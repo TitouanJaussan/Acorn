@@ -5,11 +5,10 @@
 namespace Acorn::Core
 {
     Runtime::Runtime(int argc, const char** argv)
-        : m_loggerFactory("log.txt"),
+        : m_loggerFactory("log.tmp"),
           m_logger(m_loggerFactory.create("Runtime")),
           m_layerManager(),
-          m_modLoader(getLoggerFactory()),
-          m_modRegistry(m_logger),
+          m_modManager(m_loggerFactory),
           m_window(new Window::GLFW::Window(
             Window::GLFW::WindowDescriptor{
                 .loggerFactory = m_loggerFactory,
@@ -21,9 +20,8 @@ namespace Acorn::Core
         // TODO: Make this a proper fix
         std::filesystem::current_path(std::filesystem::absolute(argv[0]).parent_path());
 
-        m_modLoader.loadModules("modules/", m_modRegistry);
-
-        modulesLoad();
+        m_modManager.loadModules("modules/");
+        m_modManager.callLoad(m_loggerFactory);
     }
 
     Runtime::~Runtime()
@@ -35,55 +33,16 @@ namespace Acorn::Core
     {
         while (!m_window->shouldClose())
         {
-            modulesUpdate();
-            modulesRender();
+            m_modManager.callUpdate();
             m_window->swapBuffers();
             m_window->pollEvents();
         }
 
-        modulesUnload();
+        m_modManager.callUnload();
     }
 
     LoggerFactory& Runtime::getLoggerFactory() noexcept
     {
         return m_loggerFactory;
-    }
-
-    void Runtime::modulesLoad()
-    {
-        modulesForEach([](Module::Module& mod)
-        {
-            mod.load();
-        });
-    }
-    
-    void Runtime::modulesUpdate()
-    {
-        modulesForEach([](Module::Module& mod)
-        {
-            mod.update();
-        });
-    }
-
-    void Runtime::modulesRender()
-    {
-        modulesForEach([](Module::Module& mod)
-        {
-            mod.render();
-        });
-    }
-
-    void Runtime::modulesUnload()
-    {
-        modulesForEach([](Module::Module& mod)
-        {
-            mod.unload();
-        });
-    }
-
-    void Runtime::modulesForEach(void (*func)(Module::Module&))
-    {
-        for (const auto& mod: m_modRegistry.getModules())
-            func(*mod);
     }
 }

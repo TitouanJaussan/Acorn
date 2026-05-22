@@ -1,5 +1,5 @@
-#ifndef TEST_MODULE_HPP
-#define TEST_MODULE_HPP
+#ifndef WINDOW_MODULE_HPP
+#define WINDOW_MODULE_HPP
 
 #ifdef _WIN32
     #ifdef TESTMODULE_BUILD_DLL
@@ -23,4 +23,4 @@ extern "C"
     extern const char name[];
 }
 
-#endif /* TEST_MODULE_HPP */
+#endif /* WINDOW_MODULE_HPP */

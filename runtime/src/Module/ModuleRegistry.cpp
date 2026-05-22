@@ -2,16 +2,16 @@
 
 namespace Acorn::Module
 {
-    ModuleRegistry::ModuleRegistry(Core::Logger& runtimeLogger)
+    ModuleRegistry::ModuleRegistry(Core::LoggerFactory& factory)
         : m_modules{},
-          m_runtimeLogger(runtimeLogger)
+          m_logger(factory.create("ModRegistry"))
     {}
 
     void ModuleRegistry::registerMod(std::unique_ptr<Module> mod)
     {
         const auto& ref = m_modules.emplace_back(std::move(mod));
         
-        m_runtimeLogger.info(
+        m_logger.info(
             "Loaded module '{}' ('{}')",
             ref->name,
             ref->libPath().filename().string()

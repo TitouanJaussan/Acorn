@@ -11,6 +11,7 @@ namespace Acorn::Core
     class ENGINE_API Logger
     {
     public:
+        Logger();
         Logger(spdlog::logger logger);
 
         template<typename... Args>

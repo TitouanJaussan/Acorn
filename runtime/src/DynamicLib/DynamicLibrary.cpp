@@ -1,5 +1,8 @@
 #include "Acorn/DynamicLib/DynamicLibrary.hpp"
-#include <stdexcept>
+#include "Acorn/Core/DetailedError.hpp"
+
+#include <filesystem>
+#include <format>
 
 namespace Acorn::Lib
 {
@@ -9,8 +12,15 @@ namespace Acorn::Lib
     {
         if (!m_handle)
         {
-            // TODO: Throw an error
-            throw std::runtime_error("Unexising file");
+            // TODO: Custom error type 
+            throw Core::DetailedError(
+                "Dynamic Library",
+                std::format(
+                    "Failed to load dynamic library '{}', cause: '{}'",
+                    libPath.string(),
+                    LIB_GET_ERR()
+                )
+            );
         }
     }
 

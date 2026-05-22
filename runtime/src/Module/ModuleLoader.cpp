@@ -1,5 +1,5 @@
 #include "Acorn/Module/ModuleLoader.hpp"
-#include "Acorn/Module/InvalidModuleError.hpp"
+#include "Acorn/Core/DetailedError.hpp"
 
 namespace Acorn::Module
 {
@@ -35,7 +35,7 @@ namespace Acorn::Module
                 }
             ));
         }
-        catch (const InvalidModuleError& err)
+        catch (const Core::DetailedError& err)
         {
             m_logger.error("{}", err.what());
         }

@@ -1,7 +1,7 @@
 #include <format>
 
 #include "Acorn/Module/Module.hpp"
-#include "Acorn/Module/InvalidModuleError.hpp"
+#include "Acorn/Module/ModuleError.hpp"
 
 namespace Acorn::Module
 {
@@ -16,7 +16,7 @@ namespace Acorn::Module
         const auto filename = descriptor.libPath.filename().string();
 
         if (!name)
-            throw InvalidModuleError(
+            throw ModuleError(
                 std::format(
                     "Unnamed module ({}): missing 'name' symbol.",
                     filename
@@ -24,7 +24,7 @@ namespace Acorn::Module
             );
 
         if (!load)
-            throw InvalidModuleError(
+            throw ModuleError(
                 std::format(
                     "Module '{}' ({}): missing 'load'",
                     name,
@@ -33,7 +33,7 @@ namespace Acorn::Module
             );
 
         if (!update)
-            throw InvalidModuleError(
+            throw ModuleError(
                 std::format(
                     "Module '{}' ({}): missing 'update'",
                     name,
@@ -42,7 +42,7 @@ namespace Acorn::Module
             );
 
         if (!render)
-            throw InvalidModuleError(
+            throw ModuleError(
                 std::format(
                     "Module '{}' ({}): missing 'render'",
                     name,
@@ -51,7 +51,7 @@ namespace Acorn::Module
             );
 
         if (!unload)
-            throw InvalidModuleError(
+            throw ModuleError(
                 std::format(
                     "Module '{}' ({}): missing 'unload'",
                     name,

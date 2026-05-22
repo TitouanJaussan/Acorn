@@ -23,6 +23,16 @@ function setup_module(mod_name)
         filter {}
 end
 
+function setup_all_modules()
+    dirs = os.matchdirs("./runtime/modules/*")
+    table.sort(dirs)
+
+    for i = 1, #dirs do
+        dirname = path.getname(dirs[i])
+        setup_module(dirname)
+    end
+end
+
 function setup_spdlog()
     if os.host() == "linux" then
         os.execute([[
@@ -114,8 +124,7 @@ project "AcornRuntime"
 
     filter {}
 
-
-setup_module("TestModule")
+setup_all_modules()
 
 project "AcornEditor"
     kind "ConsoleApp"

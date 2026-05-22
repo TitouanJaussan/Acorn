@@ -1,10 +1,11 @@
-#include <iostream>
-
 #include "TestModule.hpp"
 
-void load()
+static Acorn::Core::Logger logger;
+
+void load(Acorn::Core::Logger providedLogger)
 {
-    std::cout << "Initialized Test Module" << std::endl;
+    logger = providedLogger;
+    logger.info("Loaded Test Module");
 }
 
 void update()
@@ -19,7 +20,7 @@ void render()
 
 void unload()
 {
-    std::cout << "Unloaded module" << std::endl;
+    logger.info("Unloaded Test Module");
 }
 
 const char name[] = "Test Module";

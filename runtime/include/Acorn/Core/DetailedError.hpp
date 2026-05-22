@@ -13,7 +13,7 @@ namespace Acorn::Core
         public std::runtime_error
     {
     public:
-        DetailedError(std::string title, const char* msg);
+        DetailedError(std::string title, std::string msg);
 
         tui::Block detailedWhat() const;
 

@@ -5,14 +5,17 @@
 
 #ifdef _WIN32
     #include <windows.h>
+    #include <string>
     #define LIB_HANDLE HINSTANCE
     #define LOAD_LIB(name) LoadLibrary(name)
+    #define LIB_GET_ERR() std::to_string(GetLastError())
     #define CLOSE_LIB(lib)
     #define LIB_RESOLVE_SYMBOL(lib, symbolName) GetProcAddress(lib, name)
 #else
     #include <dlfcn.h>
     #define LIB_HANDLE void*
     #define LOAD_LIB(name) dlopen(name, RTLD_NOW)
+    #define LIB_GET_ERR() dlerror()
     #define CLOSE_LIB(lib) dlclose(lib)
     #define LIB_RESOLVE_SYMBOL(lib, symbolName) dlsym(lib, symbolName)
 #endif /* _WIN32 */

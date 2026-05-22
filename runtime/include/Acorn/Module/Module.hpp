@@ -1,6 +1,7 @@
 #ifndef ACORN_MODULE_HPP
 #define ACORN_MODULE_HPP
 
+#include "Acorn/Core/Logging/Logger.hpp"
 #include "Acorn/EngineAPI.hpp"
 #include "Acorn/Module/ModuleDescriptor.hpp"
 #include "Acorn/DynamicLib/DynamicLibrary.hpp"
@@ -18,7 +19,7 @@ namespace Acorn::Module
 
         const char* const name;
 
-        const void(*load)();
+        const void(*load)(Acorn::Core::Logger);
         const void(*update)();
         const void(*render)();
         const void(*unload)();

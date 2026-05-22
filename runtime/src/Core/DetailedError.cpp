@@ -2,7 +2,7 @@
 
 namespace Acorn::Core
 {
-    DetailedError::DetailedError(std::string title, const char* msg)
+    DetailedError::DetailedError(std::string title, std::string msg)
         : std::runtime_error(msg),
           m_title(title)
     {}

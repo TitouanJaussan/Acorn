@@ -2,6 +2,9 @@
 
 namespace Acorn::Core
 {
+    Logger::Logger()
+        : m_logger("<Default>")
+    {}
     Logger::Logger(spdlog::logger logger)
         : m_logger(logger)
     {};

@@ -6,21 +6,21 @@
 
 #include "Acorn/EngineAPI.hpp"
 #include "Acorn/Module/Module.hpp"
-#include "Acorn/Core/Logging/Logger.hpp"
+#include "Acorn/Core/Logging/LoggerFactory.hpp"
 
 namespace Acorn::Module
 {
     class ENGINE_API ModuleRegistry
     {
     public:
-        ModuleRegistry(Core::Logger& runtimeLogger);
+        ModuleRegistry(Core::LoggerFactory& factory);
 
         void registerMod(std::unique_ptr<Module> mod);
 
         const std::vector<std::unique_ptr<Module>>& getModules() const;
 
     private:
-        Core::Logger& m_runtimeLogger;
+        Core::Logger m_logger;
         std::vector<std::unique_ptr<Module>> m_modules;
     };
 }
