@@ -7,18 +7,12 @@ namespace Acorn::Module
           m_logger(factory.create("ModRegistry"))
     {}
 
-    void ModuleRegistry::registerMod(std::unique_ptr<Module> mod)
+    void ModuleRegistry::registerModule(std::unique_ptr<RuntimeModule> mod)
     {
         const auto& ref = m_modules.emplace_back(std::move(mod));
-        
-        m_logger.info(
-            "Loaded module '{}' ('{}')",
-            ref->name,
-            ref->libPath().filename().string()
-        );
     }
 
-    const std::vector<std::unique_ptr<Module>>& ModuleRegistry::getModules() const
+    const std::vector<std::unique_ptr<RuntimeModule>>& ModuleRegistry::getModules() const
     {
         return m_modules;
     }

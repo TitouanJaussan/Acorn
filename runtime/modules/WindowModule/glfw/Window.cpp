@@ -1,14 +1,17 @@
-#include "Window/glfw/Window.hpp"
+#include "glfw/Window.hpp"
 
 #include "Acorn/Core/Assert.hpp"
 
-namespace Acorn::Window::GLFW
+namespace GLFW
 {
     Window::Window(WindowDescriptor descriptor)
-        : m_logger(descriptor.loggerFactory.create("GLFW Window"))
+        : m_logger(descriptor.moduleLogger)
     {
         if (!glfwInit())
-            ACORN_ASSERT(false && "Failed to initialize GLFW");
+        {
+            // throw error
+            // ACORN_ASSERT(false && "Failed to initialize GLFW");
+        }
 
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 4);

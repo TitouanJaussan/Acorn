@@ -7,20 +7,25 @@
 #include "Acorn/Core/Logging/LoggerFactory.hpp"
 #include "Acorn/Core/Logging/Logger.hpp"
 #include "Acorn/Module/ModuleRegistry.hpp"
+#include "Acorn/Core/Runtime/RuntimeAPI.hpp"
 
 namespace Acorn::Module
 {
     class ENGINE_API ModuleLoader
     {
     public:
-        ModuleLoader(Core::LoggerFactory factory);
+        ModuleLoader(Core::LoggerFactory& factory);
 
         void loadModules(std::filesystem::path folderPath,
-            ModuleRegistry& registry);
+            ModuleRegistry& registry,
+            Core::LoggerFactory& factory,
+            Core::RuntimeAPI api);
 
     private:
         void loadModule(std::filesystem::path modLibPath,
-            ModuleRegistry& registry) noexcept;
+            ModuleRegistry& registry,
+            Core::LoggerFactory& factory,
+            Core::RuntimeAPI api) noexcept;
 
         Core::Logger m_logger;
     };

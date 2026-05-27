@@ -5,7 +5,7 @@
 #include <memory>
 
 #include "Acorn/EngineAPI.hpp"
-#include "Acorn/Module/Module.hpp"
+#include "Acorn/Module/RuntimeModule.hpp"
 #include "Acorn/Core/Logging/LoggerFactory.hpp"
 
 namespace Acorn::Module
@@ -15,13 +15,13 @@ namespace Acorn::Module
     public:
         ModuleRegistry(Core::LoggerFactory& factory);
 
-        void registerMod(std::unique_ptr<Module> mod);
+        void registerModule(std::unique_ptr<RuntimeModule> mod);
 
-        const std::vector<std::unique_ptr<Module>>& getModules() const;
+        const std::vector<std::unique_ptr<RuntimeModule>>& getModules() const;
 
     private:
         Core::Logger m_logger;
-        std::vector<std::unique_ptr<Module>> m_modules;
+        std::vector<std::unique_ptr<RuntimeModule>> m_modules;
     };
 }
 

@@ -1,26 +1,34 @@
 #ifndef WINDOW_MODULE_HPP
 #define WINDOW_MODULE_HPP
 
-#ifdef _WIN32
-    #ifdef TESTMODULE_BUILD_DLL
-        #define API __declspec(dllexport)
-    #else
-        #define API
-    #endif
-#else
-    #define API __attribute__((visibility("default")))
-#endif /* _WIN32 */
+#include <memory>
 
-#include <Acorn/Core/Logging/Logger.hpp>
+#include <Acorn/Module/Module.hpp>
+#include <Acorn/Module/ModuleManifest.hpp>
+
+#include "API.hpp"
+#include "BaseWindow.hpp"
+
+class API_PRIVATE WindowModule final : public Acorn::Module::Module
+{
+public:
+    WindowModule(Acorn::Core::RuntimeAPI api, Acorn::Core::Logger logger);
+
+    void init() override;
+    void update() override;
+    void unload() override;
+
+private:
+    std::unique_ptr<BaseWindow> m_window;
+};
 
 extern "C"
 {
-    void API load(Acorn::Core::Logger providedLogger);
-    void API update();
-    void API render();
-    void API unload();
+    Acorn::Module::Module* createModule(Acorn::Core::RuntimeAPI api,
+                                        Acorn::Core::Logger logger);
+    void destroyModule(Acorn::Module::Module* mod);
 
-    extern const char name[];
+    API const Acorn::Module::ModuleManifest* getManifest();
 }
 
 #endif /* WINDOW_MODULE_HPP */

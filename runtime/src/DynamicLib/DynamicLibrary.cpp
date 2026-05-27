@@ -24,22 +24,18 @@ namespace Acorn::Lib
         }
     }
 
-    DynamicLibrary::DynamicLibrary(DynamicLibrary&& other)
+    DynamicLibrary::DynamicLibrary(DynamicLibrary&& other) noexcept
         : path(other.path),
           m_handle(other.m_handle)
     {
-        other.path.string().clear();
         other.m_handle = nullptr;
     }
 
     DynamicLibrary::~DynamicLibrary()
     {
+        if (!m_handle) return;
+
         CLOSE_LIB(m_handle);
         m_handle = nullptr;
-    }
-
-    void* DynamicLibrary::resolveSymbol(const char* symbolName) const
-    {
-        return LIB_RESOLVE_SYMBOL(m_handle, symbolName);
     }
 }

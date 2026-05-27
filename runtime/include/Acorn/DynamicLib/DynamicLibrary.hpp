@@ -28,10 +28,13 @@ namespace Acorn::Lib
     {
     public:
         DynamicLibrary(std::filesystem::path libPath);
-        DynamicLibrary(DynamicLibrary&& other);
+        DynamicLibrary(DynamicLibrary&& other) noexcept;
         ~DynamicLibrary();
 
-        void* resolveSymbol(const char* symbolName) const;
+        DynamicLibrary& operator=(DynamicLibrary&& other) = delete;
+
+        template<typename T>
+        T resolveSymbol(const char* symbolName) const;
 
         const std::filesystem::path path;
 
@@ -39,5 +42,7 @@ namespace Acorn::Lib
         LIB_HANDLE m_handle;
     };
 }
+
+#include "Acorn/DynamicLib/DynamicLibrary.ipp"
 
 #endif /* ACORN_DYNAMIC_LIBRARY_HPP */

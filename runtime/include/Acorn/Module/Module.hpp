@@ -1,28 +1,25 @@
 #ifndef ACORN_MODULE_HPP
 #define ACORN_MODULE_HPP
 
-#include "Acorn/Core/Logging/Logger.hpp"
 #include "Acorn/EngineAPI.hpp"
-#include "Acorn/Module/ModuleDescriptor.hpp"
-#include "Acorn/DynamicLib/DynamicLibrary.hpp"
+#include "Acorn/Core/Logging/Logger.hpp"
+#include "Acorn/Core/Runtime/RuntimeAPI.hpp"
 
 namespace Acorn::Module
 {
     class ENGINE_API Module
     {
-        Lib::DynamicLibrary m_lib;
-
     public:
-        Module(ModuleDescriptor descriptor);
+        Module(Core::RuntimeAPI runtimeAPI, Core::Logger logger);
+        virtual ~Module() {};
+        
+        virtual void init()   = 0;
+        virtual void update() = 0;
+        virtual void unload() = 0;
 
-        std::filesystem::path libPath() const noexcept;
-
-        const char* const name;
-
-        const void(*load)(Acorn::Core::Logger);
-        const void(*update)();
-        const void(*render)();
-        const void(*unload)();
+    protected:
+        Core::Logger     m_logger;
+        Core::RuntimeAPI m_api;
     };
 }
 

@@ -7,22 +7,28 @@ namespace Acorn::Module
           m_modRegistry(factory)
     {}
 
-    void ModuleManager::loadModules(std::filesystem::path modsFolder)
+    void ModuleManager::loadModules(std::filesystem::path modsFolder,
+        Core::LoggerFactory& factory, Core::RuntimeAPI api)
     {
-        m_modLoader.loadModules(modsFolder, m_modRegistry);
+        m_modLoader.loadModules(
+            modsFolder,
+            m_modRegistry,
+            factory,
+            api
+        );
     }
 
-    void ModuleManager::callLoad(Core::LoggerFactory& factory)
+    void ModuleManager::callInit()
     {
-        call([&factory](Module& mod)
+        call([](RuntimeModule& mod)
         {
-            mod.load(factory.create(mod.name));
+            mod.init();
         });
     }
     
     void ModuleManager::callUpdate()
     {
-        call([](Module& mod)
+        call([](RuntimeModule& mod)
         {
             mod.update();
         });
@@ -30,13 +36,13 @@ namespace Acorn::Module
 
     void ModuleManager::callUnload()
     {
-        call([](Module& mod)
+        call([](RuntimeModule& mod)
         {
             mod.unload();
         });
     }
 
-    void ModuleManager::call(std::function<void(Module&)> fn)
+    void ModuleManager::call(std::function<void(RuntimeModule&)> fn)
     {
         for (const auto& mod: m_modRegistry.getModules())
             fn(*mod);

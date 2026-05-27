@@ -1,27 +1,57 @@
 #include "WindowModule.hpp"
+#include "glfw/Window.hpp"
+#include "glfw/WindowDescriptor.hpp"
 
-static Acorn::Core::Logger logger{};
-
-void load(Acorn::Core::Logger providedLogger)
+// TODO: Add versions to manifest
+static const Acorn::Module::ModuleManifest MANIFEST = 
 {
-    logger = providedLogger;
+    .name = "Window",
+    .dependencies = nullptr,
+    .dependenciesCount = 0
+};
 
-    logger.info("Loaded Window Module");
+WindowModule::WindowModule(Acorn::Core::RuntimeAPI api,
+                           Acorn::Core::Logger logger)
+    : Acorn::Module::Module(api, logger),
+      m_window(new GLFW::Window(GLFW::WindowDescriptor{
+          .moduleLogger = m_logger,
+          .title = "Acorn Engine",
+          .width = 1200,
+          .height = 800
+      }))
+{}
+
+void WindowModule::init()
+{
+    m_logger.info("Created Window Module!");
 }
 
-void update()
+void WindowModule::update()
 {
+    m_window->pollEvents();
+    m_window->swapBuffers();
 
+    if (m_window->shouldClose())
+        m_api.stopRuntime();
 }
 
-void render()
+void WindowModule::unload()
 {
-
+    m_logger.info("Shutting down Window Module!");
 }
 
-void unload()
+Acorn::Module::Module* createModule(Acorn::Core::RuntimeAPI api,
+                                    Acorn::Core::Logger logger)
 {
-    logger.info("Unloaded Window Module");
+    return new WindowModule{api, logger};
 }
 
-const char name[] = "Window";
+void destroyModule(Acorn::Module::Module* mod)
+{
+    delete mod;
+}
+
+const Acorn::Module::ModuleManifest* getManifest()
+{
+    return &MANIFEST;
+}

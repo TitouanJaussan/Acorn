@@ -1,14 +1,14 @@
 #ifndef ACORN_RUNTIME_HPP
 #define ACORN_RUNTIME_HPP
 
-#include <memory>
+#include <atomic>
 
 #include "Acorn/EngineAPI.hpp"
 #include "Acorn/Core/Logging/LoggerFactory.hpp"
 #include "Acorn/Core/Logging/Logger.hpp"
+#include "Acorn/Core/Runtime/RuntimeAPI.hpp"
 #include "Acorn/Layer/LayerManager.hpp"
 #include "Acorn/Module/ModuleManager.hpp"
-#include "Acorn/Window/Window.hpp"
 
 namespace Acorn::Core
 {
@@ -19,6 +19,7 @@ namespace Acorn::Core
         ~Runtime();
 
         void run();
+        void stop();
 
         template<LayerT T, typename... Args>
         void pushLayer(Args&&... args);
@@ -26,16 +27,17 @@ namespace Acorn::Core
         LoggerFactory& getLoggerFactory() noexcept;
 
     private:
+        RuntimeAPI getAPI();
+
         LoggerFactory m_loggerFactory;
         Logger m_logger;
         LayerManager m_layerManager;
         Module::ModuleManager m_modManager;
 
-        // TODO: This is wrong
-        std::unique_ptr<Window::BaseWindow> m_window;
+        std::atomic_bool m_running;
     };
 }
 
-#include "Acorn/Core/Runtime.ipp"
+#include "Acorn/Core/Runtime/Runtime.ipp"
 
 #endif /* ACORN_RUNTIME_HPP */

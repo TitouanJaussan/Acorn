@@ -1,6 +1,6 @@
-#include "Acorn/Core/Runtime.hpp"
+#include "Acorn/Core/Runtime/Runtime.hpp"
 
-#include "Window/glfw/Window.hpp"
+#include "Core/SignalHandler.hpp"
 
 namespace Acorn::Core
 {
@@ -9,19 +9,17 @@ namespace Acorn::Core
           m_logger(m_loggerFactory.create("Runtime")),
           m_layerManager(),
           m_modManager(m_loggerFactory),
-          m_window(new Window::GLFW::Window(
-            Window::GLFW::WindowDescriptor{
-                .loggerFactory = m_loggerFactory,
-                .title = "Acorn Engine",
-                .width = 1200,
-                .height = 800
-            }))
+          m_running(true)
     {
+        m_logger.info("Initializing runtime...");
+
+        setSignalHandler(this);
+
         // TODO: Make this a proper fix
         std::filesystem::current_path(std::filesystem::absolute(argv[0]).parent_path());
 
-        m_modManager.loadModules("modules/");
-        m_modManager.callLoad(m_loggerFactory);
+        m_modManager.loadModules("modules/", m_loggerFactory, getAPI());
+        m_modManager.callInit();
     }
 
     Runtime::~Runtime()
@@ -31,18 +29,26 @@ namespace Acorn::Core
 
     void Runtime::run()
     {
-        while (!m_window->shouldClose())
+        while (m_running)
         {
             m_modManager.callUpdate();
-            m_window->swapBuffers();
-            m_window->pollEvents();
         }
 
         m_modManager.callUnload();
     }
 
+    void Runtime::stop()
+    {
+        m_running = false;
+    }
+
     LoggerFactory& Runtime::getLoggerFactory() noexcept
     {
         return m_loggerFactory;
+    }
+
+    RuntimeAPI Runtime::getAPI()
+    {
+        return RuntimeAPI{*this};
     }
 }

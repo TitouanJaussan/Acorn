@@ -4,10 +4,11 @@
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 
-#include "Acorn/Window/Window.hpp"
-#include "Window/glfw/WindowDescriptor.hpp"
+#include "BaseWindow.hpp"
+#include "glfw/WindowDescriptor.hpp"
+#include "Acorn/Core/Logging/Logger.hpp"
 
-namespace Acorn::Window::GLFW
+namespace GLFW
 {
     class Window final : public BaseWindow
     {
@@ -22,7 +23,7 @@ namespace Acorn::Window::GLFW
     private:
         GLFWwindow* m_window{nullptr};
 
-        Core::Logger m_logger;
+        Acorn::Core::Logger& m_logger;
     };
 }
 
