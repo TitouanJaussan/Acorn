@@ -4,10 +4,10 @@
 #include <type_traits>
 #include <typeindex>
 #include <map>
-#include <memory>
 
 #include "Acorn/EngineAPI.hpp"
 #include "Acorn/Layer/Layer.hpp"
+#include "Acorn/Templates/UniquePtr.hpp"
 
 namespace Acorn
 {
@@ -24,8 +24,7 @@ namespace Acorn
         void pushLayer(Args&&... args);
 
     private:
-        std::map<std::type_index,
-            std::unique_ptr<Layer>> m_layersStack{};
+        std::map<std::type_index, UniquePtr<Layer>> m_layersStack{};
     };
 }
 

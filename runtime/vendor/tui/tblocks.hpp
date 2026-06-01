@@ -3,7 +3,6 @@
 #include <cassert>
 #include <cstddef>
 #include <cstdlib>
-#include <vector>
 #include <string>
 
 // This is kind of a separate project, so it does not follow the same conventions as the rest of the engine
@@ -16,13 +15,15 @@
  *     directly modify a block, even if it's a minor modification
  */
 
+#include "Acorn/Templates/ArrayList.hpp"
+
 namespace Acorn::tui
 {
     using signed_size_t = ptrdiff_t;
 
     struct Block
     {
-        std::vector<std::string> lines{};
+        ArrayList<std::string> lines{};
         size_t width{0};
         size_t height{0};
     };
@@ -39,7 +40,8 @@ namespace Acorn::tui
     inline std::pair<std::string, std::string> cut(std::string in, size_t splitColumn)
     {
         if (in.size() > splitColumn)
-            in += std::string(in.size() - splitColumn, ' ');
+            // in += std::string(in.size() - splitColumn, ' ');
+            (void)nullptr;
         else
             in += std::string(splitColumn - in.size(), ' ');
 
@@ -61,13 +63,14 @@ namespace Acorn::tui
     inline size_t visualWidth(const std::string& string)
     {
         size_t width{0};
+
         for (auto it = string.begin(); it != string.end() && *it != 0; ++it)
             width += ((*it & 0xc0) != 0x80);
 
         return width;
     }
 
-    inline size_t computeWidth(const std::vector<std::string>& content)
+    inline size_t computeWidth(const ArrayList<std::string>& content)
     {
         size_t w{0};
 
@@ -77,23 +80,25 @@ namespace Acorn::tui
         return w;
     }
 
-    inline size_t computeHeight(const std::vector<std::string>& content)
+    inline size_t computeHeight(const ArrayList<std::string>& content)
     {
-        return content.size();
+        return content.getSize();
     }
 
-    inline size_t maxWidth(const std::vector<Block>& blocks)
+    inline size_t maxWidth(const ArrayList<Block>& blocks)
     {
         size_t w{0};
+
         for (const Block& block: blocks)
             w = std::max(w, block.width);
 
         return w;
     }
 
-    inline size_t maxHeight(const std::vector<Block>& blocks)
+    inline size_t maxHeight(const ArrayList<Block>& blocks)
     {
         size_t h{0};
+
         for (const Block& block: blocks)
             h = std::max(h, block.height);
 
@@ -115,13 +120,13 @@ namespace Acorn::tui
     {
         return Block
         {
-            .lines = {std::string(txt)},
+            .lines = ArrayList<std::string>{std::string(txt)},
             .width = visualWidth(txt),
             .height = 1
         };
     }
 
-    inline Block column(std::vector<std::string> elements)
+    inline Block column(ArrayList<std::string> elements)
     {
         const size_t w = computeWidth(elements);
         const size_t h = computeHeight(elements);
@@ -136,7 +141,13 @@ namespace Acorn::tui
 
     inline Block makeColumn(std::string val, size_t height)
     {
-        return column(std::vector(height, val));
+        ArrayList<std::string> col{};
+        col.setCapacity(height);
+
+        for (size_t i = 0; i < height; ++i)
+            col.append(val);
+
+        return column(col);
     }
 
     inline std::string makeStringRow(const std::string& val, size_t count)
@@ -151,15 +162,15 @@ namespace Acorn::tui
 
     inline Block makeRow(const std::string& val, size_t count)
     {
-        return column(std::vector{makeStringRow(val, count)});
+        return column(ArrayList{makeStringRow(val, count)});
     }
 
     /* --- Transforms --- */
-    inline Block hstack(std::vector<Block> blocks)
+    inline Block hstack(ArrayList<Block> blocks)
     {
         const size_t maxH = maxHeight(blocks);
-        std::vector<std::string> lines{};
-        lines.reserve(maxH);
+        ArrayList<std::string> lines{};
+        lines.setCapacity(maxH);
 
         for (size_t i = 0; i < maxH; i++)
         {
@@ -176,20 +187,20 @@ namespace Acorn::tui
                     std::string(block.width - visualWidth(block.lines[i]),' ');
             }
 
-            lines.push_back(std::move(line));
+            lines.append(std::move(line));
         }
 
         return column(lines);
     }
 
-    inline Block vstack(std::vector<Block> blocks)
+    inline Block vstack(ArrayList<Block> blocks)
     {
-        std::vector<std::string> lines{};
+        ArrayList<std::string> lines{};
 
         for (const auto& block: blocks)
         {
             lines.insert(
-                lines.end(),
+                lines.getSize() - 1,
                 block.lines.begin(),
                 block.lines.end()
             );
@@ -207,14 +218,14 @@ namespace Acorn::tui
     {
         if (distance == 0) return block;
 
-        std::vector<std::string> lines{};
-        lines.reserve(block.height);
+        ArrayList<std::string> lines{};
+        lines.setCapacity(block.height);
 
         if (distance > 0)
         {
             for (const auto& line: block.lines)
             {
-                lines.push_back(concat(
+                lines.append(concat(
                     std::string(distance, ' '),
                     line
                 ));
@@ -223,7 +234,7 @@ namespace Acorn::tui
         else
         {
             for (const auto& line: block.lines)
-                lines.push_back(line.substr(-distance, visualWidth(line) + distance));
+                lines.append(line.substr(-distance, visualWidth(line) + distance));
         }
 
         return column(lines);
@@ -239,22 +250,22 @@ namespace Acorn::tui
         if (distance == 0) return block;
         if (-distance >= (signed_size_t)block.height) return column({});
 
-        std::vector<std::string> lines{};
-        lines.reserve(block.height + distance);
+        ArrayList<std::string> lines{};
+        lines.setCapacity(block.height + distance);
 
         if (distance < 0)
             lines.insert(
-                lines.end(), // Or .begin()
+                lines.getSize() - 1,
                 block.lines.begin() - distance,
                 block.lines.end()
             );
         else
         {
             for (size_t i = 0; i < (size_t)distance; i++)
-                lines.push_back(std::string());
+                lines.append(std::string());
 
             lines.insert(
-                lines.end(),
+                lines.getSize() - 1,
                 block.lines.begin(),
                 block.lines.end()
             );
@@ -266,23 +277,23 @@ namespace Acorn::tui
     /* Homogeneously destructive transform, of width `object.width + 2` */
     inline Block border(Block block)
     {
-        std::vector<std::string> lines{};
-        lines.reserve(block.height + 2);
+        ArrayList<std::string> lines{};
+        lines.setCapacity(block.height + 2);
 
         const std::string lineRow = makeStringRow("─", block.width);
 
-        lines.push_back("┌" + lineRow + "┐");
+        lines.append("╭" + lineRow + "╮");
 
         for (const auto& line: block.lines)
         {
             const size_t rightPad = block.width - visualWidth(line);
-            lines.push_back(concat(
+            lines.append(concat(
                 "│", line,
                 std::string(rightPad, ' '),
                 "│"));
         }
 
-        lines.push_back("└" + lineRow + "┘");
+        lines.append("╰" + lineRow + "╯");
 
         return column(lines);
     }
@@ -290,21 +301,21 @@ namespace Acorn::tui
     /* Homogeneously destructive, of width `width` */
     inline Block setWidth(Block block, const size_t width)
     {
-        std::vector<std::string> lines{};
-        lines.reserve(block.height);
+        ArrayList<std::string> lines{};
+        lines.setCapacity(block.height);
 
         for (const auto& line: block.lines)
-            lines.push_back(cut(line, width).first);
+            lines.append(cut(line, width).first);
 
         return column(lines);
     }
 
     inline Block setHeight(Block block, const size_t height)
     {
-        std::vector<std::string> lines{};
+        ArrayList<std::string> lines{};
 
         lines.insert(
-            lines.begin(),
+            0,
             block.lines.begin(),
             block.lines.begin() + height
         );
@@ -314,12 +325,12 @@ namespace Acorn::tui
 
     inline Block alignRight(Block block)
     {
-        std::vector<std::string> lines{};
-        lines.reserve(block.lines.size());
+        ArrayList<std::string> lines{};
+        lines.setCapacity(block.lines.getSize());
 
         for (const auto& line: block.lines)
         {
-            lines.push_back(concat(
+            lines.append(concat(
                 std::string(block.width - visualWidth(line), ' '),
                 line));
         }
@@ -330,14 +341,14 @@ namespace Acorn::tui
     /* Homogeneously destructive, of width `desiredWidth` */
     inline Block alignCenter(Block block)
     {
-        std::vector<std::string> lines{};
-        lines.reserve(block.lines.size());
+        ArrayList<std::string> lines{};
+        lines.setCapacity(block.lines.getSize());
 
         for (const auto& line: block.lines)
         {
             const size_t gap = block.width - visualWidth(line);
 
-            lines.push_back(concat(
+            lines.append(concat(
                 std::string(gap / 2, ' '),
                 line,
                 std::string(gap - gap / 2, ' ')
@@ -349,13 +360,13 @@ namespace Acorn::tui
 
     inline Block alignRight(Block block, size_t desiredWidth)
     {
-        std::vector<std::string> lines{};
-        lines.reserve(block.lines.size());
+        ArrayList<std::string> lines{};
+        lines.setCapacity(block.lines.getSize());
 
         for (const auto& line: block.lines)
         {
             const size_t gap = desiredWidth - visualWidth(line);
-            lines.push_back(concat(
+            lines.append(concat(
                 std::string(gap, ' '), line));
         }
 
@@ -381,17 +392,17 @@ namespace Acorn::tui
 
     inline std::pair<Block, Block> hsplit(Block block, const size_t splitColumn)
     {
-        std::vector<std::string> leftLines{};
-        std::vector<std::string> rightLines{};
+        ArrayList<std::string> leftLines{};
+        ArrayList<std::string> rightLines{};
 
-        leftLines.reserve(block.height);
-        rightLines.reserve(block.height);
+        leftLines.setCapacity(block.height);
+        rightLines.setCapacity(block.height);
 
         for (size_t row = 0; row < block.height; row++)
         {
             auto [left, right] = cut(block.lines[row], splitColumn);
-            leftLines.push_back(left);
-            rightLines.push_back(right);
+            leftLines.append(left);
+            rightLines.append(right);
         }
 
         return std::make_pair(column(leftLines), column(rightLines));
@@ -399,20 +410,20 @@ namespace Acorn::tui
 
     inline std::pair<Block, Block> vsplit(Block block, const size_t splitRow)
     {
-        std::vector<std::string> topLines{};
-        std::vector<std::string> bottomLines{};
+        ArrayList<std::string> topLines{};
+        ArrayList<std::string> bottomLines{};
 
-        topLines.reserve(splitRow);
-        bottomLines.reserve(block.height - splitRow);
+        topLines.setCapacity(splitRow);
+        bottomLines.setCapacity(block.height - splitRow);
 
         topLines.insert(
-            topLines.begin(),
+            0,
             block.lines.begin(),
             block.lines.begin() + splitRow
         );
 
         bottomLines.insert(
-            bottomLines.begin(),
+            0,
             block.lines.begin() + splitRow,
             block.lines.end()
         );

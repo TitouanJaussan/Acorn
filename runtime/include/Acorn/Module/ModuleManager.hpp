@@ -1,13 +1,13 @@
 #ifndef ACORN_MODULE_MANAGER_HPP
 #define ACORN_MODULE_MANAGER_HPP
 
+#include <filesystem>
+
 #include "Acorn/EngineAPI.hpp"
 #include "Acorn/Core/Logging/LoggerFactory.hpp"
 #include "Acorn/Module/ModuleLoader.hpp"
 #include "Acorn/Module/ModuleRegistry.hpp"
 #include "Acorn/Core/Runtime/RuntimeAPI.hpp"
-
-#include <filesystem>
 
 namespace Acorn::Module
 {
@@ -18,6 +18,8 @@ namespace Acorn::Module
 
         void loadModules(std::filesystem::path modsFolder,
             Core::LoggerFactory& factory, Core::RuntimeAPI api);
+
+        ArrayList<std::string> getModNames() const;
 
         void callInit();
         void callUpdate();

@@ -18,6 +18,19 @@ namespace Acorn::Module
         );
     }
 
+    ArrayList<std::string> ModuleManager::getModNames() const
+    {
+        const auto& mods = m_modRegistry.getModules();
+
+        ArrayList<std::string> names{};
+        names.setCapacity(m_modRegistry.getModules().getSize());
+
+        for (size_t i = 0; i < mods.getSize(); ++i)
+            names.append(mods[i]->getManifest().name);
+
+        return names;
+    }
+
     void ModuleManager::callInit()
     {
         call([](RuntimeModule& mod)
@@ -44,7 +57,9 @@ namespace Acorn::Module
 
     void ModuleManager::call(std::function<void(RuntimeModule&)> fn)
     {
-        for (const auto& mod: m_modRegistry.getModules())
-            fn(*mod);
+        const auto& mods = m_modRegistry.getModules();
+
+        for (size_t i = 0; i < mods.getSize(); ++i)
+            fn(*mods[i]);
     }
 }

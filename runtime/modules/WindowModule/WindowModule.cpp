@@ -1,11 +1,13 @@
 #include "WindowModule.hpp"
+#include "Acorn/Module/Module.hpp"
 #include "glfw/Window.hpp"
 #include "glfw/WindowDescriptor.hpp"
 
-// TODO: Add versions to manifest
 static const Acorn::Module::ModuleManifest MANIFEST = 
 {
     .name = "Window",
+    .runtimeVersion = Acorn::Version::Version{0, 0, 1},
+
     .dependencies = nullptr,
     .dependenciesCount = 0
 };
@@ -43,7 +45,7 @@ void WindowModule::unload()
 Acorn::Module::Module* createModule(Acorn::Core::RuntimeAPI api,
                                     Acorn::Core::Logger logger)
 {
-    return new WindowModule{api, logger};
+    return new WindowModule{api, logger}; // TODO: Replace with mem_new & mem_delete
 }
 
 void destroyModule(Acorn::Module::Module* mod)

@@ -33,6 +33,9 @@ namespace Acorn::Module
         void update();
         void unload();
 
+        const ModuleManifest& getManifest() const;
+        std::filesystem::path getLibPath() const;
+
     private:
         Lib::DynamicLibrary m_lib;
         ModuleManifest m_manifest;

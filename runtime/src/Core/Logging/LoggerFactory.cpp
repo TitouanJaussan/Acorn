@@ -11,7 +11,8 @@ namespace Acorn::Core
             spdlog::logger>("Default", spdlog::sinks_init_list(
             {m_stdoutSink, m_fileSink})))
     {
-        const char* pattern = "[%H:%M:%S %^%L%$] %n: %v";
+        const char* pattern = "%H:%M:%S %^%L%$ %n: %v";
+
         m_stdoutSink->set_pattern(pattern);
         m_fileSink->set_pattern(pattern);
 

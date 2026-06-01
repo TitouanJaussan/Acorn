@@ -1,30 +1,44 @@
 #include "Acorn/Core/Runtime/Runtime.hpp"
 
+#include "Acorn/Core/Memory/Tracker.hpp"
+#include "Acorn/Version/RuntimeVersion.hpp"
 #include "Core/SignalHandler.hpp"
 
 namespace Acorn::Core
 {
     Runtime::Runtime(int argc, const char** argv)
-        : m_loggerFactory("log.tmp"),
+        : m_version(RUNTIME_VERSION_MAJOR,
+                    RUNTIME_VERSION_MINOR,
+                    RUNTIME_VERSION_PATCH),
+          m_running(true),
+          m_loggerFactory("log.tmp"),
           m_logger(m_loggerFactory.create("Runtime")),
           m_layerManager(),
-          m_modManager(m_loggerFactory),
-          m_running(true)
+          m_modManager(m_loggerFactory)
     {
-        m_logger.info("Initializing runtime...");
+        init(argc, argv);
+        logRuntimeInfo();
 
-        setSignalHandler(this);
-
-        // TODO: Make this a proper fix
-        std::filesystem::current_path(std::filesystem::absolute(argv[0]).parent_path());
-
-        m_modManager.loadModules("modules/", m_loggerFactory, getAPI());
+        m_modManager.loadModules("modules/", m_loggerFactory, createAPI());
         m_modManager.callInit();
     }
 
     Runtime::~Runtime()
     {
         m_logger.info("Shutting down runtime...");
+
+        m_logger.info("Maximum memory usage reached: {} bytes",
+            Memory::Tracker::getSingleton()->getMaxMemUsage());
+        m_logger.info("Total memory usage: {} bytes",
+            Memory::Tracker::getSingleton()->getMaxMemUsage());
+    }
+
+    void Runtime::init(int argc, const char** argv)
+    {
+        setSignalHandler(this);
+
+        // TODO: Make this a proper fix
+        std::filesystem::current_path(std::filesystem::absolute(argv[0]).parent_path());
     }
 
     void Runtime::run()
@@ -47,8 +61,16 @@ namespace Acorn::Core
         return m_loggerFactory;
     }
 
-    RuntimeAPI Runtime::getAPI()
+    RuntimeAPI Runtime::createAPI()
     {
-        return RuntimeAPI{*this};
+        return RuntimeAPI{*this, m_version};
+    }
+
+    void Runtime::logRuntimeInfo()
+    {
+        m_logger.info(
+            "Acorn Engine runtime {}",
+            m_version.string()
+        );
     }
 }

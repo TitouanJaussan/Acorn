@@ -100,7 +100,7 @@ project "AcornRuntime"
         
     filter "system:windows"
         libdirs {
-            "runtime/lib"
+            "runtime/vendor/lib"
         }
 
         links {
@@ -139,6 +139,25 @@ project "AcornEditor"
 
     files {
         "editor/src/**.cpp"
+    }
+
+    links {
+        "fmt",
+        "AcornRuntime"
+    }
+
+project "UnitTests"
+    kind "ConsoleApp"
+    location "build/tests"
+    targetdir "bin/unitTests"
+
+    includedirs {
+        "runtime/include",
+        "tests"
+    }
+
+    files {
+        "tests/**.cpp"
     }
 
     links {

@@ -9,6 +9,7 @@
 #include "Acorn/Core/Runtime/RuntimeAPI.hpp"
 #include "Acorn/Layer/LayerManager.hpp"
 #include "Acorn/Module/ModuleManager.hpp"
+#include "Acorn/Core/Version/Version.hpp"
 
 namespace Acorn::Core
 {
@@ -27,14 +28,20 @@ namespace Acorn::Core
         LoggerFactory& getLoggerFactory() noexcept;
 
     private:
-        RuntimeAPI getAPI();
+        RuntimeAPI createAPI();
+
+        // TODO: Pass parsed arguments, not directly raw argc / argv
+        void init(int argc, const char** argv);
+        void logRuntimeInfo();
+
+    private:
+        Version::Version m_version;
+        std::atomic_bool m_running;
 
         LoggerFactory m_loggerFactory;
         Logger m_logger;
         LayerManager m_layerManager;
         Module::ModuleManager m_modManager;
-
-        std::atomic_bool m_running;
     };
 }
 

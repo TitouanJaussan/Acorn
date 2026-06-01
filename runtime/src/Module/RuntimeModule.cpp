@@ -51,4 +51,14 @@ namespace Acorn::Module
     {
         m_module.m_mod->unload();
     }
+
+    const ModuleManifest& RuntimeModule::getManifest() const
+    {
+        return m_manifest;
+    }
+
+    std::filesystem::path RuntimeModule::getLibPath() const
+    {
+        return m_lib.path;
+    }
 }

@@ -1,5 +1,6 @@
 #include "Acorn/Module/ModuleLoader.hpp"
 #include "Acorn/Core/DetailedError.hpp"
+#include "Acorn/Module/ModuleError.hpp"
 #include "Acorn/Module/RuntimeModuleDescriptor.hpp"
 
 namespace Acorn::Module
@@ -33,21 +34,46 @@ namespace Acorn::Module
     {
         try
         {
-            // TODO: Somehow call destroyModule() in case the module doesn't load properly
-            registry.registerModule(
-                std::make_unique<RuntimeModule>(
-                    RuntimeModuleDescriptor
-                    {
-                        .lib = Lib::DynamicLibrary{modLibPath},
-                        .api = api,
-                        .loggerFactory = factory
-                    }
-                )
+            UniquePtr<RuntimeModule> mod = UniquePtr<RuntimeModule>::createUniquePtr(
+                RuntimeModuleDescriptor
+                {
+                    .lib = Lib::DynamicLibrary{modLibPath},
+                    .api = api,
+                    .loggerFactory = factory
+                }
             );
+
+            validateModuleCompatibility(mod->getManifest(), api);
+
+            registry.registerModule(std::move(mod));
         }
         catch (const Core::DetailedError& err)
         {
-            m_logger.error("Couldn't load module '{}': {}", modLibPath.filename().string(), err.what());
+            m_logger.error("Couldn't load module '{}': {}",
+                modLibPath.filename().string(),
+                err.what()
+            );
+        }
+    }
+
+    void ModuleLoader::validateModuleCompatibility(const ModuleManifest& manifest,
+        const Core::RuntimeAPI& api)
+    {
+        if (api.version().major() > manifest.runtimeVersion.major())
+        {
+            throw ModuleError(std::format(
+                "Module version too old ({}) for runtime ({})",
+                manifest.runtimeVersion.string(),
+                api.version().string()
+            ).c_str());
+        }
+        else if (api.version().minor() > manifest.runtimeVersion.minor())
+        {
+            m_logger.warn(
+                "Module version ({}) older than runtime version ({}), possible incompatibility",
+                manifest.runtimeVersion.string(),
+                api.version().string()
+            );
         }
     }
 }

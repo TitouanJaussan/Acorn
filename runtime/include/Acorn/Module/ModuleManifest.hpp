@@ -3,15 +3,18 @@
 
 #include <cstddef>
 
+#include "Acorn/Core/Version/Version.hpp"
 #include "Acorn/EngineAPI.hpp"
 
 namespace Acorn::Module
 {
     struct ENGINE_API ModuleManifest
     {
-        const char* name;
-        const char** dependencies;
-        const size_t dependenciesCount;
+        const char*      name;
+        Version::Version runtimeVersion;
+
+        const char**     dependencies;
+        const size_t     dependenciesCount;
     };
 }
 

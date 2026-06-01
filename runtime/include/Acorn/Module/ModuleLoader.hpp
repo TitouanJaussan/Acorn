@@ -6,8 +6,9 @@
 #include "Acorn/EngineAPI.hpp"
 #include "Acorn/Core/Logging/LoggerFactory.hpp"
 #include "Acorn/Core/Logging/Logger.hpp"
-#include "Acorn/Module/ModuleRegistry.hpp"
 #include "Acorn/Core/Runtime/RuntimeAPI.hpp"
+#include "Acorn/Module/ModuleManifest.hpp"
+#include "Acorn/Module/ModuleRegistry.hpp"
 
 namespace Acorn::Module
 {
@@ -26,6 +27,10 @@ namespace Acorn::Module
             ModuleRegistry& registry,
             Core::LoggerFactory& factory,
             Core::RuntimeAPI api) noexcept;
+        
+        // Maybe this could be a static method. This would benefit no significant gain but who knows
+        void validateModuleCompatibility(const ModuleManifest& manifest,
+            const Core::RuntimeAPI& api);
 
         Core::Logger m_logger;
     };

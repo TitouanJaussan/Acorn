@@ -1,10 +1,9 @@
 #ifndef WINDOW_MODULE_HPP
 #define WINDOW_MODULE_HPP
 
-#include <memory>
-
 #include <Acorn/Module/Module.hpp>
 #include <Acorn/Module/ModuleManifest.hpp>
+#include <Acorn/Templates/UniquePtr.hpp>
 
 #include "API.hpp"
 #include "BaseWindow.hpp"
@@ -19,7 +18,7 @@ public:
     void unload() override;
 
 private:
-    std::unique_ptr<BaseWindow> m_window;
+    Acorn::UniquePtr<BaseWindow> m_window;
 };
 
 extern "C"

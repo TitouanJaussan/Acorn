@@ -1,8 +1,9 @@
 #pragma once
 
-#include "Acorn/Layer/LayerManager.hpp"
+#include <utility>
 
-#include <Acorn/Core/Assert.hpp>
+#include "Acorn/Layer/LayerManager.hpp"
+#include "Acorn/Core/Assert.hpp"
 
 namespace Acorn
 {
@@ -12,9 +13,11 @@ namespace Acorn
         const std::type_index id = typeid(T);
         ACORN_ASSERT(!m_layersStack.contains(id));
 
-        auto& layer = m_layersStack[id] =
-            std::make_unique<T>(std::forward<Args>(args)...);
+        m_layersStack.emplace(std::make_pair(
+            id,
+            UniquePtr<Layer>(mem_new<T>(std::forward<Args>(args)...))
+        ));
 
-        layer->onAttach();
+        m_layersStack[id]->onAttach();
     }
 }

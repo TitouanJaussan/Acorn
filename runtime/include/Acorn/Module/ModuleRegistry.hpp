@@ -1,12 +1,11 @@
 #ifndef ACORN_MODULE_REGISTRY_HPP
 #define ACORN_MODULE_REGISTRY_HPP
 
-#include <vector>
-#include <memory>
-
 #include "Acorn/EngineAPI.hpp"
-#include "Acorn/Module/RuntimeModule.hpp"
 #include "Acorn/Core/Logging/LoggerFactory.hpp"
+#include "Acorn/Templates/ArrayList.hpp"
+#include "Acorn/Templates/UniquePtr.hpp"
+#include "Acorn/Module/RuntimeModule.hpp"
 
 namespace Acorn::Module
 {
@@ -15,13 +14,12 @@ namespace Acorn::Module
     public:
         ModuleRegistry(Core::LoggerFactory& factory);
 
-        void registerModule(std::unique_ptr<RuntimeModule> mod);
-
-        const std::vector<std::unique_ptr<RuntimeModule>>& getModules() const;
+        void registerModule(UniquePtr<RuntimeModule> mod);
+        const ArrayList<UniquePtr<RuntimeModule>>& getModules() const;
 
     private:
         Core::Logger m_logger;
-        std::vector<std::unique_ptr<RuntimeModule>> m_modules;
+        ArrayList<UniquePtr<RuntimeModule>> m_modules;
     };
 }
 
