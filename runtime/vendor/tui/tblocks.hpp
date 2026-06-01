@@ -16,6 +16,7 @@
  */
 
 #include "Acorn/Templates/ArrayList.hpp"
+#include "Acorn/Templates/Pair.hpp"
 
 namespace Acorn::tui
 {
@@ -37,7 +38,7 @@ namespace Acorn::tui
     }
 
     /* --- String related operations --- */
-    inline std::pair<std::string, std::string> cut(std::string in, size_t splitColumn)
+    inline Pair<std::string, std::string> cut(std::string in, size_t splitColumn)
     {
         if (in.size() > splitColumn)
             // in += std::string(in.size() - splitColumn, ' ');
@@ -45,9 +46,11 @@ namespace Acorn::tui
         else
             in += std::string(splitColumn - in.size(), ' ');
 
-        return std::make_pair(
+        return Pair
+        {
             in.substr(0, splitColumn),
-            in.substr(splitColumn, in.size() - splitColumn));
+            in.substr(splitColumn, in.size() - splitColumn)
+        };
     }
 
     inline std::string flatten(Block block)
@@ -305,7 +308,7 @@ namespace Acorn::tui
         lines.setCapacity(block.height);
 
         for (const auto& line: block.lines)
-            lines.append(cut(line, width).first);
+            lines.append(cut(line, width).m_first);
 
         return column(lines);
     }
@@ -390,7 +393,7 @@ namespace Acorn::tui
         }
     }
 
-    inline std::pair<Block, Block> hsplit(Block block, const size_t splitColumn)
+    inline Pair<Block, Block> hsplit(Block block, const size_t splitColumn)
     {
         ArrayList<std::string> leftLines{};
         ArrayList<std::string> rightLines{};
@@ -405,10 +408,10 @@ namespace Acorn::tui
             rightLines.append(right);
         }
 
-        return std::make_pair(column(leftLines), column(rightLines));
+        return Pair{column(leftLines), column(rightLines)};
     }
 
-    inline std::pair<Block, Block> vsplit(Block block, const size_t splitRow)
+    inline Pair<Block, Block> vsplit(Block block, const size_t splitRow)
     {
         ArrayList<std::string> topLines{};
         ArrayList<std::string> bottomLines{};
@@ -428,6 +431,6 @@ namespace Acorn::tui
             block.lines.end()
         );
 
-        return std::make_pair(column(topLines), column(bottomLines));
+        return Pair{column(topLines), column(bottomLines)};
     }
 }

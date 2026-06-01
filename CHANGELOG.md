@@ -3,11 +3,19 @@
 Date format: `YYYY`-`MM`-`DD`
 
 <details>
-<summary><b>Versions table </b></summary>
+<summary><b>Versions list</b></summary>
 
+- [v0.0.2](#v002---2026-06-01)
 - [v0.0.1](#v001---2026-06-01)
 
 </details>
+
+## [v0.0.2] - 2026-06-01
+### Added
+- Pair template as a replacement for std::pair
+
+### Changed
+- Replaced all uses of std::pair in favor of Pair
 
 ## [v0.0.1] - 2026-06-01
 ### Added

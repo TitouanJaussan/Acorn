@@ -13,6 +13,7 @@ namespace Acorn
         const std::type_index id = typeid(T);
         ACORN_ASSERT(!m_layersStack.contains(id));
 
+        // TODO: Replace with Pair when possible
         m_layersStack.emplace(std::make_pair(
             id,
             UniquePtr<Layer>(mem_new<T>(std::forward<Args>(args)...))
