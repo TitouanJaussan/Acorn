@@ -5,10 +5,18 @@ Date format: `YYYY`-`MM`-`DD`
 <details>
 <summary><b>Versions list</b></summary>
 
+- [v0.1.0](#v010---2026-06-01)
 - [v0.0.2](#v002---2026-06-01)
 - [v0.0.1](#v001---2026-06-01)
 
 </details>
+
+## [v0.1.0] - 2026-06-01
+### Added
+- Full job scheduler system to runtime, working
+
+### Changed
+- Updated Runtime API to allow using the new job scheduler
 
 ## [v0.0.2] - 2026-06-01
 ### Added

@@ -59,6 +59,9 @@ namespace Acorn
 
         void append(const T& val);
         void append(T&& val);
+        
+        template<typename... Args>
+        void emplace(Args&&... args);  // Emplaces, but at the end of the list
 
         void insert(size_t index, T val);
         void insert(size_t pos, Iterator first, Iterator last);
@@ -67,10 +70,15 @@ namespace Acorn
         [[nodiscard]] size_t getSize() const noexcept;
         [[nodiscard]] T* getData() const noexcept;
 
+        [[nodiscard]] bool isEmpty() const noexcept;
+
         void setCapacity(size_t newCapacity);
+
+        void clearAll();
 
     private:
         void growCapacity();
+        void destructAll();
         void destroyInternalArray();
 
     private:

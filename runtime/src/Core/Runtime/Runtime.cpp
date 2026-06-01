@@ -1,6 +1,7 @@
 #include "Acorn/Core/Runtime/Runtime.hpp"
 
 #include "Acorn/Core/Memory/Tracker.hpp"
+#include "Acorn/Threading/JobSchedulerDescriptor.hpp"
 #include "Acorn/Version/RuntimeVersion.hpp"
 #include "Core/SignalHandler.hpp"
 
@@ -13,6 +14,11 @@ namespace Acorn::Core
           m_running(true),
           m_loggerFactory("log.tmp"),
           m_logger(m_loggerFactory.create("Runtime")),
+          m_jobScheduler(Threading::JobSchedulerDescriptor
+            {
+                .loggerFactory = m_loggerFactory,
+                .workerThreadsCount = 0,
+            }),
           m_layerManager(),
           m_modManager(m_loggerFactory)
     {
@@ -26,6 +32,8 @@ namespace Acorn::Core
     Runtime::~Runtime()
     {
         m_logger.info("Shutting down runtime...");
+
+        m_jobScheduler.shutdown();
 
         m_logger.info("Maximum memory usage reached: {} bytes",
             Memory::Tracker::getSingleton()->getMaxMemUsage());
@@ -46,6 +54,7 @@ namespace Acorn::Core
         while (m_running)
         {
             m_modManager.callUpdate();
+            m_jobScheduler.update();
         }
 
         m_modManager.callUnload();
@@ -61,6 +70,11 @@ namespace Acorn::Core
         return m_loggerFactory;
     }
 
+    Threading::JobScheduler& Runtime::getJobScheduler() noexcept
+    {
+        return m_jobScheduler;
+    }
+
     RuntimeAPI Runtime::createAPI()
     {
         return RuntimeAPI{*this, m_version};
@@ -69,7 +83,7 @@ namespace Acorn::Core
     void Runtime::logRuntimeInfo()
     {
         m_logger.info(
-            "Acorn Engine runtime {}",
+            "Initialized Acorn Engine runtime {}",
             m_version.string()
         );
     }

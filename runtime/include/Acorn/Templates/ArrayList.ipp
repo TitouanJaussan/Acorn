@@ -130,6 +130,16 @@ namespace Acorn
     }
 
     template<typename T>
+    template<typename... Args>
+    void ArrayList<T>::emplace(Args&&... args)
+    {
+        if (m_size == m_capacity)
+            growCapacity();
+
+        new (&m_arr[m_size++]) T(std::forward<Args>(args)...);
+    }
+
+    template<typename T>
     void ArrayList<T>::insert(size_t index, T val)
     {
         ACORN_ASSERT(m_size > 0);
@@ -220,6 +230,12 @@ namespace Acorn
     }
 
     template<typename T>
+    bool ArrayList<T>::isEmpty() const noexcept
+    {
+        return m_size == 0;
+    }
+
+    template<typename T>
     void ArrayList<T>::setCapacity(size_t newCapacity)
     {
         ACORN_ASSERT(newCapacity != 0 && "Can't set ArrayList capacity to 0");
@@ -250,6 +266,12 @@ namespace Acorn
     }
 
     template<typename T>
+    void ArrayList<T>::clearAll()
+    {
+        destructAll();
+    }
+
+    template<typename T>
     void ArrayList<T>::growCapacity()
     {
         if (m_capacity == 0)
@@ -259,7 +281,7 @@ namespace Acorn
     }
 
     template<typename T>
-    void ArrayList<T>::destroyInternalArray()
+    void ArrayList<T>::destructAll()
     {
         if (!m_arr) return;
 
@@ -269,6 +291,13 @@ namespace Acorn
                 m_arr[i].~T();
         }
 
+        m_size = 0;
+    }
+
+    template<typename T>
+    void ArrayList<T>::destroyInternalArray()
+    {
+        destructAll();
         op_delete(m_arr, m_capacity * sizeof(T));
     }
 }

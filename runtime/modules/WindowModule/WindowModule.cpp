@@ -3,6 +3,9 @@
 #include "glfw/Window.hpp"
 #include "glfw/WindowDescriptor.hpp"
 
+using namespace std::chrono;
+using namespace std::chrono_literals;
+
 static const Acorn::Module::ModuleManifest MANIFEST = 
 {
     .name = "Window",

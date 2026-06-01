@@ -17,4 +17,9 @@ namespace Acorn::Core
     {
         return m_version;
     }
+
+    Threading::JobScheduler& RuntimeAPI::getJobScheduler() const noexcept
+    {
+        return m_runtime.getJobScheduler();
+    }
 }
