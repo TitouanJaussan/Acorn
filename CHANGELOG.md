@@ -5,11 +5,11 @@ Date format: `YYYY`-`MM`-`DD`
 <details>
 <summary><b>Versions table </b></summary>
 
-- [v0.0.1](#v001---2026-05-28)
+- [v0.0.1](#v001---2026-06-01)
 
 </details>
 
-## [v0.0.1] - 2026-05-28
+## [v0.0.1] - 2026-06-01
 ### Added
 - Basic versionning of the Runtime and it's modules, forcing API cohesion between modules and Runtime
 - ArrayList template as a replacement for std::vector
