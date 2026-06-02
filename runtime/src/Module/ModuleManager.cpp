@@ -3,7 +3,8 @@
 namespace Acorn::Module
 {
     ModuleManager::ModuleManager(Core::LoggerFactory& factory)
-        : m_modLoader(factory),
+        : m_logger(factory.create("ModuleManager")),
+          m_modLoader(factory),
           m_modRegistry(factory)
     {}
 

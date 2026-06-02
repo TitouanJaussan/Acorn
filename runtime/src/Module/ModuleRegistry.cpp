@@ -14,6 +14,7 @@ namespace Acorn::Module
             mod->getManifest().name,
             mod->getLibPath().filename().string()
         );
+
         m_modules.append(std::move(mod));
     }
 

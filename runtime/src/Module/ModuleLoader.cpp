@@ -62,7 +62,8 @@ namespace Acorn::Module
         if (api.version().major() > manifest.runtimeVersion.major())
         {
             throw ModuleError(std::format(
-                "Module version too old ({}) for runtime ({})",
+                "{} Module: version too old ({}) for runtime ({})",
+                manifest.name,
                 manifest.runtimeVersion.string(),
                 api.version().string()
             ).c_str());
@@ -70,7 +71,8 @@ namespace Acorn::Module
         else if (api.version().minor() > manifest.runtimeVersion.minor())
         {
             m_logger.warn(
-                "Module version ({}) older than runtime version ({}), possible incompatibility",
+                "{} Module: version ({}) older than runtime version ({}), possible incompatibility",
+                manifest.name,
                 manifest.runtimeVersion.string(),
                 api.version().string()
             );

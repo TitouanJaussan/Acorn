@@ -1,5 +1,7 @@
+#include <Acorn/Module/Module.hpp>
+#include <Acorn/Core/Memory/Mem.hpp>
+
 #include "WindowModule.hpp"
-#include "Acorn/Module/Module.hpp"
 #include "glfw/Window.hpp"
 #include "glfw/WindowDescriptor.hpp"
 
@@ -9,7 +11,7 @@ using namespace std::chrono_literals;
 static const Acorn::Module::ModuleManifest MANIFEST = 
 {
     .name = "Window",
-    .runtimeVersion = Acorn::Version::Version{0, 0, 1},
+    .runtimeVersion = Acorn::Version::Version{0, 1, 1},
 
     .dependencies = nullptr,
     .dependenciesCount = 0
@@ -18,7 +20,7 @@ static const Acorn::Module::ModuleManifest MANIFEST =
 WindowModule::WindowModule(Acorn::Core::RuntimeAPI api,
                            Acorn::Core::Logger logger)
     : Acorn::Module::Module(api, logger),
-      m_window(new GLFW::Window(GLFW::WindowDescriptor{
+      m_window(mem_new<GLFW::Window>(GLFW::WindowDescriptor{
           .moduleLogger = m_logger,
           .title = "Acorn Engine",
           .width = 1200,
@@ -48,12 +50,12 @@ void WindowModule::unload()
 Acorn::Module::Module* createModule(Acorn::Core::RuntimeAPI api,
                                     Acorn::Core::Logger logger)
 {
-    return new WindowModule{api, logger}; // TODO: Replace with mem_new & mem_delete
+    return mem_new<WindowModule>(api, logger);
 }
 
 void destroyModule(Acorn::Module::Module* mod)
 {
-    delete mod;
+    mem_delete(mod);
 }
 
 const Acorn::Module::ModuleManifest* getManifest()

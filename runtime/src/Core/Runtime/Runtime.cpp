@@ -26,7 +26,6 @@ namespace Acorn::Core
         logRuntimeInfo();
 
         m_modManager.loadModules("modules/", m_loggerFactory, createAPI());
-        m_modManager.callInit();
     }
 
     Runtime::~Runtime()
@@ -51,6 +50,8 @@ namespace Acorn::Core
 
     void Runtime::run()
     {
+        m_modManager.callInit();
+
         while (m_running)
         {
             m_modManager.callUpdate();

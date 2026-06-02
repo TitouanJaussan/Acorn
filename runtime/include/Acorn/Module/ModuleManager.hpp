@@ -28,6 +28,8 @@ namespace Acorn::Module
     private:
         void call(std::function<void(RuntimeModule&)> fn);
 
+        Core::Logger m_logger;
+
         ModuleLoader m_modLoader;
         ModuleRegistry m_modRegistry;
     };

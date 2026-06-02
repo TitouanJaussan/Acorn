@@ -60,6 +60,8 @@ namespace Acorn
     ArrayList<T>::~ArrayList()
     {
         destroyInternalArray();
+        m_size = 0;
+        m_capacity = 0;
     }
 
     template<typename T>
@@ -145,14 +147,17 @@ namespace Acorn
         ACORN_ASSERT(m_size > 0);
         ACORN_ASSERT(index < m_size);
 
+
         if (m_size == m_capacity)
             growCapacity();
+
+        // std::cout << index  << "|" << m_size << std::endl;
 
         // I guess all this handles overlapping memory regions (it does)
         if constexpr (std::is_trivially_copyable_v<T>)
         {
-            memmove(m_arr + index + 1,
-                    m_arr + index,
+            memmove(&m_arr[index + 1],
+                    &m_arr[index],
                     (m_size - index) * sizeof(T));
 
             m_arr[index] = val;
@@ -269,6 +274,7 @@ namespace Acorn
     void ArrayList<T>::clearAll()
     {
         destructAll();
+        m_size = 0;
     }
 
     template<typename T>
@@ -291,7 +297,7 @@ namespace Acorn
                 m_arr[i].~T();
         }
 
-        m_size = 0;
+        // m_size = 0;
     }
 
     template<typename T>
