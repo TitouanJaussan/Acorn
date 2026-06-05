@@ -28,7 +28,6 @@ namespace Acorn::Module
             Core::LoggerFactory& factory,
             Core::RuntimeAPI api) noexcept;
         
-        // Maybe this could be a static method. This would benefit no significant gain but who knows
         void validateModuleCompatibility(const ModuleManifest& manifest,
             const Core::RuntimeAPI& api);
 

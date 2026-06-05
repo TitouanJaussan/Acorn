@@ -3,8 +3,8 @@
 namespace Acorn::Core
 {
     DetailedError::DetailedError(std::string title, std::string msg)
-        : std::runtime_error(msg),
-          m_title(title)
+        : std::runtime_error(std::move(msg)),
+          m_title(std::move(title))
     {}
 
     tui::Block DetailedError::detailedWhat() const

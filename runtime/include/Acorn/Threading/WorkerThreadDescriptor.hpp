@@ -10,8 +10,12 @@
 
 namespace Acorn::Threading
 {
+    class ThreadingManager;
+
     struct ENGINE_API WorkerThreadDescriptor
     {
+        ThreadingManager& threadingManager;  // Maybe this should be replaced with smaller, dedicated factory
+
         std::queue<Job>& jobsQueue;
         std::queue<Job>& callbacksQueue;
 

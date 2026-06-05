@@ -23,7 +23,7 @@ namespace GLFW
     private:
         GLFWwindow* m_window{nullptr};
 
-        Acorn::Core::Logger& m_logger;
+        Acorn::Core::Logger m_logger;
     };
 }
 

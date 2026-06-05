@@ -14,9 +14,9 @@ namespace Acorn::Threading
     public:
         WorkerThread(WorkerThreadDescriptor descriptor);
 
-        WorkerThread(WorkerThread&& other);
-        WorkerThread& operator=(WorkerThread&& other) = delete;
+        WorkerThread(WorkerThread&&) = delete;
         WorkerThread(const WorkerThread&) = delete;
+        WorkerThread& operator=(WorkerThread&&) = delete;
         WorkerThread& operator=(const WorkerThread&) = delete;
 
         void stop();

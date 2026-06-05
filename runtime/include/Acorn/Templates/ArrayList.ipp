@@ -151,8 +151,6 @@ namespace Acorn
         if (m_size == m_capacity)
             growCapacity();
 
-        // std::cout << index  << "|" << m_size << std::endl;
-
         // I guess all this handles overlapping memory regions (it does)
         if constexpr (std::is_trivially_copyable_v<T>)
         {
@@ -259,8 +257,10 @@ namespace Acorn
             {
                 new (newArr + i) T(std::move(m_arr[i]));
                 
-                // if constexpr (!std::is_trivially_destructible_v<T>)
-                    // m_arr[i].~T();
+                // If the destructor doesn't do nothing, then call it
+                // Otherwise it's obviously pointless and will get optimized out anyway
+                if constexpr (!std::is_trivially_destructible_v<T>)
+                    m_arr[i].~T();
             }
         }
 
@@ -296,8 +296,6 @@ namespace Acorn
             for (ptrdiff_t i = m_size - 1; i >= 0; --i)
                 m_arr[i].~T();
         }
-
-        // m_size = 0;
     }
 
     template<typename T>

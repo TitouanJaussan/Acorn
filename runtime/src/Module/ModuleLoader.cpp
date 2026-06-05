@@ -34,7 +34,7 @@ namespace Acorn::Module
     {
         try
         {
-            UniquePtr<RuntimeModule> mod = UniquePtr<RuntimeModule>::createUniquePtr(
+            UniquePtr<RuntimeModule> mod = UniquePtr<RuntimeModule>::create(
                 RuntimeModuleDescriptor
                 {
                     .lib = Lib::DynamicLibrary{modLibPath},

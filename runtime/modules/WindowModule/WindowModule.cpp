@@ -11,7 +11,7 @@ using namespace std::chrono_literals;
 static const Acorn::Module::ModuleManifest MANIFEST = 
 {
     .name = "Window",
-    .runtimeVersion = Acorn::Version::Version{0, 1, 1},
+    .runtimeVersion = Acorn::Version::Version{0, 2, 0},
 
     .dependencies = nullptr,
     .dependenciesCount = 0
@@ -19,9 +19,9 @@ static const Acorn::Module::ModuleManifest MANIFEST =
 
 WindowModule::WindowModule(Acorn::Core::RuntimeAPI api,
                            Acorn::Core::Logger logger)
-    : Acorn::Module::Module(api, logger),
+    : Acorn::Module::Module(std::move(api), std::move(logger)),
       m_window(mem_new<GLFW::Window>(GLFW::WindowDescriptor{
-          .moduleLogger = m_logger,
+          .factory = m_api.getLoggerFactory(),
           .title = "Acorn Engine",
           .width = 1200,
           .height = 800

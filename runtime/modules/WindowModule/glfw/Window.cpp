@@ -4,8 +4,8 @@
 
 namespace GLFW
 {
-    Window::Window(WindowDescriptor descriptor)
-        : m_logger(descriptor.moduleLogger)
+    Window::Window(WindowDescriptor desc)
+        : m_logger(desc.factory.create("GLFW Window"))
     {
         if (!glfwInit())
         {
@@ -18,9 +18,9 @@ namespace GLFW
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
         m_window = glfwCreateWindow(
-            descriptor.width,
-            descriptor.height,
-            descriptor.title.c_str(),
+            desc.width,
+            desc.height,
+            desc.title.c_str(),
             nullptr, nullptr);
         
         if (!m_window)

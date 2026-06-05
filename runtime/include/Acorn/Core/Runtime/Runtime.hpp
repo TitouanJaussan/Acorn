@@ -10,7 +10,7 @@
 #include "Acorn/Layer/LayerManager.hpp"
 #include "Acorn/Module/ModuleManager.hpp"
 #include "Acorn/Core/Version/Version.hpp"
-#include "Acorn/Threading/JobScheduler.hpp"
+#include "Acorn/Threading/ThreadingManager.hpp"
 
 namespace Acorn::Core
 {
@@ -27,7 +27,7 @@ namespace Acorn::Core
         void pushLayer(Args&&... args);
 
         LoggerFactory& getLoggerFactory() noexcept;
-        Threading::JobScheduler& getJobScheduler() noexcept;
+        Threading::ThreadingManager& getThreadingManager() noexcept;
 
     private:
         RuntimeAPI createAPI();
@@ -42,7 +42,7 @@ namespace Acorn::Core
 
         LoggerFactory m_loggerFactory;
         Logger m_logger;
-        Threading::JobScheduler m_jobScheduler;
+        Threading::ThreadingManager m_threadingManager;
         LayerManager m_layerManager;
         Module::ModuleManager m_modManager;
     };

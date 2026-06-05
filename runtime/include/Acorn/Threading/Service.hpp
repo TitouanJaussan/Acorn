@@ -1,0 +1,43 @@
+#ifndef ACORN_SERVICE_HPP
+#define ACORN_SERVICE_HPP
+
+#include <atomic>
+#include <thread>
+
+#include "Acorn/EngineAPI.hpp"
+#include "Acorn/Threading/ServiceDescriptor.hpp"
+#include "Acorn/Core/Logging/Logger.hpp"
+
+namespace Acorn::Threading
+{
+    // Maybe this could be factored out with the WorkerThread class
+    // by giving them a mutual base class, like a threading base class
+    class ENGINE_API Service
+    {
+    public:
+        Service(ServiceDescriptor descriptor);
+        virtual ~Service() = default;
+
+        Service(Service&&) = delete;
+        Service(const Service&) = delete;
+        Service& operator=(Service&&) = delete;
+        Service& operator=(const Service&) = delete;
+
+        void stop();
+        void join();
+
+        const char* name;
+
+    protected:
+        virtual void work() = 0;
+
+        Core::Logger m_logger;
+
+        std::atomic_bool m_running;
+
+    private:
+        std::thread m_thread;
+    };
+}
+
+#endif /* ACORN_SERVICE_HPP */

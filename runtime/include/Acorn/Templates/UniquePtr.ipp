@@ -81,6 +81,8 @@ namespace Acorn
             return;
     
         // m_ptr->~T();  // Why does calling this cause a segfault and jump to 0x0 ???
+        // To be very honest it's been a few days and I still genuinely donc get it,
+        // because not calling it results in the destructor still being called so that's odd
 
         mem_delete(m_ptr);
 
@@ -89,7 +91,7 @@ namespace Acorn
 
     template<typename T>
     template<typename... Args>
-    UniquePtr<T> UniquePtr<T>::createUniquePtr(Args&&... args)
+    UniquePtr<T> UniquePtr<T>::create(Args&&... args)
     {
         return UniquePtr<T>{mem_new<T>(std::forward<Args>(args)...)};
     }

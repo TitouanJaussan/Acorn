@@ -18,8 +18,13 @@ namespace Acorn::Core
         return m_version;
     }
 
-    Threading::JobScheduler& RuntimeAPI::getJobScheduler() const noexcept
+    Core::LoggerFactory& RuntimeAPI::getLoggerFactory() const noexcept
     {
-        return m_runtime.getJobScheduler();
+        return m_runtime.getLoggerFactory();
+    }
+
+    Threading::ThreadingManager& RuntimeAPI::getThreadingManager() const noexcept
+    {
+        return m_runtime.getThreadingManager();
     }
 }

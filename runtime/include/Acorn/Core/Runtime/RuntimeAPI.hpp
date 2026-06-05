@@ -3,7 +3,7 @@
 
 #include "Acorn/EngineAPI.hpp"
 #include "Acorn/Core/Version/Version.hpp"
-#include "Acorn/Threading/JobScheduler.hpp"
+#include "Acorn/Threading/ThreadingManager.hpp"
 
 namespace Acorn::Core
 {
@@ -17,7 +17,8 @@ namespace Acorn::Core
         void stopRuntime() const;
         Version::Version version() const noexcept;
 
-        Threading::JobScheduler& getJobScheduler() const noexcept;
+        Core::LoggerFactory& getLoggerFactory() const noexcept;
+        Threading::ThreadingManager& getThreadingManager() const noexcept;
 
     private:
         Runtime& m_runtime;

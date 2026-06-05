@@ -1,6 +1,7 @@
 #include <mutex>
 
 #include "Acorn/Threading/WorkerThread.hpp"
+#include "Acorn/Threading/ThreadingManager.hpp"
 
 namespace Acorn::Threading
 {
@@ -10,18 +11,10 @@ namespace Acorn::Threading
           m_jobsQueueMutex(desc.jobsQueueMutex),
           m_callbacksQueueMutex(desc.callbacksQueueMutex),
           m_sleepCondition(desc.sleepCondition),
-          m_thread([&]() -> void { work(); }),
+          m_thread(desc.threadingManager.queryNewThread(
+            [this]() -> void { work(); }
+          )),
           m_running(true)
-    {}
-
-    WorkerThread::WorkerThread(WorkerThread&& other)
-        : m_jobsQueue(other.m_jobsQueue),
-          m_callbacksQueue(other.m_callbacksQueue),
-          m_jobsQueueMutex(other.m_jobsQueueMutex),
-          m_callbacksQueueMutex(other.m_callbacksQueueMutex),
-          m_sleepCondition(other.m_sleepCondition),
-          m_thread(std::move(other.m_thread)),
-          m_running(other.m_running.load())
     {}
 
     void WorkerThread::stop()

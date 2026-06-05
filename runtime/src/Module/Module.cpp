@@ -3,7 +3,7 @@
 namespace Acorn::Module
 {
     Module::Module(Core::RuntimeAPI runtimeAPI, Core::Logger logger)
-        : m_logger(logger),
-          m_api(runtimeAPI)
+        : m_logger(std::move(logger)),
+          m_api(std::move(runtimeAPI))
     {}
 }

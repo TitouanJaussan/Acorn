@@ -5,12 +5,32 @@ Date format: `YYYY`-`MM`-`DD`
 <details>
 <summary><b>Versions list</b></summary>
 
+- [v0.2.0](#v020---2026-06-05)
 - [v0.1.1](#v011---2026-06-02)
 - [v0.1.0](#v010---2026-06-01)
 - [v0.0.2](#v002---2026-06-01)
 - [v0.0.1](#v001---2026-06-01)
 
 </details>
+
+## [v0.2.0] - 2026-06-05
+### Added
+- `ThreadingManager` containing `ServiceManager` & `JobScheduler`
+- Services, through `ServiceManager` & `Service` & `ServiceDescriptor`
+
+### Changed
+- Updated `RuntimeAPI` & `Runtime` to include Services
+- Gave the GLFW window it's own `Logger` instance
+- Renamed `UniquePtr::createUniquePtr` to `UniquePtr`
+- Refactored `JobScheduler` (check diff)
+
+### Fixed
+- Uncommented destructor call in `ArrayList::setCapacity`
+- Fixed move semantics in `DetailedError` ctor
+- Fixed move semantics in `Module` ctor
+
+### Removed
+- `WorkerThread` move ctor (also a fix, it caused dangling refs)
 
 ## [v0.1.1] - 2026-06-02
 ### Added

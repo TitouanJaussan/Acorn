@@ -1,6 +1,8 @@
 #include <chrono>
 
 #include "Acorn/Threading/JobScheduler.hpp"
+#include "Acorn/Core/DetailedError.hpp"
+#include "Acorn/Threading/WorkerThread.hpp"
 
 using namespace std::chrono;
 
@@ -14,30 +16,9 @@ namespace Acorn::Threading
           m_jobsMutex{},
           m_callbacksMutex{},
           m_sleepCondition{},
-          m_workerThreadsCount{
-              desc.workerThreadsCount == 0
-              ? std::thread::hardware_concurrency() - 1
-              : desc.workerThreadsCount},
           m_maxCallbacksPerFrame{desc.maxCallbacksPerFrame},
           m_frameCallbackBudget_ms{desc.frameCallbackBudget_ms}
-    {
-        // TODO: Get rid of that duplicate call to hardware_concurrency()
-        const size_t maxWorkerThreadsCount = std::thread::hardware_concurrency() - 1;
-
-        if (m_workerThreadsCount > maxWorkerThreadsCount)
-        {
-            m_logger.warn(
-                "The number of requested worker threads ({}) exceeds the maximum allowed on this machine ({})",
-                m_workerThreadsCount,
-                maxWorkerThreadsCount
-            );
-            // m_logger.warn("If you wish to disable this limit: <TODO>");
-            m_workerThreadsCount = maxWorkerThreadsCount;
-            m_logger.warn("Worker threads count lowered to {}", m_workerThreadsCount);
-        };
-
-        spawnWorkerThreads(m_workerThreadsCount);
-    }
+    {}
 
     void JobScheduler::update()
     {
@@ -59,7 +40,8 @@ namespace Acorn::Threading
         m_sleepCondition.notify_one();
     }
 
-    void JobScheduler::spawnWorkerThreads(size_t workersCount)
+    void JobScheduler::spawnWorkerThreads(ThreadingManager& threadingManager,
+        size_t workersCount)
     {
         if (!m_workerThreads.isEmpty())
         {
@@ -73,6 +55,7 @@ namespace Acorn::Threading
         {
             WorkerThreadDescriptor descriptor
             {
+                .threadingManager    = threadingManager,
                 .jobsQueue           = m_jobsQueue,
                 .callbacksQueue      = m_callbacksQueue,
                 .jobsQueueMutex      = m_jobsMutex,
@@ -80,26 +63,37 @@ namespace Acorn::Threading
                 .sleepCondition      = m_sleepCondition,
             };
 
-            m_workerThreads.emplace(descriptor);
+            try
+            {
+                m_workerThreads.append(
+                    UniquePtr<WorkerThread>::create(
+                        std::move(descriptor)));
 
-            m_logger.info(
-                "Created worker thread {}/{}",
-                i + 1,
-                workersCount
-            );
+                m_logger.info(
+                    "Created worker thread {}/{}",
+                    i + 1,
+                    workersCount
+                );
+            }
+            catch (const Core::DetailedError& err)
+            {
+                m_logger.error(
+                    "Failed to create worker thread: {}",
+                    err.what());
+            }
         }
     }
 
     void JobScheduler::shutdownWorkerThreads()
     {
         for (auto& worker: m_workerThreads)
-            worker.stop();
+            worker->stop();
 
         m_sleepCondition.notify_all();
 
         for (size_t i = 0; i < m_workerThreads.getSize(); i++)
         {
-            m_workerThreads[i].join();
+            m_workerThreads[i]->join();
             m_logger.info("Shutdown worker thread {}/{}", i + 1, m_workerThreads.getSize());
         }
 

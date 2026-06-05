@@ -3,13 +3,13 @@
 
 #include <string>
 
-#include "Acorn/Core/Logging/Logger.hpp"
+#include "Acorn/Core/Logging/LoggerFactory.hpp"
 
 namespace GLFW
 {
     struct WindowDescriptor
     {
-        Acorn::Core::Logger& moduleLogger;
+        Acorn::Core::LoggerFactory factory;
         const std::string title{"<Unnamed>"};
         const int width{1200};
         const int height{800};

@@ -4,8 +4,19 @@
 #include <Acorn/Module/Module.hpp>
 #include <Acorn/Module/ModuleManifest.hpp>
 #include <Acorn/Core/Runtime/RuntimeAPI.hpp>
+#include <Acorn/Core/Logging/LoggerFactory.hpp>
+#include <Acorn/Threading/Service.hpp>
 
 #include "API.hpp"
+
+class RenderService final : public Acorn::Threading::Service
+{
+public:
+    RenderService(Acorn::Core::LoggerFactory& factory,
+        Acorn::Threading::ThreadingManager& threadingManager);
+
+    void work() override;
+};
 
 class RenderModule final : public Acorn::Module::Module
 {

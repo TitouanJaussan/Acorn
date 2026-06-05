@@ -25,7 +25,7 @@ namespace Acorn
         void reset();
 
         template<typename... Args>
-        static UniquePtr<T> createUniquePtr(Args&&... args);
+        static UniquePtr<T> create(Args&&... args);
 
     private:
         T* m_ptr{nullptr};

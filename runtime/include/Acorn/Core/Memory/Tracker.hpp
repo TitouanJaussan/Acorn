@@ -23,6 +23,8 @@ namespace Acorn::Memory
     
     private:
         inline static std::unique_ptr<Tracker> s_singleton;
+        // If this was a UniquePtr<Tracker> instead, then it would track itself so it
+        // would recurse for infinity :(
 
         size_t m_currMemUsage{0};
         size_t m_totMemUsage{0};

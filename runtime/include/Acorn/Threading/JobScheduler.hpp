@@ -8,13 +8,14 @@
 #include "Acorn/EngineAPI.hpp"
 #include "Acorn/Core/Logging/Logger.hpp"
 #include "Acorn/Templates/ArrayList.hpp"
+#include "Acorn/Templates/UniquePtr.hpp"
 #include "Acorn/Threading/JobSchedulerDescriptor.hpp"
 #include "Acorn/Threading/WorkerThread.hpp"
 #include "Acorn/Threading/Job.hpp"
 
 namespace Acorn::Threading
 {
-    // TODO: Refactor this class, it does too much on it's own
+    // TODO: Maybe refactor this class, it does too much on it's own
     class ENGINE_API JobScheduler
     {
     public:
@@ -25,15 +26,17 @@ namespace Acorn::Threading
 
         void scheduleJob(Job job);
 
+        void spawnWorkerThreads(ThreadingManager& threadingManager,
+            size_t workersCount);
+
     private:
-        void spawnWorkerThreads(size_t workersCount);
         void shutdownWorkerThreads();
         void executeCallbacksBudgeted();
-        void executeAllCallbacks();  // What is the purpose of this ?
+        void executeAllCallbacks();
         
         Core::Logger m_logger;
 
-        ArrayList<WorkerThread> m_workerThreads;
+        ArrayList<UniquePtr<WorkerThread>> m_workerThreads;
 
         std::queue<Job> m_jobsQueue;
         std::queue<Job> m_callbacksQueue;
@@ -43,7 +46,6 @@ namespace Acorn::Threading
 
         std::condition_variable m_sleepCondition;
 
-        size_t m_workerThreadsCount;
         const uint32_t m_maxCallbacksPerFrame;
         const float m_frameCallbackBudget_ms;
     };
