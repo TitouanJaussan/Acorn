@@ -6,7 +6,7 @@ namespace Acorn::Editor
     EditorApp::EditorApp(int argc, const char** argv)
         : Core::Application(argc, argv)
     {
-        m_runtime.pushLayer<ProjectSelectionLayer>(
-            m_runtime.getLoggerFactory());
+        m_runtime->pushLayer<ProjectSelectionLayer>(
+            m_runtime->getLoggerFactory());
     }
 }

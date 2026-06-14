@@ -12,7 +12,7 @@ namespace Acorn
         UniquePtr() noexcept;
         UniquePtr(UniquePtr&& other);
         UniquePtr(const UniquePtr& other);
-        explicit UniquePtr(T* ptr) noexcept;
+        UniquePtr(T* ptr) noexcept;
         ~UniquePtr();
 
         T* operator->() const noexcept;
@@ -20,6 +20,7 @@ namespace Acorn
 
         UniquePtr<T>& operator=(UniquePtr<T>&& other);
         UniquePtr<T>& operator=(const UniquePtr<T>& other);
+        bool operator!() const noexcept;
 
         T* getPtr() const noexcept;
         void reset();

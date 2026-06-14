@@ -1,7 +1,8 @@
+#include <glad/include/glad/glad.h>
+
 #include <Acorn/Core/Memory/Mem.hpp>
 #include <Acorn/Templates/UniquePtr.hpp>
 #include <Acorn/Threading/ServiceDescriptor.hpp>
-#include <thread>
 
 #include "RenderModule.hpp"
 
@@ -10,10 +11,9 @@ using namespace std::chrono_literals;
 static const Acorn::Module::ModuleManifest MANIFEST = 
 {
     .name = "Render",
-    .runtimeVersion = Acorn::Version::Version{0, 2, 0},
+    .runtimeVersion = Acorn::Version::Version{0, 2, 1},
 
-    .dependencies = nullptr,
-    .dependenciesCount = 0
+    .dependencies = { "Window" }
 };
 
 RenderService::RenderService(Acorn::Core::LoggerFactory& factory,
@@ -38,14 +38,14 @@ void RenderService::work()
 RenderModule::RenderModule(Acorn::Core::RuntimeAPI api, Acorn::Core::Logger logger)
     : Acorn::Module::Module(std::move(api), std::move(logger))
 {
-    m_api.getThreadingManager().m_serviceManager.addService(
-        Acorn::UniquePtr<Acorn::Threading::Service>(
-            mem_new<RenderService>(
-                m_api.getLoggerFactory(),
-                m_api.getThreadingManager()
-            )
-        )
-    );
+    // m_api.getThreadingManager().m_serviceManager.addService(
+    //     Acorn::UniquePtr<Acorn::Threading::Service>(
+    //         mem_new<RenderService>(
+    //             m_api.getLoggerFactory(),
+    //             m_api.getThreadingManager()
+    //         )
+    //     )
+    // );
 }
 
 void RenderModule::init()

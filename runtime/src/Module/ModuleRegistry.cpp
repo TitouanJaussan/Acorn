@@ -3,15 +3,16 @@
 namespace Acorn::Module
 {
     ModuleRegistry::ModuleRegistry(Core::LoggerFactory& factory)
-        : m_modules{},
-          m_logger(factory.create("ModRegistry"))
+        : m_logger(factory.create("ModRegistry")),
+          m_modules{}
     {}
 
     void ModuleRegistry::registerModule(UniquePtr<RuntimeModule> mod)
     {
         m_logger.info(
-            "Registered {} module ({})",
+            "Registered {} module {} ({})",
             mod->getManifest().name,
+            mod->getManifest().runtimeVersion.string(),
             mod->getLibPath().filename().string()
         );
 

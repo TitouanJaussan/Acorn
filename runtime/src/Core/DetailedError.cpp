@@ -1,9 +1,11 @@
+#include <string>
+
 #include "Acorn/Core/DetailedError.hpp"
 
 namespace Acorn::Core
 {
-    DetailedError::DetailedError(std::string title, std::string msg)
-        : std::runtime_error(std::move(msg)),
+    DetailedError::DetailedError(String title, String msg)
+        : std::runtime_error(std::string(msg.getData())),
           m_title(std::move(title))
     {}
 

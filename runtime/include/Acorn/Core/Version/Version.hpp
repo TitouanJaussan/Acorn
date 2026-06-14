@@ -2,10 +2,10 @@
 #define ACORN_VERSION_HPP
 
 #include <cstdint>
-#include <string>
-#include <format>
 
 #include "Acorn/EngineAPI.hpp"
+#include "Acorn/Core/Format.hpp"
+#include "Acorn/Templates/String.hpp"
 
 namespace Acorn::Version
 {
@@ -26,10 +26,9 @@ namespace Acorn::Version
             constexpr uint32_t minor() const noexcept { return m_minor; }
             constexpr uint32_t patch() const noexcept { return m_patch; }
 
-            std::string string() const { return std::format("v{}.{}.{}", m_major, m_minor, m_patch); }
+            String string() const { return Core::format("v{}.{}.{}", m_major, m_minor, m_patch); }
 
             constexpr bool operator<=>(const Version&) const = default;
-            explicit operator std::string() const { return string(); }
 
         private:
             uint32_t m_major{0};

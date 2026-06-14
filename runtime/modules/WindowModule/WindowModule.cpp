@@ -11,10 +11,9 @@ using namespace std::chrono_literals;
 static const Acorn::Module::ModuleManifest MANIFEST = 
 {
     .name = "Window",
-    .runtimeVersion = Acorn::Version::Version{0, 2, 0},
+    .runtimeVersion = Acorn::Version::Version{0, 2, 1},
 
-    .dependencies = nullptr,
-    .dependenciesCount = 0
+    .dependencies = {}
 };
 
 WindowModule::WindowModule(Acorn::Core::RuntimeAPI api,

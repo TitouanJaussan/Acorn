@@ -1,4 +1,5 @@
 #include "Acorn/Module/ModuleManager.hpp"
+#include "Acorn/Module/ModLoadingCtx.hpp"
 
 namespace Acorn::Module
 {
@@ -13,17 +14,20 @@ namespace Acorn::Module
     {
         m_modLoader.loadModules(
             modsFolder,
-            m_modRegistry,
-            factory,
-            api
+            ModLoadingCtx
+            {
+                .modRegistry = m_modRegistry,
+                .loggerFactory = factory,
+                .runtimeAPI = std::move(api)
+            }
         );
     }
 
-    ArrayList<std::string> ModuleManager::getModNames() const
+    ArrayList<String> ModuleManager::getModNames() const
     {
         const auto& mods = m_modRegistry.getModules();
 
-        ArrayList<std::string> names{};
+        ArrayList<String> names{};
         names.setCapacity(m_modRegistry.getModules().getSize());
 
         for (size_t i = 0; i < mods.getSize(); ++i)

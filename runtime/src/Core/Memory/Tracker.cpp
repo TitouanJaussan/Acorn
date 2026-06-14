@@ -33,7 +33,7 @@ namespace Acorn::Memory
         m_currMemUsage -= deallocSize;
     }
 
-    size_t Tracker::getCurMemUsage() const noexcept
+    size_t Tracker::getCurrMemUsage() const noexcept
     {
         return m_currMemUsage;
     }

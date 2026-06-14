@@ -22,7 +22,7 @@ namespace Acorn::Module
           m_module(ModuleWrapper{
             m_lib.resolveSymbol<CreateModFn>("createModule")(
                 desc.api,
-                desc.loggerFactory.create(m_manifest.name)
+                desc.loggerFactory.create(m_manifest.name.getData())
             ),
             m_lib.resolveSymbol<DestroyModFn>("destroyModule")
           })

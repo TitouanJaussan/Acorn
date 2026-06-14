@@ -33,8 +33,14 @@ def create_runtime_version_header(version: Version) -> None:
     if not os.path.exists(_dir):
         os.makedirs(_dir)
 
+    header: str = generate_header(version)
+
+    with open(RUNTIME_VERSION_HEADER_PATH, "r") as file:
+        if "".join(file.readlines()) == header:
+            return
+
     with open(RUNTIME_VERSION_HEADER_PATH, "w") as file:
-        file.write(generate_header(version))
+        file.write(header)
 
 def generate_build_files() -> None:
     premake_action: str = "gmake" if sys_platform == "linux" else "vs2022"  # TODO: Replace with vs2026 when supported

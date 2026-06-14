@@ -1,20 +1,18 @@
 #ifndef MODULE_MANIFEST_HPP
 #define MODULE_MANIFEST_HPP
 
-#include <cstddef>
-
 #include "Acorn/Core/Version/Version.hpp"
 #include "Acorn/EngineAPI.hpp"
+#include "Acorn/Templates/ArrayList.hpp"
+#include "Acorn/Templates/String.hpp"
 
 namespace Acorn::Module
 {
     struct ENGINE_API ModuleManifest
     {
-        const char*      name;
-        Version::Version runtimeVersion;
-
-        const char**     dependencies;
-        const size_t     dependenciesCount;
+        const String name;
+        const Version::Version runtimeVersion;
+        const ArrayList<String> dependencies;
     };
 }
 

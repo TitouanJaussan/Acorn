@@ -26,7 +26,10 @@ namespace Acorn
 
     template<typename T>
     UniquePtr<T>::UniquePtr(const UniquePtr& other)
-        : m_ptr(mem_new<T>(other))
+        : m_ptr(
+            !other ? nullptr
+                   : mem_new<T>(*other)
+            )
     {}
 
     template<typename T>
@@ -53,7 +56,8 @@ namespace Acorn
         reset();
 
         m_ptr = other.m_ptr;
-        other.reset();
+        other.m_ptr = nullptr;
+        // other.reset();
 
         return *this;
     }
@@ -69,6 +73,12 @@ namespace Acorn
     }
 
     template<typename T>
+    bool UniquePtr<T>::operator!() const noexcept
+    {
+        return m_ptr == nullptr;
+    }
+
+    template<typename T>
     T* UniquePtr<T>::getPtr() const noexcept
     {
         return m_ptr;
@@ -80,10 +90,6 @@ namespace Acorn
         if (!m_ptr)
             return;
     
-        // m_ptr->~T();  // Why does calling this cause a segfault and jump to 0x0 ???
-        // To be very honest it's been a few days and I still genuinely donc get it,
-        // because not calling it results in the destructor still being called so that's odd
-
         mem_delete(m_ptr);
 
         m_ptr = nullptr;

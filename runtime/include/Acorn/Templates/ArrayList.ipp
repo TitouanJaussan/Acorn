@@ -23,7 +23,7 @@ namespace Acorn
           m_size(0),
           m_capacity(0)
     {
-        ACORN_ASSERT(other.m_arr != nullptr);
+        // ACORN_ASSERT(other.m_arr != nullptr);
 
         setCapacity(other.m_capacity);
         m_size = other.m_size;
@@ -67,14 +67,16 @@ namespace Acorn
     template<typename T>
     T& ArrayList<T>::operator[](size_t i) noexcept
     {
-        ACORN_ASSERT(i < m_capacity);
+        ACORN_ASSERT(i < m_size);
+        ACORN_ASSERT(m_arr);
         return m_arr[i];
     }
 
     template<typename T>
     const T& ArrayList<T>::operator[](size_t i) const noexcept
     {
-        ACORN_ASSERT(i < m_capacity);
+        ACORN_ASSERT(i < m_size);
+        ACORN_ASSERT(m_arr);
         return m_arr[i];
     }
 
@@ -132,8 +134,15 @@ namespace Acorn
     }
 
     template<typename T>
+    void ArrayList<T>::popBack()
+    {
+        m_arr[m_size - 1].~T();
+        --m_size;
+    }
+
+    template<typename T>
     template<typename... Args>
-    void ArrayList<T>::emplace(Args&&... args)
+    void ArrayList<T>::emplaceBack(Args&&... args)
     {
         if (m_size == m_capacity)
             growCapacity();
@@ -146,7 +155,6 @@ namespace Acorn
     {
         ACORN_ASSERT(m_size > 0);
         ACORN_ASSERT(index < m_size);
-
 
         if (m_size == m_capacity)
             growCapacity();
@@ -182,9 +190,7 @@ namespace Acorn
     void ArrayList<T>::insert(size_t pos, Iterator first, Iterator last)
     {
         const size_t dist = static_cast<size_t>(std::distance(first, last));
-
-        while (m_size + dist > m_capacity)
-            growCapacity();
+        setCapacity(m_size + dist);
 
         if constexpr (std::is_trivially_copyable_v<T>)
         {
@@ -215,6 +221,30 @@ namespace Acorn
     }
 
     template<typename T>
+    void ArrayList<T>::swap(size_t idxA, size_t idxB) 
+    {
+        ACORN_ASSERT(idxA < m_size && idxB < m_size);
+        if (idxA == idxB) return;
+
+        T temp(std::move(m_arr[idxA]));
+        m_arr[idxA] = std::move(m_arr[idxB]);
+        m_arr[idxB] = std::move(temp);
+    }
+
+    template<typename T>
+    template<typename Fn, typename... Args>
+    size_t ArrayList<T>::findIndex(Fn&& findFn, Args&&... args) const
+    {
+        for (size_t i = 0; i < m_size; ++i)
+        {
+            if (findFn(m_arr[i], std::forward<Args>(args)...))
+                return i;
+        }
+
+        return m_size;
+    }
+
+    template<typename T>
     size_t ArrayList<T>::getCapacity() const noexcept
     {
         return m_capacity;
@@ -241,7 +271,8 @@ namespace Acorn
     template<typename T>
     void ArrayList<T>::setCapacity(size_t newCapacity)
     {
-        ACORN_ASSERT(newCapacity != 0 && "Can't set ArrayList capacity to 0");
+        if (newCapacity == 0) return;
+
         ACORN_ASSERT(newCapacity >= m_size && "Can't shrink ArrayList capacity below it's size");
 
         T* newArr = static_cast<T*>(op_new(newCapacity * sizeof(T)));

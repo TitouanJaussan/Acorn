@@ -1,6 +1,7 @@
 #include <iostream>
 #include <format>
 
+#include <Acorn/Core/Memory/Tracker.hpp>
 #include "UnitTester.hpp"
 
 namespace Acorn
@@ -24,7 +25,7 @@ namespace Acorn
         std::cout << std::format(
             "Running tests ({})...",
             m_tests.size()
-        )<< std::endl;
+        ) << std::endl;
 
         const auto successStr = colorString("success", AnsiColor::Green);
         const auto failureStr = colorString("failure", AnsiColor::Red);
@@ -38,5 +39,9 @@ namespace Acorn
                 result.success ? successStr : failureStr
             ) << std::endl;
         }
+
+        std::cout << "Total mem usage: " << Memory::Tracker::getSingleton()->getTotMemUsage() << " bytes" << std::endl;
+        std::cout << "Max mem usage: "   << Memory::Tracker::getSingleton()->getMaxMemUsage() << " bytes" << std::endl;
+        std::cout << "Final mem usage: " << Memory::Tracker::getSingleton()->getCurrMemUsage() << " bytes" << std::endl;
     }
 }

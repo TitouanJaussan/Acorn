@@ -3,6 +3,8 @@
 #include <vector>
 
 #include <Acorn/Templates/ArrayList.hpp>
+#include <Acorn/Templates/UniquePtr.hpp>
+#include <Acorn/Templates/String.hpp>
 
 #include "RuntimeTests.hpp"
 #include "UnitTest.hpp"
@@ -149,6 +151,82 @@ namespace Acorn
                        l.getCapacity() == 0 &&
                        l.getSize() == 0 &&
                        stealer.getSize() == oldSize;
+            }
+        });
+
+        tester.addTest(UnitTest
+        {
+            .name = "UniquePtr ownership transfer test",
+            .testFn = []() -> bool
+            {
+                UniquePtr<int> myInt = mem_new<int>(10);
+                UniquePtr<int> stealer = std::move(myInt);
+
+                return !myInt && (*stealer == 10);
+            }
+        });
+
+        tester.addTest(UnitTest
+        {
+            .name = "UniquePtr copy test",
+            .testFn = []() -> bool
+            {
+                UniquePtr<int> myInt = UniquePtr<int>::create(10);
+                UniquePtr<int> clone = myInt;
+
+                return myInt.getPtr() != nullptr && *myInt == 10 && *clone == 10 && myInt.getPtr() != clone.getPtr();
+            }
+        });
+
+        tester.addTest(UnitTest
+        {
+            .name = "String const char* initialization test",
+            .testFn = []() -> bool
+            {
+                String str = "Hello, World!";
+
+                return str.getSize() == 13 && strcmp(str.getData(), "Hello, World!") == 0;
+            }
+        });
+
+        tester.addTest(UnitTest
+        {
+            .name = "String append test",
+            .testFn = []() -> bool
+            {
+                String str = "Hello, Worl";
+                str.append('d');
+                str.append('!');
+
+                return strcmp(str.getData(), "Hello, World!") == 0;
+            }
+        });
+
+        tester.addTest(UnitTest
+        {
+            .name = "String concatenation test",
+            .testFn = []() -> bool
+            {
+                String str = "Hello";
+                str += ", World";
+                str += "!";
+
+                return strcmp(str.getData(), "Hello, World!") == 0;
+            }
+        });
+
+        tester.addTest(UnitTest
+        {
+            .name = "String substring test",
+            .testFn = []() -> bool
+            {
+                String str = "Hello, World!";
+                std::string realStr = "Hello, World!";
+
+                auto subStr1 = str.substring(7, 6);
+                auto subStr2 = realStr.substr(7, 6);
+
+                return strcmp(subStr1.getData(), subStr2.c_str()) == 0;
             }
         });
     }

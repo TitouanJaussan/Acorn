@@ -59,12 +59,18 @@ namespace Acorn
 
         void append(const T& val);
         void append(T&& val);
+        void popBack();
         
         template<typename... Args>
-        void emplace(Args&&... args);  // Emplaces, but at the end of the list
+        void emplaceBack(Args&&... args);  // Emplaces, but at the end of the list
 
         void insert(size_t index, T val);
         void insert(size_t pos, Iterator first, Iterator last);
+
+        void swap(size_t idxA, size_t idxB);
+
+        template<typename Fn, typename... Args>
+        size_t findIndex(Fn&& findFn, Args&&... args) const;
 
         [[nodiscard]] size_t getCapacity() const noexcept;
         [[nodiscard]] size_t getSize() const noexcept;
@@ -76,12 +82,12 @@ namespace Acorn
 
         void clearAll();
 
-    private:
+    protected:
         void growCapacity();
         void destructAll();
         void destroyInternalArray();
 
-    private:
+    protected:
         T* m_arr{nullptr};
 
         size_t m_size{0};

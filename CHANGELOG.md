@@ -5,6 +5,7 @@ Date format: `YYYY`-`MM`-`DD`
 <details>
 <summary><b>Versions list</b></summary>
 
+- [v0.2.1](#v021---2026-06-14)
 - [v0.2.0](#v020---2026-06-05)
 - [v0.1.1](#v011---2026-06-02)
 - [v0.1.0](#v010---2026-06-01)
@@ -12,6 +13,24 @@ Date format: `YYYY`-`MM`-`DD`
 - [v0.0.1](#v001---2026-06-01)
 
 </details>
+
+## [v0.2.1] - 2026-06-14
+### Added
+- `String` as a replacement for `std::string`
+- `String` support for `fmt` & `std::format`
+- `Core::format` as a replacement for direct usage of `std::format`
+- Dependencies solving for modules and ordered mod loading based off the dependencies (WIP)
+- More unit tests
+
+### Changed
+- Updated `setup.py` to not regenerate the runtime version header if it's unchanged (saving compilation time)
+- Replaced a lot of `std::string` by `String` in order to move towards the full use of the engine's string class
+- Updated the modules manifest to use more of the engine's default containers (`String`, `ArrayList`, etc...)
+- `Runtime` instance now stored within a `UniquePtr` in the `Application` class to manage lifetime and memoy more explicitly
+
+### Fixed
+- Incorrect copy constructor of `UniquePtr`
+- Incorrect move assignment operator of `UniquePtr`
 
 ## [v0.2.0] - 2026-06-05
 ### Added

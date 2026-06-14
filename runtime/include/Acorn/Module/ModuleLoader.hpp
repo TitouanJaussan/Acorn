@@ -4,11 +4,10 @@
 #include <filesystem>
 
 #include "Acorn/EngineAPI.hpp"
-#include "Acorn/Core/Logging/LoggerFactory.hpp"
 #include "Acorn/Core/Logging/Logger.hpp"
-#include "Acorn/Core/Runtime/RuntimeAPI.hpp"
+#include "Acorn/Module/ModLoadingCtx.hpp"
 #include "Acorn/Module/ModuleManifest.hpp"
-#include "Acorn/Module/ModuleRegistry.hpp"
+#include "Acorn/Templates/UniquePtr.hpp"
 
 namespace Acorn::Module
 {
@@ -17,16 +16,19 @@ namespace Acorn::Module
     public:
         ModuleLoader(Core::LoggerFactory& factory);
 
-        void loadModules(std::filesystem::path folderPath,
-            ModuleRegistry& registry,
-            Core::LoggerFactory& factory,
-            Core::RuntimeAPI api);
+        void loadModules(std::filesystem::path modsDirPath, ModLoadingCtx ctx);
 
     private:
-        void loadModule(std::filesystem::path modLibPath,
-            ModuleRegistry& registry,
-            Core::LoggerFactory& factory,
-            Core::RuntimeAPI api) noexcept;
+        void solveDependencies(
+            ArrayList<UniquePtr<RuntimeModule>>& mods,
+            size_t modIndex);
+
+        ArrayList<std::filesystem::path> discoverMods(
+            std::filesystem::path modsDirPath,
+            ModLoadingCtx ctx);
+        UniquePtr<RuntimeModule> loadModule(
+            std::filesystem::path modPath,
+            ModLoadingCtx ctx) noexcept;
         
         void validateModuleCompatibility(const ModuleManifest& manifest,
             const Core::RuntimeAPI& api);

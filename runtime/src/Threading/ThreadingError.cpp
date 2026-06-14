@@ -2,7 +2,7 @@
 
 namespace Acorn::Threading
 {
-    ThreadingError::ThreadingError(std::string msg)
+    ThreadingError::ThreadingError(String msg)
         : Core::DetailedError("ThreadingError", std::move(msg))
     {}
 }

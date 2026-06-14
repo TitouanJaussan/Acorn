@@ -13,7 +13,6 @@ namespace Acorn::Module
     using DestroyModFn     = void(*)(Module*);
     using GetModManifestFn = ModuleManifest*(*)(void);
 
-    // TODO: Maybe move this to it's own file ?
     struct ENGINE_API ModuleWrapper
     {
         ModuleWrapper(Module* module, DestroyModFn dtor) noexcept;

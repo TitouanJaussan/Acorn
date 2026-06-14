@@ -17,9 +17,9 @@ namespace Acorn::Memory
         void recordAlloc(size_t allocSize) noexcept;
         void recordDealloc(size_t deallocSize) noexcept;
 
-        size_t getCurMemUsage() const noexcept;
-        size_t getTotMemUsage() const noexcept;
-        size_t getMaxMemUsage() const noexcept;
+        size_t getCurrMemUsage() const noexcept;
+        size_t getTotMemUsage()  const noexcept;
+        size_t getMaxMemUsage()  const noexcept;
     
     private:
         inline static std::unique_ptr<Tracker> s_singleton;

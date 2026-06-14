@@ -2,9 +2,9 @@
 #define ACORN_DETAILED_ERROR_HPP
 
 #include <stdexcept>
-#include <string>
 
 #include "Acorn/EngineAPI.hpp"
+#include "Acorn/Templates/String.hpp"
 #include "tui/tblocks.hpp"
 
 namespace Acorn::Core
@@ -13,12 +13,12 @@ namespace Acorn::Core
         public std::runtime_error
     {
     public:
-        DetailedError(std::string title, std::string msg);
+        DetailedError(String title, String msg);
 
         tui::Block detailedWhat() const;
 
     private:
-        const std::string m_title;
+        const String m_title;
     };
 }
 

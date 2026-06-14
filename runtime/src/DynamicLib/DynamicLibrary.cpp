@@ -1,8 +1,8 @@
-#include "Acorn/DynamicLib/DynamicLibrary.hpp"
-#include "Acorn/Core/DetailedError.hpp"
-
 #include <filesystem>
-#include <format>
+
+#include "Acorn/DynamicLib/DynamicLibrary.hpp"
+#include "Acorn/Core/Format.hpp"
+#include "Acorn/Core/DetailedError.hpp"
 
 namespace Acorn::Lib
 {
@@ -15,7 +15,7 @@ namespace Acorn::Lib
             // TODO: Custom error type 
             throw Core::DetailedError(
                 "Dynamic Library",
-                std::format(
+                Core::format(
                     "Failed to load dynamic library '{}', cause: '{}'",
                     libPath.string(),
                     LIB_GET_ERR()

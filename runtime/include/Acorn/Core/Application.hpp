@@ -3,6 +3,7 @@
 
 #include "Acorn/EngineAPI.hpp"
 #include "Acorn/Core/Runtime/Runtime.hpp"
+#include "Acorn/Templates/UniquePtr.hpp"
 
 namespace Acorn::Core
 {
@@ -14,7 +15,9 @@ namespace Acorn::Core
         void launch();
     
     protected:
-        Core::Runtime m_runtime;
+        void tidyUp();
+
+        UniquePtr<Core::Runtime> m_runtime;
     };
 }
 

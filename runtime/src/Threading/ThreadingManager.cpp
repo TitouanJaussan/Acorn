@@ -1,10 +1,10 @@
 #include <thread>
 #include <algorithm>
-#include <format>
 
 #include "Acorn/Threading/ThreadingManager.hpp"
 #include "Acorn/Threading/JobSchedulerDescriptor.hpp"
 #include "Acorn/Threading/ThreadingError.hpp"
+#include "Acorn/Core/Format.hpp"
 
 namespace Acorn::Threading
 {
@@ -29,7 +29,7 @@ namespace Acorn::Threading
     std::thread ThreadingManager::queryNewThread(std::function<void()> fn)
     {
         if (m_threadsCount == m_maxThreadsCount)
-            throw ThreadingError(std::format(
+            throw ThreadingError(Core::format(
                 "Can't complete new thread query: maximum simultaneous threads count ({}) reached",
                 m_maxThreadsCount
             ));
