@@ -3,6 +3,7 @@
 
 #include "Acorn/EngineAPI.hpp"
 #include "Acorn/Core/Logging/LoggerFactory.hpp"
+#include "Acorn/Templates/String.hpp"
 
 namespace Acorn::Threading
 {
@@ -10,7 +11,7 @@ namespace Acorn::Threading
 
     struct ENGINE_API ServiceDescriptor
     {
-        const char* name;
+        String name;
         Core::LoggerFactory& factory;
         ThreadingManager& threadingManager;
     };

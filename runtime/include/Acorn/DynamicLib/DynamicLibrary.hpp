@@ -14,7 +14,7 @@
 #else
     #include <dlfcn.h>
     #define LIB_HANDLE void*
-    #define LOAD_LIB(name) dlopen(name, RTLD_NOW)
+    #define LOAD_LIB(name) dlopen(name, RTLD_NOW | RTLD_GLOBAL)
     #define LIB_GET_ERR() dlerror()
     #define CLOSE_LIB(lib) dlclose(lib)
     #define LIB_RESOLVE_SYMBOL(lib, symbolName) dlsym(lib, symbolName)

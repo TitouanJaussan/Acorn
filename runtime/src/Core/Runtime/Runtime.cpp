@@ -45,7 +45,7 @@ namespace Acorn::Core
 
     void Runtime::run()
     {
-        m_modManager.callInit();
+        m_modManager.callInit(*this);
 
         while (m_running)
         {
@@ -70,6 +70,11 @@ namespace Acorn::Core
     Threading::ThreadingManager& Runtime::getThreadingManager() noexcept
     {
         return m_threadingManager;
+    }
+
+    Module::ModuleManager& Runtime::getModuleManager() noexcept
+    {
+        return m_modManager;
     }
 
     RuntimeAPI Runtime::createAPI()

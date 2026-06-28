@@ -9,7 +9,7 @@ namespace GLFW
 {
     struct WindowDescriptor
     {
-        Acorn::Core::LoggerFactory factory;
+        Acorn::Core::LoggerFactory& factory;
         const std::string title{"<Unnamed>"};
         const int width{1200};
         const int height{800};

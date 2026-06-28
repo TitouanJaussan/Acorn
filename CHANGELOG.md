@@ -5,6 +5,7 @@ Date format: `YYYY`-`MM`-`DD`
 <details>
 <summary><b>Versions list</b></summary>
 
+- [v0.2.2](#v022---2026-06-28)
 - [v0.2.1](#v021---2026-06-14)
 - [v0.2.0](#v020---2026-06-05)
 - [v0.1.1](#v011---2026-06-02)
@@ -13,6 +14,24 @@ Date format: `YYYY`-`MM`-`DD`
 - [v0.0.1](#v001---2026-06-01)
 
 </details>
+
+## [v0.2.2] - 2026-06-28
+### Added
+- Module APIs for inter-module communication
+- Module `APIHandle` for reload safe shared api handles
+- `operator+` for `String` concatenation
+- More methods to the `BaseWindow` interface (`WindowModule` specific)
+- New `String` unit test
+
+### Changed
+- Heavily reworked the module structure (file structure and code architecture, WIP)
+- Logger factory now uses `String` instead of `const char*` for the logger name parameter
+
+### Fixed
+- Bugs in `ArrayList` that could lead to double free
+- Weird rvalue only constructor in `Pair` ???
+- Name of logger provided to modules missing the `Module` suffix
+- Clearing the services `ArrayList` before the automatic destructor to destroy services before closing the module that allocated them
 
 ## [v0.2.1] - 2026-06-14
 ### Added

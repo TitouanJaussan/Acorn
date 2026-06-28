@@ -9,6 +9,7 @@
 
 #include "Acorn/EngineAPI.hpp"
 #include "Acorn/Core/Logging/Logger.hpp"
+#include "Acorn/Templates/String.hpp"
 
 namespace Acorn::Core
 {
@@ -17,7 +18,7 @@ namespace Acorn::Core
     public:
         LoggerFactory(const std::filesystem::path logFile);
 
-        Logger create(const char* name);
+        Logger create(String name);
 
     private:
         std::shared_ptr<spdlog::sinks::stdout_color_sink_mt> m_stdoutSink;

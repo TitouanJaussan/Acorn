@@ -1,33 +1,19 @@
 #ifndef WINDOW_MODULE_HPP
 #define WINDOW_MODULE_HPP
 
-#include <Acorn/Module/Module.hpp>
-#include <Acorn/Module/ModuleManifest.hpp>
+#include <Acorn/Core/Runtime/RuntimeAPI.hpp>
+#include <Acorn/Core/Logging/Logger.hpp>
 #include <Acorn/Templates/UniquePtr.hpp>
 
-#include "API.hpp"
+#include "Export.hpp"
 #include "BaseWindow.hpp"
 
-class API_PRIVATE WindowModule final : public Acorn::Module::Module
+struct WINDOW_MODULE_LOCAL WindowModule
 {
-public:
-    WindowModule(Acorn::Core::RuntimeAPI api, Acorn::Core::Logger logger);
+    Acorn::Core::RuntimeAPI m_runtimeAPI;
+    Acorn::Core::Logger m_logger;
 
-    void init() override;
-    void update() override;
-    void unload() override;
-
-private:
     Acorn::UniquePtr<BaseWindow> m_window;
 };
-
-extern "C"
-{
-    API Acorn::Module::Module* createModule(
-        Acorn::Core::RuntimeAPI api,
-        Acorn::Core::Logger logger);
-    API void destroyModule(Acorn::Module::Module* mod);
-    API const Acorn::Module::ModuleManifest* getManifest();
-}
 
 #endif /* WINDOW_MODULE_HPP */

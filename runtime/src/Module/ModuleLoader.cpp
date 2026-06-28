@@ -1,7 +1,6 @@
 #include "Acorn/Module/ModuleLoader.hpp"
-#include "Acorn/Core/DetailedError.hpp"
 #include "Acorn/Module/ModuleError.hpp"
-#include "Acorn/Module/RuntimeModuleDescriptor.hpp"
+#include "Acorn/Core/DetailedError.hpp"
 
 namespace Acorn::Module
 {
@@ -13,6 +12,8 @@ namespace Acorn::Module
     {
         ArrayList<std::filesystem::path> modsPaths = discoverMods(modsDirPath, ctx);
         ArrayList<UniquePtr<RuntimeModule>> mods{};
+
+        modsPaths.swap(0, 1);
 
         for (const auto& modPath: modsPaths)
         {
@@ -118,8 +119,6 @@ namespace Acorn::Module
                 RuntimeModuleDescriptor
                 {
                     .lib = Lib::DynamicLibrary{modPath},
-                    .api = ctx.runtimeAPI,
-                    .loggerFactory = ctx.loggerFactory
                 }
             );
 

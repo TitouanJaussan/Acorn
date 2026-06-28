@@ -1,5 +1,4 @@
 #include <cstring>
-#include <fmt/format.h>
 
 #include "Acorn/Templates/String.hpp"
 
@@ -65,6 +64,42 @@ namespace Acorn
         );
 
         return *this;
+    }
+
+    String String::operator+(String&& other) const
+    {
+        String out{};
+        out.m_str.setCapacity(getSize() + other.getSize());
+
+        out.m_str.insert(
+            0,
+            m_str.begin(),
+            m_str.end());
+
+        out.m_str.insert(
+            getSize(),
+            other.m_str.begin(),
+            other.m_str.end());
+
+        return out;
+    }
+
+    String String::operator+(const String& other) const
+    {
+        String out{};
+        out.m_str.setCapacity(getSize() + other.getSize());
+
+        out.m_str.insert(
+            0,
+            m_str.begin(),
+            m_str.end());
+
+        out.m_str.insert(
+            getSize(),
+            other.m_str.begin(),
+            other.m_str.end());
+
+        return out;
     }
 
     bool String::operator==(const String& other) const

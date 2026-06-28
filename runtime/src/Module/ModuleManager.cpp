@@ -1,5 +1,8 @@
 #include "Acorn/Module/ModuleManager.hpp"
+#include "Acorn/Core/Assert.hpp"
 #include "Acorn/Module/ModLoadingCtx.hpp"
+#include "Acorn/Core/Runtime/Runtime.hpp"
+#include "Acorn/Core/DetailedError.hpp"
 
 namespace Acorn::Module
 {
@@ -17,11 +20,38 @@ namespace Acorn::Module
             ModLoadingCtx
             {
                 .modRegistry = m_modRegistry,
-                .loggerFactory = factory,
                 .runtimeAPI = std::move(api)
             }
         );
     }
+    
+    void ModuleManager::callInit(Core::Runtime& runtime)
+    {
+        call([&runtime, this](RuntimeModule& mod)
+        {
+            mod.init(runtime.createAPI(), runtime.getLoggerFactory());
+
+            ACORN_ASSERT(mod.getAPI());
+            m_modRegistry.updateModuleAPI(mod.getManifest().name, mod.getAPI());
+        }, "init");
+    }
+    
+    void ModuleManager::callUpdate()
+    {
+        call([](RuntimeModule& mod)
+        {
+            mod.update();
+        }, "update");
+    }
+
+    void ModuleManager::callUnload()
+    {
+        call([](RuntimeModule& mod)
+        {
+            mod.unload();
+        }, "unload");
+    }
+
 
     ArrayList<String> ModuleManager::getModNames() const
     {
@@ -36,35 +66,36 @@ namespace Acorn::Module
         return names;
     }
 
-    void ModuleManager::callInit()
+    RuntimeModule* ModuleManager::getModule(String modName) const
     {
-        call([](RuntimeModule& mod)
-        {
-            mod.init();
-        });
-    }
-    
-    void ModuleManager::callUpdate()
-    {
-        call([](RuntimeModule& mod)
-        {
-            mod.update();
-        });
+        return m_modRegistry.getModule(std::move(modName));
     }
 
-    void ModuleManager::callUnload()
+    APIHandle* ModuleManager::getModuleAPIHandle(String modName) const
     {
-        call([](RuntimeModule& mod)
-        {
-            mod.unload();
-        });
+        return m_modRegistry.getAPIHandle(std::move(modName));
     }
 
-    void ModuleManager::call(std::function<void(RuntimeModule&)> fn)
+    void ModuleManager::call(std::function<void(RuntimeModule&)> fn,
+        const char* fnName)
     {
         const auto& mods = m_modRegistry.getModules();
 
         for (size_t i = 0; i < mods.getSize(); ++i)
-            fn(*mods[i]);
+        {
+            try
+            {
+                fn(*mods[i]);
+            }
+            catch (const Core::DetailedError& err)
+            {
+                m_logger.error(
+                    "An error occured in {}Module::{} : {}",
+                    mods[i]->getManifest().name,
+                    fnName,
+                    err.what()
+                );
+            }
+        }
     }
 }

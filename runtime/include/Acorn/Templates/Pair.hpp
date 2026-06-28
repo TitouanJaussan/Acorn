@@ -9,7 +9,7 @@ namespace Acorn
     class ENGINE_API Pair
     {
     public:
-        Pair(T1&& first, T2&& second);
+        Pair(T1 first, T2 second);
         Pair(Pair&& other);
         Pair(const Pair& other);
 

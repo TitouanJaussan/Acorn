@@ -23,8 +23,6 @@ namespace Acorn
           m_size(0),
           m_capacity(0)
     {
-        // ACORN_ASSERT(other.m_arr != nullptr);
-
         setCapacity(other.m_capacity);
         m_size = other.m_size;
 
@@ -102,10 +100,8 @@ namespace Acorn
         if (this == &other)
             return *this;
 
-        destroyInternalArray();
-
-        m_size = other.m_size;
         m_capacity = 0;
+        m_size = other.m_size;
         setCapacity(other.m_capacity);
 
         size_t i = 0;
@@ -295,7 +291,7 @@ namespace Acorn
             }
         }
 
-        destroyInternalArray();
+        op_delete(m_arr, m_capacity * sizeof(T));
 
         m_arr = newArr;
         m_capacity = newCapacity;

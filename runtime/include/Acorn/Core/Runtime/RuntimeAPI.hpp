@@ -4,6 +4,12 @@
 #include "Acorn/EngineAPI.hpp"
 #include "Acorn/Core/Version/Version.hpp"
 #include "Acorn/Threading/ThreadingManager.hpp"
+#include "Acorn/Module/APIHandle.hpp"
+
+namespace Acorn::Module
+{
+    class RuntimeModule;
+}
 
 namespace Acorn::Core
 {
@@ -19,6 +25,7 @@ namespace Acorn::Core
 
         Core::LoggerFactory& getLoggerFactory() const noexcept;
         Threading::ThreadingManager& getThreadingManager() const noexcept;
+        Module::APIHandle* getModuleAPIHandle(String modName) const;
 
     private:
         Runtime& m_runtime;

@@ -10,6 +10,7 @@ function setup_module(mod_name)
         includedirs {
             "runtime/include",
             "runtime/vendor",
+            "runtime/modules",
             "runtime/modules/"..mod_name
         }
 

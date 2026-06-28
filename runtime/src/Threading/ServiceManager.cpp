@@ -19,5 +19,7 @@ namespace Acorn::Threading
             service->stop();
             service->join();
         }
+
+        m_services.clearAll();
     }
 }

@@ -28,10 +28,11 @@ namespace Acorn::Core
 
         LoggerFactory& getLoggerFactory() noexcept;
         Threading::ThreadingManager& getThreadingManager() noexcept;
+        Module::ModuleManager& getModuleManager() noexcept;
 
-    private:
         RuntimeAPI createAPI();
 
+    private:
         // TODO: Pass parsed arguments, not directly raw argc / argv
         void init(int argc, const char** argv);
         void logRuntimeInfo();

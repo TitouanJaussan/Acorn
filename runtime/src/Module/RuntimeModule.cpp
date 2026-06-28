@@ -1,55 +1,44 @@
 #include "Acorn/Module/RuntimeModule.hpp"
-#include "Acorn/Core/DetailedError.hpp"
-#include "Acorn/Module/Module.hpp"
 
 namespace Acorn::Module
 {
-    using CreateModFn = Module*(*)(Core::RuntimeAPI, Core::Logger);
-
-    ModuleWrapper::ModuleWrapper(Module* module, DestroyModFn dtor) noexcept
-        : m_mod(module),
-          m_dtor(dtor)
-    {}
-
-    ModuleWrapper::~ModuleWrapper()
-    {
-        m_dtor(m_mod);
-    }
+    using GetModManifestFn = ModuleManifest*(*)(void);
 
     RuntimeModule::RuntimeModule(RuntimeModuleDescriptor desc)
         : m_lib(std::move(desc.lib)),
           m_manifest(*m_lib.resolveSymbol<GetModManifestFn>("getManifest")()),
-          m_module(ModuleWrapper{
-            m_lib.resolveSymbol<CreateModFn>("createModule")(
-                desc.api,
-                desc.loggerFactory.create(m_manifest.name.getData())
-            ),
-            m_lib.resolveSymbol<DestroyModFn>("destroyModule")
-          })
-    {
-        if (!m_module.m_mod)
-            throw Core::DetailedError(
-                "RuntimeModule",
-                "Provided module is NULL"
-            );
-    }
+          m_module{
+              .m_init   = m_lib.resolveSymbol<InitFn>("init"),
+              .m_update = m_lib.resolveSymbol<UpdateFn>("update"),
+              .m_unload = m_lib.resolveSymbol<UnloadFn>("unload"),
+              .m_api    = nullptr
+          }
+    {}
 
     RuntimeModule::~RuntimeModule()
     {}
 
-    void RuntimeModule::init()
+    void RuntimeModule::init(
+        Core::RuntimeAPI api,
+        Core::LoggerFactory& factory)
     {
-        m_module.m_mod->init();
+        m_module.m_init(std::move(api), factory.create((m_manifest.name + " Module").getData()));
+        m_module.m_api = m_lib.resolveSymbol<void*(*)()>("getAPI")();
     }
 
     void RuntimeModule::update()
     {
-        m_module.m_mod->update();
+        m_module.m_update();
     }
 
     void RuntimeModule::unload()
     {
-        m_module.m_mod->unload();
+        m_module.m_unload();
+    }
+
+    void* RuntimeModule::getAPI()
+    {
+        return m_module.m_api;
     }
 
     const ModuleManifest& RuntimeModule::getManifest() const

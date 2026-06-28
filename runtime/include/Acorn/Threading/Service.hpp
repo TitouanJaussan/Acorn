@@ -26,7 +26,7 @@ namespace Acorn::Threading
         void stop();
         void join();
 
-        const char* name;
+        const String name;
 
     protected:
         virtual void work() = 0;

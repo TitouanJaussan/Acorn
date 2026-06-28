@@ -1,40 +1,37 @@
 #ifndef RENDER_MODULE_HPP
 #define RENDER_MODULE_HPP
 
-#include <Acorn/Module/Module.hpp>
-#include <Acorn/Module/ModuleManifest.hpp>
 #include <Acorn/Core/Runtime/RuntimeAPI.hpp>
-#include <Acorn/Core/Logging/LoggerFactory.hpp>
-#include <Acorn/Threading/Service.hpp>
+#include <Acorn/Core/Logging/Logger.hpp>
+#include <Acorn/Module/ModuleManifest.hpp>
 
-#include "API.hpp"
+#include "Export.hpp"
 
-class RenderService final : public Acorn::Threading::Service
+struct RENDER_MODULE_LOCAL RenderModule
 {
-public:
-    RenderService(Acorn::Core::LoggerFactory& factory,
-        Acorn::Threading::ThreadingManager& threadingManager);
-
-    void work() override;
+    Acorn::Core::RuntimeAPI m_runtimeAPI;
+    Acorn::Core::Logger m_logger;
 };
 
-class RenderModule final : public Acorn::Module::Module
+class RENDER_MODULE_LOCAL RenderModuleAPI
 {
 public:
-    RenderModule(Acorn::Core::RuntimeAPI api, Acorn::Core::Logger logger);
+    RenderModuleAPI(RenderModule* mod);
 
-    void init() override;
-    void update() override;
-    void unload() override;
+private:
+    RenderModule* m_mod;
 };
 
 extern "C"
 {
-    API Acorn::Module::Module* createModule(
+    RENDER_MODULE_EXPORT void init(
         Acorn::Core::RuntimeAPI api,
         Acorn::Core::Logger logger);
-    API void destroyModule(Acorn::Module::Module* mod);
-    API const Acorn::Module::ModuleManifest* getManifest();
+    RENDER_MODULE_EXPORT void update();
+    RENDER_MODULE_EXPORT void unload();
+
+    RENDER_MODULE_EXPORT RenderModuleAPI* getAPI();
+    RENDER_MODULE_EXPORT const Acorn::Module::ModuleManifest* getManifest();
 }
 
 #endif /* RENDER_MODULE_HPP */

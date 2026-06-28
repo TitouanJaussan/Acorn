@@ -3,23 +3,26 @@
 
 #include "Acorn/EngineAPI.hpp"
 
+#include "Acorn/Core/Runtime/RuntimeAPI.hpp"
+#include "Acorn/Core/Logging/LoggerFactory.hpp"
+#include "Acorn/Core/Logging/Logger.hpp"
 #include "Acorn/Module/ModuleManifest.hpp"
 #include "Acorn/Module/RuntimeModuleDescriptor.hpp"
 
 namespace Acorn::Module
 {
-    struct Module;
+    class Module;
 
-    using DestroyModFn     = void(*)(Module*);
-    using GetModManifestFn = ModuleManifest*(*)(void);
+    using InitFn   = void(*)(Core::RuntimeAPI api, Core::Logger logger);
+    using UpdateFn = void(*)();
+    using UnloadFn = void(*)();
 
     struct ENGINE_API ModuleWrapper
     {
-        ModuleWrapper(Module* module, DestroyModFn dtor) noexcept;
-        ~ModuleWrapper();
-
-        Module* m_mod;
-        const DestroyModFn m_dtor;
+        InitFn   m_init;
+        UpdateFn m_update;
+        UnloadFn m_unload;
+        void*    m_api;
     };
 
     class ENGINE_API RuntimeModule final
@@ -28,9 +31,12 @@ namespace Acorn::Module
         explicit RuntimeModule(RuntimeModuleDescriptor desc);
         ~RuntimeModule();
 
-        void init();
-        void update();
-        void unload();
+        void  init(
+            Core::RuntimeAPI api,
+            Core::LoggerFactory& factory);
+        void  update();
+        void  unload();
+        void* getAPI();
 
         const ModuleManifest& getManifest() const;
         std::filesystem::path getLibPath() const;

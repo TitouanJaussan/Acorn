@@ -19,10 +19,10 @@ namespace Acorn::Core
         spdlog::set_default_logger(m_defaultLogger);
     }
 
-    Logger LoggerFactory::create(const char* name)
+    Logger LoggerFactory::create(String name)
     {
         return Logger(spdlog::logger(
-            name,
+            name.getData(),
             spdlog::sinks_init_list({m_stdoutSink, m_fileSink})
         ));
     }

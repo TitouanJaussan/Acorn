@@ -19,6 +19,8 @@ namespace GLFW
         void pollEvents() override;
         bool shouldClose() override;
         void swapBuffers() override;
+        void makeContextCurrent() override;
+        void releaseCurrentContext() override;
 
     private:
         GLFWwindow* m_window{nullptr};

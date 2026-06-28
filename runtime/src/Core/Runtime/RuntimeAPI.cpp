@@ -27,4 +27,11 @@ namespace Acorn::Core
     {
         return m_runtime.getThreadingManager();
     }
+
+    Module::APIHandle* RuntimeAPI::getModuleAPIHandle(String modName) const
+    {
+        return m_runtime
+            .getModuleManager()
+            .getModuleAPIHandle(std::move(modName));
+    }
 }

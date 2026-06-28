@@ -1,16 +1,19 @@
 #ifndef WINDOW_MODULE_API_HPP
 #define WINDOW_MODULE_API_HPP
 
-#ifdef _WIN32
-    #ifdef WINDOWMODULE_BUILD_DLL
-        #define API __declspec(dllexport)
-    #else
-        #define API
-    #endif
-    #define API_PRIVATE 
-#else
-    #define API __attribute__((visibility("default")))
-    #define API_PRIVATE __attribute__((visibility("hidden")))
-#endif /* _WIN32 */
+#include "Export.hpp"
+#include "BaseWindow.hpp"
+#include "WindowModule.hpp"
+
+class WINDOW_MODULE_EXPORT WindowModuleAPI
+{
+public:
+    WindowModuleAPI(WindowModule* mod);
+
+    BaseWindow* getMainWindow();
+
+private:
+    WindowModule* m_module;
+};
 
 #endif /* WINDOW_MODULE_API_HPP */

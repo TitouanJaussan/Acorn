@@ -215,6 +215,17 @@ namespace Acorn
             }
         });
 
+        tester.addTest(UnitTest{
+            .name = "String `operator+` test",
+            .testFn = []() -> bool
+            {
+                String str = "Hello";
+                String result = str + ", World!";
+
+                return strcmp(result.getData(), "Hello, World!") == 0;
+            }
+        });
+
         tester.addTest(UnitTest
         {
             .name = "String substring test",

@@ -22,6 +22,8 @@ namespace Acorn
 
         String& operator+=(String&& other);
         String& operator+=(const String& other);
+        String operator+(String&& other) const;
+        String operator+(const String& other) const;
 
         bool operator==(const String& other) const;
 

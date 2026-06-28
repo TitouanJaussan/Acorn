@@ -5,7 +5,7 @@ namespace Acorn::Threading
 {
     Service::Service(ServiceDescriptor desc)
         : name(desc.name),
-          m_logger(desc.factory.create(name)),
+          m_logger(desc.factory.create(name + " Service")),
           m_running(true),
           m_thread(desc.threadingManager.queryNewThread(
             [this]() -> void { work(); }

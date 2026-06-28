@@ -7,8 +7,12 @@
 #include "Acorn/Core/Logging/LoggerFactory.hpp"
 #include "Acorn/Module/ModuleLoader.hpp"
 #include "Acorn/Module/ModuleRegistry.hpp"
-#include "Acorn/Core/Runtime/RuntimeAPI.hpp"
 #include "Acorn/Templates/String.hpp"
+
+namespace Acorn::Core
+{
+    class Runtime;
+}
 
 namespace Acorn::Module
 {
@@ -20,14 +24,17 @@ namespace Acorn::Module
         void loadModules(std::filesystem::path modsFolder,
             Core::LoggerFactory& factory, Core::RuntimeAPI api);
 
-        ArrayList<String> getModNames() const;
-
-        void callInit();
+        // TODO: If possible only pass a runtime api factory instead of the whole runtime
+        void callInit(Core::Runtime& runtime);
         void callUpdate();
         void callUnload();
 
+        ArrayList<String> getModNames() const;
+        RuntimeModule*    getModule(String modName) const;
+        APIHandle*        getModuleAPIHandle(String modName) const;
+
     private:
-        void call(std::function<void(RuntimeModule&)> fn);
+        void call(std::function<void(RuntimeModule&)> fn, const char* fnName);
 
         Core::Logger m_logger;
 
