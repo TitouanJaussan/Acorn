@@ -34,7 +34,7 @@ namespace Acorn::Threading
                 m_maxThreadsCount
             ));
 
-        m_logger.info("Completed new thread query!");
+        m_logger.info("Completed thread query");
 
         ++m_threadsCount;
         return std::thread(std::move(fn));  // That doesn mean that the thread starts executing even

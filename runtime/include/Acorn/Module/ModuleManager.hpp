@@ -5,8 +5,10 @@
 
 #include "Acorn/EngineAPI.hpp"
 #include "Acorn/Core/Logging/LoggerFactory.hpp"
+#include "Acorn/Core/Runtime/RuntimeAPI.hpp"
 #include "Acorn/Module/ModuleLoader.hpp"
 #include "Acorn/Module/ModuleRegistry.hpp"
+#include "Acorn/Filesystem/Filesystem.hpp"
 #include "Acorn/Templates/String.hpp"
 
 namespace Acorn::Core
@@ -21,8 +23,9 @@ namespace Acorn::Module
     public:
         ModuleManager(Core::LoggerFactory& factory);
 
-        void loadModules(std::filesystem::path modsFolder,
-            Core::LoggerFactory& factory, Core::RuntimeAPI api);
+        void loadModules(std::filesystem::path   modsFolder,
+                         Filesystem::Filesystem& filesystem,
+                         Core::RuntimeAPI        runtimeAPI);
 
         // TODO: If possible only pass a runtime api factory instead of the whole runtime
         void callInit(Core::Runtime& runtime);

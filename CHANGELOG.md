@@ -5,6 +5,7 @@ Date format: `YYYY`-`MM`-`DD`
 <details>
 <summary><b>Versions list</b></summary>
 
+- [v0.2.3](#v023---2026-07-04)
 - [v0.2.2](#v022---2026-06-28)
 - [v0.2.1](#v021---2026-06-14)
 - [v0.2.0](#v020---2026-06-05)
@@ -14,6 +15,19 @@ Date format: `YYYY`-`MM`-`DD`
 - [v0.0.1](#v001---2026-06-01)
 
 </details>
+
+## [v0.2.3] - 2026-07-04
+### Added
+- `Filesystem` utility for reading / writing to files & setting cwd
+- `toml` deserialization via `tomlplusplus`
+- New ctor for `ArrayList`
+
+### Changed
+- Manifest now present in the `manifest.toml` file in module
+- Cleaned up & updated module loading code
+
+### Removed
+- Manifest in dynamic library
 
 ## [v0.2.2] - 2026-06-28
 ### Added

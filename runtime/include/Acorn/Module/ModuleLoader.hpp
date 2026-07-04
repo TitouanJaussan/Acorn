@@ -8,6 +8,7 @@
 #include "Acorn/Module/ModLoadingCtx.hpp"
 #include "Acorn/Module/ModuleManifest.hpp"
 #include "Acorn/Templates/UniquePtr.hpp"
+#include "Acorn/Templates/Pair.hpp"
 
 namespace Acorn::Module
 {
@@ -20,17 +21,24 @@ namespace Acorn::Module
 
     private:
         void solveDependencies(
-            ArrayList<UniquePtr<RuntimeModule>>& mods,
+            ArrayList<Pair<std::filesystem::path, ModuleManifest>>& mods,
             size_t modIndex);
 
-        ArrayList<std::filesystem::path> discoverMods(
+        ArrayList<Pair<std::filesystem::path, ModuleManifest>> discoverMods(
             std::filesystem::path modsDirPath,
-            ModLoadingCtx ctx);
-        UniquePtr<RuntimeModule> loadModule(
+            ModLoadingCtx& ctx);
+
+        ModuleManifest discoverMod(
             std::filesystem::path modPath,
-            ModLoadingCtx ctx) noexcept;
-        
-        void validateModuleCompatibility(const ModuleManifest& manifest,
+            ModLoadingCtx& ctx);
+
+        UniquePtr<RuntimeModule> loadModule(
+            Pair<std::filesystem::path, ModuleManifest> mod,
+            ModLoadingCtx& ctx) noexcept;
+
+        bool isModuleValid(std::filesystem::path modPath);
+        void validateModuleCompatibility(
+            const ModuleManifest& manifest,
             const Core::RuntimeAPI& api);
 
         Core::Logger m_logger;

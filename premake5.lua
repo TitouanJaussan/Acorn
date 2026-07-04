@@ -1,10 +1,19 @@
 TARGET_DIR = "bin/%{cfg.buildcfg}"
 
 function setup_module(mod_name)
+    -- Check for manifest.toml
+
+    local manifest_path = "runtime/modules/"..mod_name.."/manifest.toml"
+
+    if not os.isfile(manifest_path) then
+        printf("Can't generate "..mod_name..", no manifest.toml found")
+        return
+    end
+
     project(mod_name)
         kind "SharedLib"
         location("build/modules/"..mod_name)
-        targetdir(TARGET_DIR.."/modules")
+        targetdir(TARGET_DIR.."/modules/"..mod_name)
         warnings "Extra"
 
         includedirs {
@@ -12,6 +21,11 @@ function setup_module(mod_name)
             "runtime/vendor",
             "runtime/modules",
             "runtime/modules/"..mod_name
+        }
+
+        local manifestSrc = path.getabsolute(path.join(ROOT_DIR, "runtime/modules", mod_name, "manifest.toml"))
+        postbuildcommands {
+            '{COPY} "' .. manifestSrc .. '" "%{cfg.targetdir}"'
         }
 
         files {
@@ -80,6 +94,7 @@ project "AcornRuntime"
     
     files {
         "runtime/src/**.cpp",
+        "runtime/vendor/glad/**.cpp"
     }
 
     setup_spdlog()

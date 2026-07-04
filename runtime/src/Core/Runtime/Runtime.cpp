@@ -13,14 +13,16 @@ namespace Acorn::Core
           m_running(true),
           m_loggerFactory("log.tmp"),
           m_logger(m_loggerFactory.create("Runtime")),
+
+          m_filesystem(m_loggerFactory, std::filesystem::absolute(argv[0]).parent_path()),
           m_threadingManager(m_loggerFactory),
-          m_layerManager(),
+          m_layerManager(m_loggerFactory),
           m_modManager(m_loggerFactory)
     {
         init(argc, argv);
         logRuntimeInfo();
 
-        m_modManager.loadModules("modules/", m_loggerFactory, createAPI());
+        m_modManager.loadModules("modules/", m_filesystem, createAPI());
     }
 
     Runtime::~Runtime()
@@ -38,14 +40,11 @@ namespace Acorn::Core
     void Runtime::init(int argc, const char** argv)
     {
         setSignalHandler(this);
-
-        // TODO: Make this a proper fix
-        std::filesystem::current_path(std::filesystem::absolute(argv[0]).parent_path());
     }
 
     void Runtime::run()
     {
-        m_modManager.callInit(*this);
+        m_modManager.callInit(*this);  // I don't like this
 
         while (m_running)
         {

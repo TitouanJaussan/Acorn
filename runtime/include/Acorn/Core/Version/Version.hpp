@@ -5,7 +5,6 @@
 
 #include "Acorn/EngineAPI.hpp"
 #include "Acorn/Core/Format.hpp"
-#include "Acorn/Templates/String.hpp"
 
 namespace Acorn::Version
 {
@@ -15,12 +14,18 @@ namespace Acorn::Version
             constexpr Version() noexcept = default;
             constexpr Version(const Version&) = default;
             constexpr Version(Version&&) = default;
+            constexpr Version& operator=(Version&&) = default;
     
-            constexpr Version(const uint32_t major, const uint32_t minor, const uint32_t patch) noexcept
+            constexpr Version(
+                    const uint32_t major,
+                    const uint32_t minor,
+                    const uint32_t patch) noexcept
                 : m_major(major),
                   m_minor(minor),
                   m_patch(patch)
             {}
+
+            Version(ArrayList<int64_t> version);
 
             constexpr uint32_t major() const noexcept { return m_major; }
             constexpr uint32_t minor() const noexcept { return m_minor; }

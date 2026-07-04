@@ -6,7 +6,7 @@ namespace Acorn::Module
 
     RuntimeModule::RuntimeModule(RuntimeModuleDescriptor desc)
         : m_lib(std::move(desc.lib)),
-          m_manifest(*m_lib.resolveSymbol<GetModManifestFn>("getManifest")()),
+          m_manifest(std::move(desc.manifest)),
           m_module{
               .m_init   = m_lib.resolveSymbol<InitFn>("init"),
               .m_update = m_lib.resolveSymbol<UpdateFn>("update"),

@@ -2,6 +2,10 @@
 
 namespace Acorn
 {
+    LayerManager::LayerManager(Core::LoggerFactory& factory)
+        : m_logger(factory.create("LayerManager"))
+    {}
+
     LayerManager::~LayerManager()
     {
         for (auto it = m_layersStack.rbegin();

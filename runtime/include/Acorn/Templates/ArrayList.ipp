@@ -55,6 +55,13 @@ namespace Acorn
     }
 
     template<typename T>
+    ArrayList<T>::ArrayList(T* data, size_t size)
+        : m_arr(data),
+          m_size(size),
+          m_capacity(size)
+    {}
+
+    template<typename T>
     ArrayList<T>::~ArrayList()
     {
         destroyInternalArray();

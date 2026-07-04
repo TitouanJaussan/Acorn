@@ -10,9 +10,9 @@ namespace Acorn::Module
 {
     struct ENGINE_API ModuleManifest
     {
-        const String name;
-        const Version::Version runtimeVersion;
-        const ArrayList<String> dependencies;
+        String name;
+        Version::Version runtimeVersion;
+        ArrayList<String> dependencies;
     };
 }
 

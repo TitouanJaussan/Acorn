@@ -12,6 +12,7 @@ namespace Acorn
         Pair(T1 first, T2 second);
         Pair(Pair&& other);
         Pair(const Pair& other);
+        Pair& operator=(Pair&&) = default;
 
         T1 m_first;
         T2 m_second;

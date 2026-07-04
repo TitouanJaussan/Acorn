@@ -10,7 +10,7 @@ namespace Acorn::Module
         public Core::DetailedError
     {
     public:
-        ModuleError(const char* msg);
+        ModuleError(String msg);
     };
 }
 

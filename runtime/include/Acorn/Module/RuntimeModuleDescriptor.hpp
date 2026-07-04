@@ -3,6 +3,7 @@
 
 #include "Acorn/EngineAPI.hpp"
 #include "Acorn/DynamicLib/DynamicLibrary.hpp"
+#include "Acorn/Module/ModuleManifest.hpp"
 
 namespace Acorn::Module
 {
@@ -11,6 +12,7 @@ namespace Acorn::Module
     struct ENGINE_API RuntimeModuleDescriptor
     {
         Lib::DynamicLibrary lib;
+        ModuleManifest manifest;
     };
 }
 

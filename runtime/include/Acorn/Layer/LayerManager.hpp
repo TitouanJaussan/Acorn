@@ -6,6 +6,8 @@
 #include <map>
 
 #include "Acorn/EngineAPI.hpp"
+#include "Acorn/Core/Logging/LoggerFactory.hpp"
+#include "Acorn/Core/Logging/Logger.hpp"
 #include "Acorn/Layer/Layer.hpp"
 #include "Acorn/Templates/UniquePtr.hpp"
 
@@ -17,13 +19,15 @@ namespace Acorn
     class ENGINE_API LayerManager final
     {
     public:
-        LayerManager() = default;
+        LayerManager(Core::LoggerFactory& factory);
         ~LayerManager();
 
         template<LayerT T, typename... Args>
         void pushLayer(Args&&... args);
 
     private:
+        Core::Logger m_logger;
+
         std::map<std::type_index, UniquePtr<Layer>> m_layersStack{};
     };
 }

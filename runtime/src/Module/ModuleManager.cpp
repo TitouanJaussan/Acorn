@@ -12,14 +12,16 @@ namespace Acorn::Module
           m_modRegistry(factory)
     {}
 
-    void ModuleManager::loadModules(std::filesystem::path modsFolder,
-        Core::LoggerFactory& factory, Core::RuntimeAPI api)
+    void ModuleManager::loadModules(std::filesystem::path   modsFolder,
+                                    Filesystem::Filesystem& filesystem,
+                                    Core::RuntimeAPI        api)
     {
         m_modLoader.loadModules(
             modsFolder,
             ModLoadingCtx
             {
                 .modRegistry = m_modRegistry,
+                .filesystem = filesystem,
                 .runtimeAPI = std::move(api)
             }
         );

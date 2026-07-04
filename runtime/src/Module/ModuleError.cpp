@@ -2,7 +2,7 @@
 
 namespace Acorn::Module
 {
-    ModuleError::ModuleError(const char* msg)
-        : Core::DetailedError(" Module", msg)
+    ModuleError::ModuleError(String msg)
+        : Core::DetailedError("Module", std::move(msg))
     {}
 }

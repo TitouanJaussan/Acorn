@@ -1,0 +1,5 @@
+# RenderModule
+
+name = "Render"
+version = [0, 2, 3]
+dependencies = [ "Window" ]

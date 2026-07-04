@@ -22,6 +22,10 @@ void RenderService::work()
         ->getMainWindow()
         ->makeContextCurrent();
 
+    m_windowModAPI.as<WindowModuleAPI>()
+        ->getMainWindow()
+        ->swapBuffers();
+
     while (m_running)
     {
         std::this_thread::sleep_for(.5s);

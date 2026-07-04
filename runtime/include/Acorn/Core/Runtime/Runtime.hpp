@@ -4,13 +4,14 @@
 #include <atomic>
 
 #include "Acorn/EngineAPI.hpp"
+#include "Acorn/Core/Version/Version.hpp"
 #include "Acorn/Core/Logging/LoggerFactory.hpp"
 #include "Acorn/Core/Logging/Logger.hpp"
 #include "Acorn/Core/Runtime/RuntimeAPI.hpp"
+#include "Acorn/Filesystem/Filesystem.hpp"
+#include "Acorn/Threading/ThreadingManager.hpp"
 #include "Acorn/Layer/LayerManager.hpp"
 #include "Acorn/Module/ModuleManager.hpp"
-#include "Acorn/Core/Version/Version.hpp"
-#include "Acorn/Threading/ThreadingManager.hpp"
 
 namespace Acorn::Core
 {
@@ -43,6 +44,8 @@ namespace Acorn::Core
 
         LoggerFactory m_loggerFactory;
         Logger m_logger;
+
+        Filesystem::Filesystem m_filesystem;
         Threading::ThreadingManager m_threadingManager;
         LayerManager m_layerManager;
         Module::ModuleManager m_modManager;

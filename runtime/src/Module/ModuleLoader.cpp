@@ -1,6 +1,11 @@
+#include "Acorn/Core/Version/Version.hpp"
+#define TOML_IMPLEMENTATION
+#include <tomlplusplus/toml.hpp>
+
 #include "Acorn/Module/ModuleLoader.hpp"
 #include "Acorn/Module/ModuleError.hpp"
 #include "Acorn/Core/DetailedError.hpp"
+#include "Acorn/Toml/ToArrayList.hpp"
 
 namespace Acorn::Module
 {
@@ -10,28 +15,21 @@ namespace Acorn::Module
 
     void ModuleLoader::loadModules(std::filesystem::path modsDirPath, ModLoadingCtx ctx)
     {
-        ArrayList<std::filesystem::path> modsPaths = discoverMods(modsDirPath, ctx);
-        ArrayList<UniquePtr<RuntimeModule>> mods{};
+        auto modsList = discoverMods(modsDirPath, ctx);
 
-        modsPaths.swap(0, 1);
+        for (size_t i = 0; i < modsList.getSize(); ++i)
+            solveDependencies(modsList, i);
 
-        for (const auto& modPath: modsPaths)
+        for (auto& mod: modsList)
         {
-            auto mod = loadModule(modPath, ctx);
-            if (!mod) continue;
-
-            mods.append(std::move(mod));
+            auto loaded = loadModule(std::move(mod), ctx);
+            if (!loaded) continue;
+            ctx.modRegistry.registerModule(std::move(loaded));
         }
-
-        for (size_t i = 0; i < mods.getSize(); ++i)
-            solveDependencies(mods, i);
-
-        for (auto& mod: mods)
-            ctx.modRegistry.registerModule(std::move(mod));
     }
 
     void ModuleLoader::solveDependencies(
-        ArrayList<UniquePtr<RuntimeModule>>& mods,
+        ArrayList<Pair<std::filesystem::path, ModuleManifest>>& mods,
         size_t modIndex)
     {
         while (modIndex < mods.getSize())
@@ -39,13 +37,13 @@ namespace Acorn::Module
             size_t totalSolvedDeps = 0;
 
             for (size_t depIdx = 0;
-                 depIdx < mods[modIndex]->getManifest().dependencies.getSize();
+                 depIdx < mods[modIndex].m_second.dependencies.getSize();
                  ++depIdx)
             {
                 size_t foundIdx = mods.findIndex(
-                    [](UniquePtr<RuntimeModule>& mod, auto& mods, auto currModIndex, auto depIdx) -> bool
+                    [](auto& mod, auto& mods, auto currModIndex, auto depIdx) -> bool
                     {
-                        return mod->getManifest().name == mods[currModIndex]->getManifest().dependencies[depIdx];
+                        return mod.m_second.name == mods[currModIndex].m_second.dependencies[depIdx];
                     }, mods, modIndex, depIdx
                 );
 
@@ -53,8 +51,9 @@ namespace Acorn::Module
                 {
                     // Dependency not here, let's not load this mod
                     m_logger.error(
-                        "Could not solve dependencies for the {} module, loading aborted.",
-                        mods[modIndex]->getManifest().name
+                        "Could not solve dependencies for the {} module (missing {} module), loading aborted.",
+                        mods[modIndex].m_second.name,
+                        mods[modIndex].m_second.dependencies[depIdx]
                     );
 
                     mods.swap(modIndex, mods.getSize() - 1);
@@ -72,64 +71,175 @@ namespace Acorn::Module
             }
 
             if (totalSolvedDeps == 0)
-                break;  // Or return;
+                break;  // Or return
         }
     }
 
-    ArrayList<std::filesystem::path> ModuleLoader::discoverMods(
+    ArrayList<Pair<std::filesystem::path, ModuleManifest>> ModuleLoader::discoverMods(
         std::filesystem::path modsDirPath,
-        ModLoadingCtx ctx)
+        ModLoadingCtx& ctx)
     {
-        ArrayList<std::filesystem::path> modPaths;
+        ArrayList<Pair<std::filesystem::path, ModuleManifest>> modPaths{};
 
         for (const auto& item: std::filesystem::directory_iterator(modsDirPath))
         {
-            if (std::filesystem::is_directory(item))
+            try
             {
-                const auto other = discoverMods(modsDirPath, ctx);
+                if (!std::filesystem::is_directory(item))
+                {
+                    m_logger.warn(
+                        "Unexpected file in modules folder ('{}')",
+                        item.path().filename().string());
+                    continue;
+                }
 
-                modPaths.insert(
-                    modPaths.getSize(),
-                    other.begin(),
-                    other.end());
+                ModuleManifest manifest = discoverMod(item.path(), ctx);
+                validateModuleCompatibility(manifest, ctx.runtimeAPI);
 
-                continue;
+                modPaths.append(Pair{
+                    item.path(),
+                    manifest
+                });
             }
-
-#ifdef _WIN32
-            if (item.path().extension() != ".dll")
-                continue;
-#else
-            if (item.path().extension() != ".so")
-                continue;
-#endif
-            modPaths.append(item.path());
+            catch (const Core::DetailedError& err)
+            {
+                m_logger.error(
+                    "Invalid module '{}', loading aborted: {}",
+                    item.path().filename().string(),
+                    err.what()
+                );
+            }
         }
 
         return modPaths;
     }
 
-    UniquePtr<RuntimeModule> ModuleLoader::loadModule(
+    ModuleManifest ModuleLoader::discoverMod(
         std::filesystem::path modPath,
-        ModLoadingCtx ctx) noexcept
+        ModLoadingCtx& ctx)
     {
+        const auto manifestPath = modPath / "manifest.toml";
+
+        if (!std::filesystem::exists(manifestPath))
+        {
+            throw ModuleError(Core::format(
+                "No manifest.toml found in module directory '{}'",
+                modPath.string()
+            ));
+        }
+
+        Filesystem::File manifestFile = ctx.filesystem.readFile(manifestPath, true);
+        toml::table manifestTable{};
+        
         try
         {
-            UniquePtr<RuntimeModule> mod = UniquePtr<RuntimeModule>::create(
+            manifestTable = toml::parse(
+                manifestFile.getData(),
+                manifestPath.string());
+        }
+        catch (const toml::parse_error& err)
+        {
+            throw ModuleError(Core::format(
+                "Failed to parse {}: {}",
+                manifestPath.string(),
+                err.what()
+            ));
+        }
+
+        if (!manifestTable.contains("name") or !manifestTable["name"].is_string())
+        {
+            throw ModuleError(Core::format(
+                "Missing or invalid 'name' field in '{}",
+                manifestPath.string()
+            ));
+        }
+
+        if (!manifestTable.contains("version") or !manifestTable["version"].is_array())
+        {
+            throw ModuleError(Core::format(
+                "Missing or invalid 'version' field in '{}'",
+                manifestPath.string()
+            ));
+        }
+
+        if (!manifestTable.contains("dependencies") or !manifestTable["dependencies"].is_array())
+        {
+            throw ModuleError(Core::format(
+                "Missing or invalid 'dependencies' field in '{}'",
+                manifestPath.string()
+            ));
+        }
+
+        return ModuleManifest
+        {
+            .name = String(manifestTable["name"].as_string()->get().c_str()),
+            .runtimeVersion = Version::Version(Toml::toIntArrayList(
+                    manifestTable["version"].as_array()
+                )),
+            .dependencies = Toml::toStringArrayList(manifestTable["dependencies"].as_array())
+        };
+
+    }
+
+    UniquePtr<RuntimeModule> ModuleLoader::loadModule(
+        Pair<std::filesystem::path, ModuleManifest> mod,
+        ModLoadingCtx& ctx) noexcept
+    {
+        size_t sharedLibrariesCount{0};
+        std::filesystem::path libPath{};
+
+        for (const auto& item: std::filesystem::directory_iterator(mod.m_first))
+        {
+            if (std::filesystem::is_directory(item))
+                continue;
+
+#ifdef _WIN32
+            if (item.path().filename().extension() == ".dll")
+            {
+                libPath = item.path();
+                ++sharedLibrariesCount;
+            }
+#else
+            if (item.path().filename().extension() == ".so")
+            {
+                libPath = item.path();
+                ++sharedLibrariesCount;
+            }
+#endif /* _WIN32 */
+        }
+
+        if (sharedLibrariesCount == 0)
+        {
+            m_logger.error(
+                "No shared libraries found in module directory '{}', module loading aborted",
+                mod.m_first.filename().string());
+            return {};
+        }
+
+        if (sharedLibrariesCount > 1)
+        {
+            m_logger.error(
+                "More than 1 shared library found in module directory '{}', module loading aborted",
+                mod.m_first.filename().string());
+            return {};
+        }
+
+        try
+        {
+            UniquePtr<RuntimeModule> modInstance = UniquePtr<RuntimeModule>::create(
                 RuntimeModuleDescriptor
                 {
-                    .lib = Lib::DynamicLibrary{modPath},
+                    .lib = Lib::DynamicLibrary{libPath},
+                    .manifest = std::move(mod.m_second),
                 }
             );
 
-            validateModuleCompatibility(mod->getManifest(), ctx.runtimeAPI);
-
-            return mod;
+            return modInstance;
         }
         catch (const Core::DetailedError& err)
         {
             m_logger.error("Couldn't load module '{}': {}",
-                modPath.filename().string(),
+                mod.m_first.filename().string(),
                 err.what()
             );
         }
@@ -142,12 +252,12 @@ namespace Acorn::Module
     {
         if (api.version().major() > manifest.runtimeVersion.major())
         {
-            throw ModuleError(std::format(
+            throw ModuleError(Core::format(
                 "{} Module: version too old ({}) for runtime ({})",
                 manifest.name.getData(),  // TODO: Fix by adding support for String to format
                 manifest.runtimeVersion.string(),
                 api.version().string()
-            ).c_str());
+            ));
         }
         else if (api.version().minor() > manifest.runtimeVersion.minor())
         {

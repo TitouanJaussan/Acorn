@@ -1,8 +1,6 @@
-#include <Acorn/Templates/UniquePtr.hpp>
-#include <Acorn/Threading/Service.hpp>
 #include <Acorn/Module/ModuleError.hpp>
 
-#include "RenderModule.hpp"
+#include "ABI.hpp"
 #include "RenderService.hpp"
 
 static const Acorn::Module::ModuleManifest MANIFEST =
@@ -14,10 +12,6 @@ static const Acorn::Module::ModuleManifest MANIFEST =
 
 static RenderModule*    mod{nullptr};
 static RenderModuleAPI* modAPI{nullptr};
-
-RenderModuleAPI::RenderModuleAPI(RenderModule* mod)
-    : m_mod(mod)
-{}
 
 void init(
     Acorn::Core::RuntimeAPI api,

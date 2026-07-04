@@ -17,5 +17,5 @@ class Version:
 RUNTIME_VERSION: Version = Version(
     major = 0,
     minor = 2,
-    patch = 2
+    patch = 3
 )

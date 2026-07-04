@@ -17,6 +17,7 @@ namespace Acorn
         ArrayList(const ArrayList& other);    // Copy ctr
         ArrayList(ArrayList&& other);         // Move ctr
         ArrayList(std::initializer_list<T> list);
+        ArrayList(T* data, size_t size);
         
         ~ArrayList();
 
