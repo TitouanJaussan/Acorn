@@ -1,20 +1,20 @@
 #ifndef ACORN_PROJECT_SELECTION_LAYER_HPP
 #define ACORN_PROJECT_SELECTION_LAYER_HPP
 
-#include <Acorn/Layer/Layer.hpp>
-#include <Acorn/Core/Logging/LoggerFactory.hpp>
+#include <Acorn/Core/Layer/Layer.hpp>
+#include <Acorn/Base/Logging/LoggerFactory.hpp>
 
 namespace Acorn::Editor
 {
-    class ProjectSelectionLayer final : public Layer
+    class ProjectSelectionLayer final : public Core::Layer
     {
     public:
-        ProjectSelectionLayer(Core::LoggerFactory loggerFactory);
+        ProjectSelectionLayer(Base::LoggerFactory loggerFactory);
 
         void onAttach() override;
         void onDetach() override;
     private:
-        Core::Logger m_logger;
+        Base::Logger m_logger;
     };
 }
 

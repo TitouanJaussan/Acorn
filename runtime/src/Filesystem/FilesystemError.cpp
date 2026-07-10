@@ -3,6 +3,6 @@
 namespace Acorn::Filesystem
 {
     FilesystemError::FilesystemError(String msg)
-        : Core::DetailedError("Filesystem", std::move(msg))
+        : Base::DetailedError("Filesystem", std::move(msg))
     {}
 }

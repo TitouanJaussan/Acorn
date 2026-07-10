@@ -6,7 +6,7 @@
 
 #include "Acorn/EngineAPI.hpp"
 #include "Acorn/Threading/ServiceDescriptor.hpp"
-#include "Acorn/Core/Logging/Logger.hpp"
+#include "Acorn/Base/Logging/Logger.hpp"
 
 namespace Acorn::Threading
 {
@@ -31,7 +31,7 @@ namespace Acorn::Threading
     protected:
         virtual void work() = 0;
 
-        Core::Logger m_logger;
+        Base::Logger m_logger;
 
         std::atomic_bool m_running;
 

@@ -2,7 +2,7 @@
 #define ACORN_SERVICE_DESCRIPTOR_HPP
 
 #include "Acorn/EngineAPI.hpp"
-#include "Acorn/Core/Logging/LoggerFactory.hpp"
+#include "Acorn/Base/Logging/LoggerFactory.hpp"
 #include "Acorn/Templates/String.hpp"
 
 namespace Acorn::Threading
@@ -12,7 +12,7 @@ namespace Acorn::Threading
     struct ENGINE_API ServiceDescriptor
     {
         String name;
-        Core::LoggerFactory& factory;
+        Base::LoggerFactory& factory;
         ThreadingManager& threadingManager;
     };
 }

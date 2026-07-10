@@ -4,16 +4,16 @@
 #include <filesystem>
 
 #include "Acorn/EngineAPI.hpp"
-#include "Acorn/Core/Logging/LoggerFactory.hpp"
-#include "Acorn/Core/Runtime/RuntimeAPI.hpp"
+#include "Acorn/Base/Logging/LoggerFactory.hpp"
+#include "Acorn/Core/Runtime/API.hpp"
 #include "Acorn/Module/ModuleLoader.hpp"
 #include "Acorn/Module/ModuleRegistry.hpp"
 #include "Acorn/Filesystem/Filesystem.hpp"
 #include "Acorn/Templates/String.hpp"
 
-namespace Acorn::Core
+namespace Acorn::Runtime
 {
-    class Runtime;
+    class Engine;
 }
 
 namespace Acorn::Module
@@ -21,14 +21,14 @@ namespace Acorn::Module
     class ENGINE_API ModuleManager
     {
     public:
-        ModuleManager(Core::LoggerFactory& factory);
+        ModuleManager(Base::LoggerFactory& factory);
 
         void loadModules(std::filesystem::path   modsFolder,
                          Filesystem::Filesystem& filesystem,
-                         Core::RuntimeAPI        runtimeAPI);
+                         Runtime::API            runtimeAPI);
 
         // TODO: If possible only pass a runtime api factory instead of the whole runtime
-        void callInit(Core::Runtime& runtime);
+        void callInit(Runtime::Engine& engine);
         void callUpdate();
         void callUnload();
 
@@ -39,7 +39,7 @@ namespace Acorn::Module
     private:
         void call(std::function<void(RuntimeModule&)> fn, const char* fnName);
 
-        Core::Logger m_logger;
+        Base::Logger m_logger;
 
         ModuleLoader m_modLoader;
         ModuleRegistry m_modRegistry;

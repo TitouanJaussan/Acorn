@@ -2,12 +2,12 @@
 #define ACORN_MODULE_ERROR_HPP
 
 #include "Acorn/EngineAPI.hpp"
-#include "Acorn/Core/DetailedError.hpp"
+#include "Acorn/Base/DetailedError.hpp"
 
 namespace Acorn::Module
 {
     class ENGINE_API ModuleError final :
-        public Core::DetailedError
+        public Base::DetailedError
     {
     public:
         ModuleError(String msg);

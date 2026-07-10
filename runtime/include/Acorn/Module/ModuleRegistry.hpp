@@ -2,7 +2,7 @@
 #define ACORN_MODULE_REGISTRY_HPP
 
 #include "Acorn/EngineAPI.hpp"
-#include "Acorn/Core/Logging/LoggerFactory.hpp"
+#include "Acorn/Base/Logging/LoggerFactory.hpp"
 #include "Acorn/Templates/ArrayList.hpp"
 #include "Acorn/Templates/UniquePtr.hpp"
 #include "Acorn/Templates/Pair.hpp"
@@ -14,7 +14,7 @@ namespace Acorn::Module
     class ENGINE_API ModuleRegistry
     {
     public:
-        ModuleRegistry(Core::LoggerFactory& factory);
+        ModuleRegistry(Base::LoggerFactory& factory);
 
         void registerModule(UniquePtr<RuntimeModule> mod);
         const ArrayList<UniquePtr<RuntimeModule>>& getModules() const;
@@ -28,7 +28,7 @@ namespace Acorn::Module
         Pair<bool, size_t> findModuleIndex(String modName) const;
 
     private:
-        Core::Logger m_logger;
+        Base::Logger m_logger;
         ArrayList<UniquePtr<RuntimeModule>> m_modules;
         ArrayList<UniquePtr<APIHandle>> m_modsApis;
     };

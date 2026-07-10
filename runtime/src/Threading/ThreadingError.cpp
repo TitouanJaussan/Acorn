@@ -3,6 +3,6 @@
 namespace Acorn::Threading
 {
     ThreadingError::ThreadingError(String msg)
-        : Core::DetailedError("ThreadingError", std::move(msg))
+        : Base::DetailedError("ThreadingError", std::move(msg))
     {}
 }

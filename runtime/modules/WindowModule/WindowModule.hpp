@@ -1,8 +1,8 @@
 #ifndef WINDOW_MODULE_HPP
 #define WINDOW_MODULE_HPP
 
-#include <Acorn/Core/Runtime/RuntimeAPI.hpp>
-#include <Acorn/Core/Logging/Logger.hpp>
+#include <Acorn/Core/Runtime/API.hpp>
+#include <Acorn/Base/Logging/Logger.hpp>
 #include <Acorn/Templates/UniquePtr.hpp>
 
 #include "Export.hpp"
@@ -10,8 +10,8 @@
 
 struct WINDOW_MODULE_LOCAL WindowModule
 {
-    Acorn::Core::RuntimeAPI m_runtimeAPI;
-    Acorn::Core::Logger m_logger;
+    Acorn::Runtime::API m_runtimeAPI;
+    Acorn::Base::Logger m_logger;
 
     Acorn::UniquePtr<BaseWindow> m_window;
 };

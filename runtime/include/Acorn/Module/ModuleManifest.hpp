@@ -1,7 +1,7 @@
 #ifndef MODULE_MANIFEST_HPP
 #define MODULE_MANIFEST_HPP
 
-#include "Acorn/Core/Version/Version.hpp"
+#include "Acorn/Base/Version/Version.hpp"
 #include "Acorn/EngineAPI.hpp"
 #include "Acorn/Templates/ArrayList.hpp"
 #include "Acorn/Templates/String.hpp"

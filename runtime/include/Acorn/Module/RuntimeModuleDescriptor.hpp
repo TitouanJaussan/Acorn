@@ -7,8 +7,6 @@
 
 namespace Acorn::Module
 {
-    class Runtime;
-
     struct ENGINE_API RuntimeModuleDescriptor
     {
         Lib::DynamicLibrary lib;

@@ -3,7 +3,7 @@
 namespace Acorn::Editor
 {
     ProjectSelectionLayer::ProjectSelectionLayer(
-        Core::LoggerFactory loggerFactory)
+        Base::LoggerFactory loggerFactory)
         : m_logger(loggerFactory.create(
             "ProjectSelectionLayer"))
     {}

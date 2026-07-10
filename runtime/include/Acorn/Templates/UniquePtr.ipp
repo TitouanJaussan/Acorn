@@ -2,7 +2,7 @@
 
 #include <utility>
 
-#include "Acorn/Core/Memory/Mem.hpp"
+#include "Acorn/Base/Memory/Mem.hpp"
 #include "Acorn/Templates/UniquePtr.hpp"
 
 namespace Acorn

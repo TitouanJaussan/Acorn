@@ -1,21 +1,21 @@
 #include "Acorn/Core/Application.hpp"
-#include "Acorn/Core/Memory/Tracker.hpp"
+#include "Acorn/Base/Memory/Tracker.hpp"
 
 namespace Acorn::Core
 {
-    Application::Application(int argc, const char** argv)
-        : m_runtime(UniquePtr<Core::Runtime>::create(argc, argv))
+    Application::Application(int argc, char** argv)
+        : m_engine(UniquePtr<Runtime::Engine>::create(argc, argv))
     {}
 
     void Application::launch()
     {
-        m_runtime->run();
+        m_engine->run();
         tidyUp();
     }
 
     void Application::tidyUp()
     {
-        m_runtime.reset();
+        m_engine.reset();
 
         SPDLOG_INFO(
             "Final heap memory usage: {} bytes",

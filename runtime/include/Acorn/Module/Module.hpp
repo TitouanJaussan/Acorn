@@ -2,15 +2,15 @@
 #define ACORN_MODULE_HPP
 
 #include "Acorn/EngineAPI.hpp"
-#include "Acorn/Core/Logging/Logger.hpp"
-#include "Acorn/Core/Runtime/RuntimeAPI.hpp"
+#include "Acorn/Base/Logging/Logger.hpp"
+#include "Acorn/Core/Runtime/API.hpp"
 
 namespace Acorn::Module
 {
     class ENGINE_API Module
     {
     public:
-        Module(Core::RuntimeAPI runtimeAPI, Core::Logger logger);
+        Module(Runtime::API runtimeAPI, Base::Logger logger);
         virtual ~Module() {};
         
         virtual void init()   = 0;
@@ -18,8 +18,8 @@ namespace Acorn::Module
         virtual void unload() = 0;
 
     protected:
-        Core::Logger     m_logger;
-        Core::RuntimeAPI m_api;
+        Base::Logger     m_logger;
+        Runtime::API m_api;
     };
 }
 

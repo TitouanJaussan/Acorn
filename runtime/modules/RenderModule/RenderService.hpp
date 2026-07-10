@@ -2,7 +2,7 @@
 #define RENDER_SERVICE_HPP
 
 #include <Acorn/Threading/Service.hpp>
-#include <Acorn/Core/Logging/LoggerFactory.hpp>
+#include <Acorn/Base/Logging/LoggerFactory.hpp>
 #include <Acorn/Module/RuntimeModule.hpp>
 #include <Acorn/Module/APIHandle.hpp>
 
@@ -12,7 +12,7 @@ class RENDER_MODULE_EXPORT RenderService final : public Acorn::Threading::Servic
 {
 public:
     RenderService(
-        Acorn::Core::LoggerFactory& factory,
+        Acorn::Base::LoggerFactory& factory,
         Acorn::Threading::ThreadingManager& threadingManager,
         Acorn::Module::APIHandle& windowModAPI);
 

@@ -3,10 +3,10 @@
 
 namespace Acorn::Editor
 {
-    EditorApp::EditorApp(int argc, const char** argv)
+    EditorApp::EditorApp(int argc, char** argv)
         : Core::Application(argc, argv)
     {
-        m_runtime->pushLayer<ProjectSelectionLayer>(
-            m_runtime->getLoggerFactory());
+        m_engine->pushLayer<ProjectSelectionLayer>(
+            m_engine->getLoggerFactory());
     }
 }

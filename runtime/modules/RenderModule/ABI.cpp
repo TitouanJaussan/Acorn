@@ -14,8 +14,8 @@ static RenderModule*    mod{nullptr};
 static RenderModuleAPI* modAPI{nullptr};
 
 void init(
-    Acorn::Core::RuntimeAPI api,
-    Acorn::Core::Logger logger)
+    Acorn::Runtime::API api,
+    Acorn::Base::Logger logger)
 {
     mod    = mem_new<RenderModule>(std::move(api), std::move(logger));
     modAPI = mem_new<RenderModuleAPI>(mod);

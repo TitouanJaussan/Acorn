@@ -3,7 +3,7 @@
 
 #include "Acorn/EngineAPI.hpp"
 
-#include "Acorn/Core/Runtime/RuntimeAPI.hpp"
+#include "Acorn/Core/Runtime/API.hpp"
 #include "Acorn/Module/ModuleRegistry.hpp"
 #include "Acorn/Filesystem/Filesystem.hpp"
 
@@ -13,7 +13,7 @@ namespace Acorn::Module
     {
         ModuleRegistry& modRegistry;
         Filesystem::Filesystem& filesystem;
-        Core::RuntimeAPI runtimeAPI;
+        Runtime::API runtimeAPI;
     };
 }
 

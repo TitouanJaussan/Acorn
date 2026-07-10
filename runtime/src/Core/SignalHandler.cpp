@@ -1,6 +1,6 @@
 #include "Core/SignalHandler.hpp"
 
-static Acorn::Core::Runtime* runtimePtr = nullptr;
+static Acorn::Runtime::Engine* enginePtr = nullptr;
 
 #ifdef _WIN32
     #include <Windows.h>
@@ -30,7 +30,7 @@ bool WINAPI windows_handler(DWORD dwCtrlType)
 void linux_handler(int s)
 {
     if (s == 2)
-        runtimePtr->stop();
+        enginePtr->stop();
 }
 
 #endif /* _WIN32 */
@@ -39,9 +39,9 @@ void linux_handler(int s)
 
 namespace Acorn::Core
 {
-    void setSignalHandler(Acorn::Core::Runtime* runtime)
+    void setSignalHandler(Acorn::Runtime::Engine* engine)
     {
-        runtimePtr = runtime;
+        enginePtr = engine;
 
 #ifdef _WIN32
     SetConsoleCtrlHandler(windows_handler, TRUE);

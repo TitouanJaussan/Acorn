@@ -1,11 +1,9 @@
 #ifndef ACORN_RUNTIME_MODULE_HPP
 #define ACORN_RUNTIME_MODULE_HPP
 
-#include "Acorn/EngineAPI.hpp"
-
-#include "Acorn/Core/Runtime/RuntimeAPI.hpp"
-#include "Acorn/Core/Logging/LoggerFactory.hpp"
-#include "Acorn/Core/Logging/Logger.hpp"
+#include "Acorn/Core/Runtime/API.hpp"
+#include "Acorn/Base/Logging/LoggerFactory.hpp"
+#include "Acorn/Base/Logging/Logger.hpp"
 #include "Acorn/Module/ModuleManifest.hpp"
 #include "Acorn/Module/RuntimeModuleDescriptor.hpp"
 
@@ -13,7 +11,7 @@ namespace Acorn::Module
 {
     class Module;
 
-    using InitFn   = void(*)(Core::RuntimeAPI api, Core::Logger logger);
+    using InitFn   = void(*)(Runtime::API api, Base::Logger logger);
     using UpdateFn = void(*)();
     using UnloadFn = void(*)();
 
@@ -32,8 +30,8 @@ namespace Acorn::Module
         ~RuntimeModule();
 
         void  init(
-            Core::RuntimeAPI api,
-            Core::LoggerFactory& factory);
+            Runtime::API api,
+            Base::LoggerFactory& factory);
         void  update();
         void  unload();
         void* getAPI();

@@ -1,9 +1,10 @@
 #include "RenderService.hpp"
 #include "WindowModule/API.hpp"
+#include <GL/gl.h>
 
 using namespace std::chrono_literals;
 
-RenderService::RenderService(Acorn::Core::LoggerFactory& factory,
+RenderService::RenderService(Acorn::Base::LoggerFactory& factory,
     Acorn::Threading::ThreadingManager& threadingManager,
     Acorn::Module::APIHandle& windowModAPI)
     : Acorn::Threading::Service(Acorn::Threading::ServiceDescriptor
@@ -18,17 +19,27 @@ RenderService::RenderService(Acorn::Core::LoggerFactory& factory,
 void RenderService::work()
 {
     m_logger.info("Starting Render Service!");
+
     m_windowModAPI.as<WindowModuleAPI>()
         ->getMainWindow()
         ->makeContextCurrent();
 
-    m_windowModAPI.as<WindowModuleAPI>()
+    const auto size = m_windowModAPI.as<WindowModuleAPI>()
         ->getMainWindow()
-        ->swapBuffers();
+        ->getSize();
+
+    glViewport(0, 0, size.m_first, size.m_second);
 
     while (m_running)
     {
-        std::this_thread::sleep_for(.5s);
+        glClearColor(0.9, 0.6, 0.8, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        m_windowModAPI.as<WindowModuleAPI>()
+            ->getMainWindow()
+            ->swapBuffers();
+
+        std::this_thread::sleep_for(.1s);
     }
 
     m_windowModAPI.as<WindowModuleAPI>()

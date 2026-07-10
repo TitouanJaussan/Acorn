@@ -4,9 +4,9 @@
 #include <cstring>
 #include <type_traits>
 
-#include "Acorn/Core/Memory/Mem.hpp"
 #include "Acorn/Templates/ArrayList.hpp"
-#include "Acorn/Core/Assert.hpp"
+#include "Acorn/Base/Memory/Mem.hpp"
+#include "Acorn/Base/Assert.hpp"
 
 namespace Acorn
 {

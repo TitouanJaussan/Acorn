@@ -2,7 +2,7 @@
 #define ACORN_APPLICATION_HPP
 
 #include "Acorn/EngineAPI.hpp"
-#include "Acorn/Core/Runtime/Runtime.hpp"
+#include "Acorn/Core/Runtime/Engine.hpp"
 #include "Acorn/Templates/UniquePtr.hpp"
 
 namespace Acorn::Core
@@ -10,14 +10,14 @@ namespace Acorn::Core
     class ENGINE_API Application
     {
     public:
-        Application(int argc, const char** argv);
+        Application(int argc, char** argv);
 
         void launch();
     
     protected:
         void tidyUp();
 
-        UniquePtr<Core::Runtime> m_runtime;
+        UniquePtr<Runtime::Engine> m_engine;
     };
 }
 

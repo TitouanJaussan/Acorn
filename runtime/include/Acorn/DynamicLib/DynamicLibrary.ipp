@@ -1,8 +1,8 @@
 #pragma once
 
 #include "Acorn/DynamicLib/DynamicLibrary.hpp"
-#include "Acorn/Core/DetailedError.hpp"
-#include "Acorn/Core/Format.hpp"
+#include "Acorn/DynamicLib/DynamicLibraryError.hpp"
+#include "Acorn/Base/Format.hpp"
 
 namespace Acorn::Lib
 {
@@ -11,18 +11,19 @@ namespace Acorn::Lib
     {
         if (!m_handle)
         {
-            throw Core::DetailedError(
-                "Dynamic Library",
-                Core::format("Can't resolve symbol, handle is NULL")
+            throw DynamicLibraryError(
+                Base::format("Can't resolve symbol, handle is NULL")
             );
         }
 
         const void* sym = LIB_RESOLVE_SYMBOL(m_handle, name);
 
         if (!sym)
-            throw Core::DetailedError(
-                "Dynamic Library",
-                Core::format("Can't resolve '{}', no such symbol found", name).getData()
+            throw DynamicLibraryError(
+                Base::format(
+                    "Can't resolve '{}', no such symbol found",
+                    name
+                ).getData()
             );
 
         return (T)sym;

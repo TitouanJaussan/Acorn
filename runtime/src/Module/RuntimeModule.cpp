@@ -19,10 +19,12 @@ namespace Acorn::Module
     {}
 
     void RuntimeModule::init(
-        Core::RuntimeAPI api,
-        Core::LoggerFactory& factory)
+        Runtime::API api,
+        Base::LoggerFactory& factory)
     {
-        m_module.m_init(std::move(api), factory.create((m_manifest.name + " Module").getData()));
+        m_module.m_init(
+            std::move(api),
+            factory.create((m_manifest.name + " Module").getData()));
         m_module.m_api = m_lib.resolveSymbol<void*(*)()>("getAPI")();
     }
 

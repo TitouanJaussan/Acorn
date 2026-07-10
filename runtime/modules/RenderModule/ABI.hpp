@@ -1,8 +1,8 @@
 #ifndef RENDER_MODULE_ABI_HPP
 #define RENDER_MODULE_ABI_HPP
 
-#include <Acorn/Core/Runtime/RuntimeAPI.hpp>
-#include <Acorn/Core/Logging/Logger.hpp>
+#include <Acorn/Core/Runtime/API.hpp>
+#include <Acorn/Base/Logging/Logger.hpp>
 #include <Acorn/Module/ModuleManifest.hpp>
 
 #include "Export.hpp"
@@ -11,8 +11,8 @@
 extern "C"
 {
     RENDER_MODULE_EXPORT void init(
-        Acorn::Core::RuntimeAPI api,
-        Acorn::Core::Logger logger);
+        Acorn::Runtime::API api,
+        Acorn::Base::Logger logger);
     RENDER_MODULE_EXPORT void update();
     RENDER_MODULE_EXPORT void unload();
 

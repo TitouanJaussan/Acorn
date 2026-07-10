@@ -4,6 +4,8 @@
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 
+#include <Acorn/Templates/Pair.hpp>
+
 #include "Export.hpp"
 
 class WINDOW_MODULE_EXPORT BaseWindow
@@ -17,6 +19,7 @@ public:
     virtual void swapBuffers() = 0;
     virtual void makeContextCurrent() = 0;
     virtual void releaseCurrentContext() = 0;
+    virtual Acorn::Pair<int, int> getSize() = 0;  // TODO: Replace Pair with Vec2
 };
 
 #endif /* ACORN_BASE_WINDOW_HPP */

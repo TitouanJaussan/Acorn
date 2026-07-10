@@ -32,6 +32,10 @@ function setup_module(mod_name)
             "runtime/modules/"..mod_name.."/**.cpp"
         }
 
+        links {
+            "GL"
+        }
+
         filter "system:windows"
             defines(string.upper(mod_name).."_BUILD_DLL")
 

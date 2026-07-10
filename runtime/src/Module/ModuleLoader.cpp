@@ -1,19 +1,20 @@
-#include "Acorn/Core/Version/Version.hpp"
+#include <filesystem>
 #define TOML_IMPLEMENTATION
 #include <tomlplusplus/toml.hpp>
 
 #include "Acorn/Module/ModuleLoader.hpp"
+#include "Acorn/Base/Version/Version.hpp"
 #include "Acorn/Module/ModuleError.hpp"
-#include "Acorn/Core/DetailedError.hpp"
 #include "Acorn/Toml/ToArrayList.hpp"
 
 namespace Acorn::Module
 {
-    ModuleLoader::ModuleLoader(Core::LoggerFactory& factory)
+    ModuleLoader::ModuleLoader(Base::LoggerFactory& factory)
         : m_logger(factory.create("ModLoader"))
     {}
 
-    void ModuleLoader::loadModules(std::filesystem::path modsDirPath, ModLoadingCtx ctx)
+    void ModuleLoader::loadModules(std::filesystem::path modsDirPath,
+                                   ModLoadingCtx ctx)
     {
         auto modsList = discoverMods(modsDirPath, ctx);
 
@@ -41,9 +42,11 @@ namespace Acorn::Module
                  ++depIdx)
             {
                 size_t foundIdx = mods.findIndex(
-                    [](auto& mod, auto& mods, auto currModIndex, auto depIdx) -> bool
+                    [](auto& mod, auto& mods, auto currModIndex, auto depIdx)
+                        -> bool
                     {
-                        return mod.m_second.name == mods[currModIndex].m_second.dependencies[depIdx];
+                        return mod.m_second.name ==
+                               mods[currModIndex].m_second.dependencies[depIdx];
                     }, mods, modIndex, depIdx
                 );
 
@@ -51,7 +54,8 @@ namespace Acorn::Module
                 {
                     // Dependency not here, let's not load this mod
                     m_logger.error(
-                        "Could not solve dependencies for the {} module (missing {} module), loading aborted.",
+                        "Could not solve dependencies for the {} module"
+                        " (missing {} module), loading aborted.",
                         mods[modIndex].m_second.name,
                         mods[modIndex].m_second.dependencies[depIdx]
                     );
@@ -75,11 +79,27 @@ namespace Acorn::Module
         }
     }
 
-    ArrayList<Pair<std::filesystem::path, ModuleManifest>> ModuleLoader::discoverMods(
+    ArrayList<Pair<std::filesystem::path,
+                   ModuleManifest>> ModuleLoader::discoverMods(
         std::filesystem::path modsDirPath,
         ModLoadingCtx& ctx)
     {
         ArrayList<Pair<std::filesystem::path, ModuleManifest>> modPaths{};
+
+        if (!std::filesystem::exists(modsDirPath))
+        {
+            m_logger.warn(
+                "{} doesn't exist, no modules will be loaded",
+                modsDirPath.c_str());
+            return {};
+        }
+
+        if (!std::filesystem::is_directory(modsDirPath))
+        {
+            m_logger.warn(
+                "{} is not a directory, no modules will be loaded",
+                modsDirPath.c_str());
+        }
 
         for (const auto& item: std::filesystem::directory_iterator(modsDirPath))
         {
@@ -101,7 +121,7 @@ namespace Acorn::Module
                     manifest
                 });
             }
-            catch (const Core::DetailedError& err)
+            catch (const Base::DetailedError& err)
             {
                 m_logger.error(
                     "Invalid module '{}', loading aborted: {}",
@@ -122,13 +142,14 @@ namespace Acorn::Module
 
         if (!std::filesystem::exists(manifestPath))
         {
-            throw ModuleError(Core::format(
+            throw ModuleError(Base::format(
                 "No manifest.toml found in module directory '{}'",
                 modPath.string()
             ));
         }
 
-        Filesystem::File manifestFile = ctx.filesystem.readFile(manifestPath, true);
+        Filesystem::File manifestFile = ctx.filesystem.readFile(
+            manifestPath, true);
         toml::table manifestTable{};
         
         try
@@ -139,32 +160,35 @@ namespace Acorn::Module
         }
         catch (const toml::parse_error& err)
         {
-            throw ModuleError(Core::format(
+            throw ModuleError(Base::format(
                 "Failed to parse {}: {}",
                 manifestPath.string(),
                 err.what()
             ));
         }
 
-        if (!manifestTable.contains("name") or !manifestTable["name"].is_string())
+        if (!manifestTable.contains("name") or
+            !manifestTable["name"].is_string())
         {
-            throw ModuleError(Core::format(
+            throw ModuleError(Base::format(
                 "Missing or invalid 'name' field in '{}",
                 manifestPath.string()
             ));
         }
 
-        if (!manifestTable.contains("version") or !manifestTable["version"].is_array())
+        if (!manifestTable.contains("version") or
+            !manifestTable["version"].is_array())
         {
-            throw ModuleError(Core::format(
+            throw ModuleError(Base::format(
                 "Missing or invalid 'version' field in '{}'",
                 manifestPath.string()
             ));
         }
 
-        if (!manifestTable.contains("dependencies") or !manifestTable["dependencies"].is_array())
+        if (!manifestTable.contains("dependencies") or
+            !manifestTable["dependencies"].is_array())
         {
-            throw ModuleError(Core::format(
+            throw ModuleError(Base::format(
                 "Missing or invalid 'dependencies' field in '{}'",
                 manifestPath.string()
             ));
@@ -176,7 +200,8 @@ namespace Acorn::Module
             .runtimeVersion = Version::Version(Toml::toIntArrayList(
                     manifestTable["version"].as_array()
                 )),
-            .dependencies = Toml::toStringArrayList(manifestTable["dependencies"].as_array())
+            .dependencies = Toml::toStringArrayList(
+                manifestTable["dependencies"].as_array())
         };
 
     }
@@ -211,7 +236,8 @@ namespace Acorn::Module
         if (sharedLibrariesCount == 0)
         {
             m_logger.error(
-                "No shared libraries found in module directory '{}', module loading aborted",
+                "No shared libraries found in module directory '{}',"
+                " module loading aborted",
                 mod.m_first.filename().string());
             return {};
         }
@@ -219,24 +245,25 @@ namespace Acorn::Module
         if (sharedLibrariesCount > 1)
         {
             m_logger.error(
-                "More than 1 shared library found in module directory '{}', module loading aborted",
+                "More than 1 shared library found in module directory '{}',"
+                " module loading aborted",
                 mod.m_first.filename().string());
             return {};
         }
 
         try
         {
-            UniquePtr<RuntimeModule> modInstance = UniquePtr<RuntimeModule>::create(
-                RuntimeModuleDescriptor
-                {
-                    .lib = Lib::DynamicLibrary{libPath},
-                    .manifest = std::move(mod.m_second),
-                }
-            );
+            UniquePtr<RuntimeModule> modInstance =
+                UniquePtr<RuntimeModule>::create(RuntimeModuleDescriptor
+                    {
+                        .lib = Lib::DynamicLibrary{libPath},
+                        .manifest = std::move(mod.m_second),
+                    }
+                );
 
             return modInstance;
         }
-        catch (const Core::DetailedError& err)
+        catch (const Base::DetailedError& err)
         {
             m_logger.error("Couldn't load module '{}': {}",
                 mod.m_first.filename().string(),
@@ -247,12 +274,13 @@ namespace Acorn::Module
         return {};
     }
 
-    void ModuleLoader::validateModuleCompatibility(const ModuleManifest& manifest,
-        const Core::RuntimeAPI& api)
+    void ModuleLoader::validateModuleCompatibility(
+        const ModuleManifest& manifest,
+        const Runtime::API& api)
     {
         if (api.version().major() > manifest.runtimeVersion.major())
         {
-            throw ModuleError(Core::format(
+            throw ModuleError(Base::format(
                 "{} Module: version too old ({}) for runtime ({})",
                 manifest.name.getData(),  // TODO: Fix by adding support for String to format
                 manifest.runtimeVersion.string(),
@@ -262,7 +290,8 @@ namespace Acorn::Module
         else if (api.version().minor() > manifest.runtimeVersion.minor())
         {
             m_logger.warn(
-                "{} Module: version ({}) older than runtime version ({}), possible incompatibility",
+                "{} Module: version ({}) older than runtime version ({}), "
+                "possible incompatibility",
                 manifest.name.getData(),  // TODO: Fix by adding support for String to format
                 manifest.runtimeVersion.string(),
                 api.version().string()

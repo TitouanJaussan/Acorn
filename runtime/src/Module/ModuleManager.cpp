@@ -1,12 +1,11 @@
 #include "Acorn/Module/ModuleManager.hpp"
-#include "Acorn/Core/Assert.hpp"
 #include "Acorn/Module/ModLoadingCtx.hpp"
-#include "Acorn/Core/Runtime/Runtime.hpp"
-#include "Acorn/Core/DetailedError.hpp"
+#include "Acorn/Core/Runtime/Engine.hpp"
+#include "Acorn/Base/Assert.hpp"
 
 namespace Acorn::Module
 {
-    ModuleManager::ModuleManager(Core::LoggerFactory& factory)
+    ModuleManager::ModuleManager(Base::LoggerFactory& factory)
         : m_logger(factory.create("ModuleManager")),
           m_modLoader(factory),
           m_modRegistry(factory)
@@ -14,10 +13,10 @@ namespace Acorn::Module
 
     void ModuleManager::loadModules(std::filesystem::path   modsFolder,
                                     Filesystem::Filesystem& filesystem,
-                                    Core::RuntimeAPI        api)
+                                    Runtime::API            api)
     {
         m_modLoader.loadModules(
-            modsFolder,
+            std::move(modsFolder),
             ModLoadingCtx
             {
                 .modRegistry = m_modRegistry,
@@ -27,11 +26,11 @@ namespace Acorn::Module
         );
     }
     
-    void ModuleManager::callInit(Core::Runtime& runtime)
+    void ModuleManager::callInit(Runtime::Engine& engine)
     {
-        call([&runtime, this](RuntimeModule& mod)
+        call([&engine, this](RuntimeModule& mod)
         {
-            mod.init(runtime.createAPI(), runtime.getLoggerFactory());
+            mod.init(engine.createAPI(), engine.getLoggerFactory());
 
             ACORN_ASSERT(mod.getAPI());
             m_modRegistry.updateModuleAPI(mod.getManifest().name, mod.getAPI());
@@ -89,7 +88,7 @@ namespace Acorn::Module
             {
                 fn(*mods[i]);
             }
-            catch (const Core::DetailedError& err)
+            catch (const Base::DetailedError& err)
             {
                 m_logger.error(
                     "An error occured in {}Module::{} : {}",

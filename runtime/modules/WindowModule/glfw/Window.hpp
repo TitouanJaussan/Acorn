@@ -4,9 +4,10 @@
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 
+#include <Acorn/Base/Logging/Logger.hpp>
+
 #include "BaseWindow.hpp"
 #include "glfw/WindowDescriptor.hpp"
-#include "Acorn/Core/Logging/Logger.hpp"
 
 namespace GLFW
 {
@@ -21,11 +22,12 @@ namespace GLFW
         void swapBuffers() override;
         void makeContextCurrent() override;
         void releaseCurrentContext() override;
+        Acorn::Pair<int, int> getSize() override;
 
     private:
         GLFWwindow* m_window{nullptr};
 
-        Acorn::Core::Logger m_logger;
+        Acorn::Base::Logger m_logger;
     };
 }
 

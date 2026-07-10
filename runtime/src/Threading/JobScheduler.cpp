@@ -1,7 +1,7 @@
 #include <chrono>
 
 #include "Acorn/Threading/JobScheduler.hpp"
-#include "Acorn/Core/DetailedError.hpp"
+#include "Acorn/Base/DetailedError.hpp"
 #include "Acorn/Threading/WorkerThread.hpp"
 
 using namespace std::chrono;
@@ -75,7 +75,7 @@ namespace Acorn::Threading
                     workersCount
                 );
             }
-            catch (const Core::DetailedError& err)
+            catch (const Base::DetailedError& err)
             {
                 m_logger.error(
                     "Failed to create worker thread: {}",

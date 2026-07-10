@@ -8,7 +8,7 @@ namespace Acorn::Editor
     class EditorApp final : public Core::Application
     {
     public:
-        EditorApp(int argc, const char** argv);
+        EditorApp(int argc, char** argv);
     };
 }
 

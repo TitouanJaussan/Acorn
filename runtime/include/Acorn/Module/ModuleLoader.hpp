@@ -4,7 +4,7 @@
 #include <filesystem>
 
 #include "Acorn/EngineAPI.hpp"
-#include "Acorn/Core/Logging/Logger.hpp"
+#include "Acorn/Base/Logging/Logger.hpp"
 #include "Acorn/Module/ModLoadingCtx.hpp"
 #include "Acorn/Module/ModuleManifest.hpp"
 #include "Acorn/Templates/UniquePtr.hpp"
@@ -15,7 +15,7 @@ namespace Acorn::Module
     class ENGINE_API ModuleLoader
     {
     public:
-        ModuleLoader(Core::LoggerFactory& factory);
+        ModuleLoader(Base::LoggerFactory& factory);
 
         void loadModules(std::filesystem::path modsDirPath, ModLoadingCtx ctx);
 
@@ -39,9 +39,9 @@ namespace Acorn::Module
         bool isModuleValid(std::filesystem::path modPath);
         void validateModuleCompatibility(
             const ModuleManifest& manifest,
-            const Core::RuntimeAPI& api);
+            const Runtime::API& api);
 
-        Core::Logger m_logger;
+        Base::Logger m_logger;
     };
 }
 

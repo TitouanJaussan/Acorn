@@ -4,11 +4,11 @@
 #include "Acorn/Threading/ThreadingManager.hpp"
 #include "Acorn/Threading/JobSchedulerDescriptor.hpp"
 #include "Acorn/Threading/ThreadingError.hpp"
-#include "Acorn/Core/Format.hpp"
+#include "Acorn/Base/Format.hpp"
 
 namespace Acorn::Threading
 {
-    ThreadingManager::ThreadingManager(Core::LoggerFactory& factory)
+    ThreadingManager::ThreadingManager(Base::LoggerFactory& factory)
         : m_maxThreadsCount(
             std::min(4u, std::thread::hardware_concurrency() - 1)),
           m_jobScheduler(JobSchedulerDescriptor{
@@ -29,7 +29,7 @@ namespace Acorn::Threading
     std::thread ThreadingManager::queryNewThread(std::function<void()> fn)
     {
         if (m_threadsCount == m_maxThreadsCount)
-            throw ThreadingError(Core::format(
+            throw ThreadingError(Base::format(
                 "Can't complete new thread query: maximum simultaneous threads count ({}) reached",
                 m_maxThreadsCount
             ));

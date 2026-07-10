@@ -2,7 +2,7 @@
 
 namespace Acorn::Module
 {
-    ModuleRegistry::ModuleRegistry(Core::LoggerFactory& factory)
+    ModuleRegistry::ModuleRegistry(Base::LoggerFactory& factory)
         : m_logger(factory.create("ModRegistry")),
           m_modules{},
           m_modsApis{}

@@ -6,7 +6,7 @@
 #include <condition_variable>
 
 #include "Acorn/EngineAPI.hpp"
-#include "Acorn/Core/Logging/Logger.hpp"
+#include "Acorn/Base/Logging/Logger.hpp"
 #include "Acorn/Templates/ArrayList.hpp"
 #include "Acorn/Templates/UniquePtr.hpp"
 #include "Acorn/Threading/JobSchedulerDescriptor.hpp"
@@ -34,7 +34,7 @@ namespace Acorn::Threading
         void executeCallbacksBudgeted();
         void executeAllCallbacks();
         
-        Core::Logger m_logger;
+        Base::Logger m_logger;
 
         ArrayList<UniquePtr<WorkerThread>> m_workerThreads;
 

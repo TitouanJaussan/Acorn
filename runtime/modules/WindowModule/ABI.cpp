@@ -10,12 +10,12 @@ static const Acorn::Module::ModuleManifest MANIFEST =
     .dependencies = {}
 };
 
-static WindowModule* mod{nullptr};
+static WindowModule*    mod{nullptr};
 static WindowModuleAPI* modAPI{nullptr};
 
 void init(
-    Acorn::Core::RuntimeAPI runtimeAPI,
-    Acorn::Core::Logger logger)
+    Acorn::Runtime::API runtimeAPI,
+    Acorn::Base::Logger logger)
 {
     mod = mem_new<WindowModule>(
         std::move(runtimeAPI),
@@ -38,10 +38,9 @@ void init(
 void update()
 {
     mod->m_window->pollEvents();
-    mod->m_window->swapBuffers();
 
     if (mod->m_window->shouldClose())
-        mod->m_runtimeAPI.stopRuntime();
+        mod->m_runtimeAPI.stopEngine();
 }
 
 void unload()
@@ -52,7 +51,7 @@ void unload()
     mem_delete(mod);
 
     modAPI = nullptr;
-    mod = nullptr;
+    mod    = nullptr;
 }
 
 WindowModuleAPI* getAPI()

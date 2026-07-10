@@ -2,7 +2,7 @@
 
 namespace Acorn::Threading
 {
-    ServiceManager::ServiceManager(Core::LoggerFactory& factory)
+    ServiceManager::ServiceManager(Base::LoggerFactory& factory)
         : m_logger(factory.create("ServiceManager")),
           m_services()
     {}

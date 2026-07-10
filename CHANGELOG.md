@@ -5,6 +5,7 @@ Date format: `YYYY`-`MM`-`DD`
 <details>
 <summary><b>Versions list</b></summary>
 
+- [v0.2.4](#v024---2026-07-10)
 - [v0.2.3](#v023---2026-07-04)
 - [v0.2.2](#v022---2026-06-28)
 - [v0.2.1](#v021---2026-06-14)
@@ -15,6 +16,15 @@ Date format: `YYYY`-`MM`-`DD`
 - [v0.0.1](#v001---2026-06-01)
 
 </details>
+
+## [v0.2.4] - 2026-07-10
+### Added
+- Command line arguments & flags parsing (WIP, very simple)
+
+### Changed
+- Big core rewrite & a lot of moved / renamed files & classes
+- `Runtime` class renamed to `Engine`
+- Check for existence of `modules` folder before loading mods & crashing if not present
 
 ## [v0.2.3] - 2026-07-04
 ### Added

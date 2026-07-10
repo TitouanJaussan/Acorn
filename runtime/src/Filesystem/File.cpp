@@ -1,5 +1,5 @@
 #include "Acorn/Filesystem/File.hpp"
-#include "Acorn/Core/Assert.hpp"
+#include "Acorn/Base/Assert.hpp"
 
 namespace Acorn::Filesystem
 {

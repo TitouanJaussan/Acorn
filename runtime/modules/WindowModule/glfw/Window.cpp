@@ -1,7 +1,7 @@
 #include "glfw/Window.hpp"
 
-#include <Acorn/Core/Assert.hpp>
-#include <Acorn/Core/DetailedError.hpp>
+#include <Acorn/Base/Assert.hpp>
+#include <Acorn/Base/DetailedError.hpp>
 
 namespace GLFW
 {
@@ -10,7 +10,7 @@ namespace GLFW
     {
         if (!glfwInit())
         {
-            throw Acorn::Core::DetailedError("GLFW", "Failed to initialize GLFW");
+            throw Acorn::Base::DetailedError("GLFW", "Failed to initialize GLFW");
         }
 
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
@@ -29,7 +29,7 @@ namespace GLFW
             ACORN_ASSERT(false && "Failed to create GLFW window");
         }
 
-        makeContextCurrent();
+        // makeContextCurrent();
     }
 
     Window::~Window()
@@ -61,5 +61,14 @@ namespace GLFW
     void Window::releaseCurrentContext()
     {
         glfwMakeContextCurrent(nullptr);
+    }
+
+    Acorn::Pair<int, int> Window::getSize()
+    {
+        Acorn::Pair<int, int> size{0, 0};
+
+        glfwGetWindowSize(m_window, &size.m_first, &size.m_second);
+
+        return size;
     }
 }

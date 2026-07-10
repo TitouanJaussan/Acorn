@@ -6,7 +6,7 @@
 
 namespace Acorn::Filesystem
 {
-    Filesystem::Filesystem(Core::LoggerFactory& factory,
+    Filesystem::Filesystem(Base::LoggerFactory& factory,
                            std::filesystem::path rootDirectory)
         : m_logger(factory.create("Filesystem"))
     {
