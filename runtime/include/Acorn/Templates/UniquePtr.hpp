@@ -1,6 +1,8 @@
 #ifndef ACORN_UNIQUE_PTR_HPP
 #define ACORN_UNIQUE_PTR_HPP
 
+#include <type_traits>
+
 #include "Acorn/EngineAPI.hpp"
 
 namespace Acorn
@@ -10,8 +12,13 @@ namespace Acorn
     {
     public:
         UniquePtr() noexcept;
-        UniquePtr(UniquePtr&& other);
+        UniquePtr(UniquePtr&& other) noexcept;
         UniquePtr(const UniquePtr& other);
+        
+        template<typename OtherT>
+        requires(std::is_base_of_v<T, OtherT>)
+        UniquePtr(UniquePtr<OtherT>&& other);
+
         UniquePtr(T* ptr) noexcept;
         ~UniquePtr();
 
@@ -27,6 +34,9 @@ namespace Acorn
 
         template<typename... Args>
         static UniquePtr<T> create(Args&&... args);
+
+        template<typename OtherT>
+        friend class UniquePtr;
 
     private:
         T* m_ptr{nullptr};

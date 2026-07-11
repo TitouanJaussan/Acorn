@@ -24,9 +24,10 @@ namespace Acorn::Threading
         void update();
         void shutdown();
 
-        void scheduleJob(Job job);
+        void submitJob(Job job);
 
-        void spawnWorkerThreads(ThreadingManager& threadingManager,
+        void spawnWorkerThreads(
+            ThreadingManager& threadingManager,
             size_t workersCount);
 
     private:

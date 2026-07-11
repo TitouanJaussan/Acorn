@@ -11,6 +11,11 @@ namespace Acorn::Module
           m_modRegistry(factory)
     {}
 
+    ModuleManagerHandle ModuleManager::newHandle() noexcept
+    {
+        return ModuleManagerHandle(*this);
+    }
+
     void ModuleManager::loadModules(std::filesystem::path   modsFolder,
                                     Filesystem::Filesystem& filesystem,
                                     Runtime::API            api)

@@ -7,9 +7,14 @@ namespace Acorn::Threading
           m_services()
     {}
 
-    void ServiceManager::addService(UniquePtr<Service> service)
+    void ServiceManager::spawnService(
+        UniquePtr<Service> service,
+        ThreadingManager& manager)
     {
-        m_services.append(std::move(service));
+        if (!m_services.append(std::move(service))->start(manager))
+        {
+            // Idk maybe do something ?
+        }
     }
 
     void ServiceManager::shutdown()

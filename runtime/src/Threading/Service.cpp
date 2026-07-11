@@ -1,5 +1,6 @@
 #include "Acorn/Threading/Service.hpp"
 #include "Acorn/Threading/ThreadingManager.hpp"
+#include "Acorn/Base/DetailedError.hpp"
 
 namespace Acorn::Threading
 {
@@ -7,10 +8,22 @@ namespace Acorn::Threading
         : name(desc.name),
           m_logger(desc.factory.create(name + " Service")),
           m_running(true),
-          m_thread(desc.threadingManager.queryNewThread(
-            [this]() -> void { work(); }
-          ))
+          m_thread()
     {}
+
+    bool Service::start(ThreadingManager& manager)
+    {
+        try
+        {
+            m_thread = manager.queryNewThread([this]() -> void { work(); });
+            return true;
+        }
+        catch (const Base::DetailedError& err)
+        {
+            m_logger.info("Failed to start: {}", err.what());
+            return false;
+        }
+    }
 
     void Service::stop()
     {

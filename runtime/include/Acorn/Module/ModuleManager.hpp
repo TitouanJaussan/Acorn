@@ -8,6 +8,7 @@
 #include "Acorn/Core/Runtime/API.hpp"
 #include "Acorn/Module/ModuleLoader.hpp"
 #include "Acorn/Module/ModuleRegistry.hpp"
+#include "Acorn/Module/ModuleManagerHandle.hpp"
 #include "Acorn/Filesystem/Filesystem.hpp"
 #include "Acorn/Templates/String.hpp"
 
@@ -22,6 +23,8 @@ namespace Acorn::Module
     {
     public:
         ModuleManager(Base::LoggerFactory& factory);
+
+        ModuleManagerHandle newHandle() noexcept;
 
         void loadModules(std::filesystem::path   modsFolder,
                          Filesystem::Filesystem& filesystem,

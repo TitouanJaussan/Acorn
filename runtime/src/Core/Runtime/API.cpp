@@ -1,5 +1,6 @@
 #include "Acorn/Core/Runtime/API.hpp"
 #include "Acorn/Core/Runtime/Engine.hpp"
+#include "Acorn/Core/Runtime/Systems.hpp"
 
 namespace Acorn::Runtime
 {
@@ -13,24 +14,28 @@ namespace Acorn::Runtime
         m_engine.stop();
     }
     
-    Version::Version API::version() const noexcept
+    Version::Version API::getVersion() const noexcept
     {
         return m_version;
+    }
+
+    Threading::ThreadingManagerHandle API::threading()
+    {
+        return m_engine.systems.threadingManager.newHandle();
+    }
+
+    Filesystem::FilesystemHandle API::filesystem()
+    {
+        return m_engine.systems.filesystem.newHandle();
+    }
+
+    Module::ModuleManagerHandle API::module()
+    {
+        return m_engine.systems.modManager.newHandle();
     }
 
     Base::LoggerFactory& API::getLoggerFactory() const noexcept
     {
         return m_engine.getLoggerFactory();
-    }
-
-    Threading::ThreadingManager& API::getThreadingManager() const noexcept
-    {
-        return m_engine.m_systems.threadingManager;
-    }
-
-    Module::APIHandle* API::getModuleAPIHandle(String modName) const
-    {
-        return m_engine.m_systems.modManager
-            .getModuleAPIHandle(std::move(modName));
     }
 }

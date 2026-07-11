@@ -278,23 +278,26 @@ namespace Acorn::Module
         const ModuleManifest& manifest,
         const Runtime::API& api)
     {
-        if (api.version().major() > manifest.runtimeVersion.major())
+
+        const auto& ver = api.getVersion();
+
+        if (ver.major() > manifest.runtimeVersion.major())
         {
             throw ModuleError(Base::format(
                 "{} Module: version too old ({}) for runtime ({})",
                 manifest.name.getData(),  // TODO: Fix by adding support for String to format
                 manifest.runtimeVersion.string(),
-                api.version().string()
+                ver.string()
             ));
         }
-        else if (api.version().minor() > manifest.runtimeVersion.minor())
+        else if (ver.minor() > manifest.runtimeVersion.minor())
         {
             m_logger.warn(
                 "{} Module: version ({}) older than runtime version ({}), "
                 "possible incompatibility",
                 manifest.name.getData(),  // TODO: Fix by adding support for String to format
                 manifest.runtimeVersion.string(),
-                api.version().string()
+                ver.string()
             );
         }
     }

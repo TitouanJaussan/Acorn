@@ -5,6 +5,7 @@
 
 #include "Acorn/EngineAPI.hpp"
 #include "Acorn/Filesystem/File.hpp"
+#include "Acorn/Filesystem/FilesystemHandle.hpp"
 #include "Acorn/Base/Logging/LoggerFactory.hpp"
 #include "Acorn/Base/Logging/Logger.hpp"
 
@@ -16,6 +17,8 @@ namespace Acorn::Filesystem
         Filesystem(Base::LoggerFactory& factory,
                    std::filesystem::path rootDirectory);
         
+        FilesystemHandle newHandle() noexcept;
+
         File readFile(std::filesystem::path path,
                       bool nullTerminated = false);
 

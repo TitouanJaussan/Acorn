@@ -16,7 +16,7 @@ namespace Acorn::Core
         // TODO: Replace with Pair when possible
         m_layersStack.emplace(std::make_pair(
             id,
-            UniquePtr<Layer>(mem_new<T>(std::forward<Args>(args)...))
+            UniquePtr<T>::create(std::forward<Args>(args)...)
         ));
 
         m_layersStack[id]->onAttach();

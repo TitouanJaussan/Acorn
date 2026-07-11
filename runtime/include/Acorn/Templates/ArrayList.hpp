@@ -58,8 +58,8 @@ namespace Acorn
         Iterator begin() const { return Iterator(&m_arr[0]); }
         Iterator end()   const { return Iterator(&m_arr[m_size]); }
 
-        void append(const T& val);
-        void append(T&& val);
+        T& append(const T& val);
+        T& append(T&& val);
         void popBack();
         
         template<typename... Args>

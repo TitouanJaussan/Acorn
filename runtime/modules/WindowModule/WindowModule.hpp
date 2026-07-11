@@ -10,10 +10,10 @@
 
 struct WINDOW_MODULE_LOCAL WindowModule
 {
-    Acorn::Runtime::API m_runtimeAPI;
-    Acorn::Base::Logger m_logger;
+    Acorn::Runtime::API runtimeAPI;
+    Acorn::Base::Logger logger;
 
-    Acorn::UniquePtr<BaseWindow> m_window;
+    Acorn::UniquePtr<BaseWindow> window;
 };
 
 #endif /* WINDOW_MODULE_HPP */

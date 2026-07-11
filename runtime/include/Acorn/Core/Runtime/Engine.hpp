@@ -35,8 +35,8 @@ namespace Acorn::Runtime
         Runtime::CoreState m_core;
 
     public:
-        const Core::CommandLineArguments m_cmdLineArgs;
-        Systems m_systems;
+        const Core::CommandLineArguments cmdLineArgs;
+        Systems systems;
     };
 }
 

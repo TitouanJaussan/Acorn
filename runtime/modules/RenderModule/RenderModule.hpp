@@ -8,8 +8,8 @@
 
 struct RENDER_MODULE_LOCAL RenderModule
 {
-    Acorn::Runtime::API m_runtimeAPI;
-    Acorn::Base::Logger m_logger;
+    Acorn::Runtime::API runtimeAPI;
+    Acorn::Base::Logger logger;
 };
 
 #endif /* RENDER_MODULE_HPP */

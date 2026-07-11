@@ -10,12 +10,16 @@
 
 namespace Acorn::Threading
 {
+    class ThreadingManager;
+
     class ENGINE_API ServiceManager
     {
     public:
         ServiceManager(Base::LoggerFactory& factory);
 
-        void addService(UniquePtr<Service> service);
+        void spawnService(
+            UniquePtr<Service> service,
+            ThreadingManager& manager);
         void shutdown();
 
     private:

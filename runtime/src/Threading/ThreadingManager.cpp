@@ -9,47 +9,53 @@
 namespace Acorn::Threading
 {
     ThreadingManager::ThreadingManager(Base::LoggerFactory& factory)
-        : m_maxThreadsCount(
-            std::min(4u, std::thread::hardware_concurrency() - 1)),
-          m_jobScheduler(JobSchedulerDescriptor{
-            .loggerFactory = factory,
-            .maxCallbacksPerFrame = 2,
-            .frameCallbackBudget_ms = 4.0f
+        : maxThreadsCount(
+              std::min(4u, std::thread::hardware_concurrency() - 1)),
+          jobScheduler(JobSchedulerDescriptor
+          {
+              .loggerFactory = factory,
+              .maxCallbacksPerFrame = 2,
+              .frameCallbackBudget_ms = 4.0f
           }),
-          m_serviceManager(factory),
+          serviceManager(factory),
           m_threadsCount(0),
           m_logger(factory.create("ThreadingManager"))
     {
-        m_logger.info("Max threads count: {}", m_maxThreadsCount);
+        m_logger.info("Max threads count: {}", maxThreadsCount);
 
-        m_jobScheduler.spawnWorkerThreads(*this,
-            std::min((size_t)4, m_maxThreadsCount - 2));
+        jobScheduler.spawnWorkerThreads(*this,
+            std::min((size_t)4, maxThreadsCount - 2));
     }
 
     std::thread ThreadingManager::queryNewThread(std::function<void()> fn)
     {
-        if (m_threadsCount == m_maxThreadsCount)
+        if (m_threadsCount == maxThreadsCount)
             throw ThreadingError(Base::format(
                 "Can't complete new thread query: maximum simultaneous threads count ({}) reached",
-                m_maxThreadsCount
+                maxThreadsCount
             ));
 
         m_logger.info("Completed thread query");
 
         ++m_threadsCount;
-        return std::thread(std::move(fn));  // That doesn mean that the thread starts executing even
+        return std::thread(std::move(fn));  // That doesn't mean that the thread starts executing even
                                             // before it's even returned (realistically it's the same
                                             // as if it started when returned)
     }
 
+    ThreadingManagerHandle ThreadingManager::newHandle()
+    {
+        return ThreadingManagerHandle(*this);
+    }
+
     void ThreadingManager::update()
     {
-        m_jobScheduler.update();
+        jobScheduler.update();
     }
 
     void ThreadingManager::shutdown()
     {
-        m_jobScheduler.shutdown();
-        m_serviceManager.shutdown();
+        jobScheduler.shutdown();
+        serviceManager.shutdown();
     }
 }

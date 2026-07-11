@@ -5,13 +5,11 @@
 using namespace std::chrono_literals;
 
 RenderService::RenderService(Acorn::Base::LoggerFactory& factory,
-    Acorn::Threading::ThreadingManager& threadingManager,
     Acorn::Module::APIHandle& windowModAPI)
     : Acorn::Threading::Service(Acorn::Threading::ServiceDescriptor
         {
             .name = "Render",
-            .factory = factory,
-            .threadingManager = threadingManager
+            .factory = factory
         }),
       m_windowModAPI(windowModAPI)
 {}

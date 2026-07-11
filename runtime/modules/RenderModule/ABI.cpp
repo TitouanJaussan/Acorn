@@ -1,4 +1,5 @@
 #include <Acorn/Module/ModuleError.hpp>
+#include <Acorn/Core/Runtime/Systems.hpp>
 
 #include "ABI.hpp"
 #include "RenderService.hpp"
@@ -20,22 +21,21 @@ void init(
     mod    = mem_new<RenderModule>(std::move(api), std::move(logger));
     modAPI = mem_new<RenderModuleAPI>(mod);
 
-    auto* windowModAPI = mod->m_runtimeAPI.getModuleAPIHandle("Window");
+    auto* windowModAPI = mod->runtimeAPI.module().getModuleAPIHandle("Window");
 
     if (!windowModAPI)
         throw Acorn::Module::ModuleError(
             "Couldn't access window module API"
         );
 
-    mod->m_runtimeAPI.getThreadingManager().m_serviceManager.addService(
-        Acorn::UniquePtr<Acorn::Threading::Service>(
-            mem_new<RenderService>(
-                mod->m_runtimeAPI.getLoggerFactory(),
-                mod->m_runtimeAPI.getThreadingManager(),
+    mod->runtimeAPI
+        .threading()
+        .spawnService(
+            Acorn::UniquePtr<RenderService>::create(
+                mod->runtimeAPI.getLoggerFactory(),
                 *windowModAPI
             )
-        )
-    );
+        );
 }
 
 void update()

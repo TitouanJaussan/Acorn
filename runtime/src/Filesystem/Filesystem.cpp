@@ -15,6 +15,11 @@ namespace Acorn::Filesystem
         m_logger.info("Set root directory to {}", rootDirectory.string());
     }
 
+    FilesystemHandle Filesystem::newHandle() noexcept
+    {
+        return FilesystemHandle(*this);
+    }
+
     File Filesystem::readFile(std::filesystem::path path,
                               bool nullTerminated)
     {

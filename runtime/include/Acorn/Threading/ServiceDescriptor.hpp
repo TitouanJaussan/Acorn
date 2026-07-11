@@ -7,13 +7,10 @@
 
 namespace Acorn::Threading
 {
-    class ThreadingManager;
-
     struct ENGINE_API ServiceDescriptor
     {
         String name;
         Base::LoggerFactory& factory;
-        ThreadingManager& threadingManager;
     };
 }
 

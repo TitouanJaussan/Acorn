@@ -10,6 +10,8 @@
 
 namespace Acorn::Threading
 {
+    class ThreadingManager;
+
     // Maybe this could be factored out with the WorkerThread class
     // by giving them a mutual base class, like a threading base class
     class ENGINE_API Service
@@ -18,11 +20,12 @@ namespace Acorn::Threading
         Service(ServiceDescriptor descriptor);
         virtual ~Service() = default;
 
-        Service(Service&&) = delete;
-        Service(const Service&) = delete;
-        Service& operator=(Service&&) = delete;
+        Service(Service&&)                 = delete;
+        Service(const Service&)            = delete;
+        Service& operator=(Service&&)      = delete;
         Service& operator=(const Service&) = delete;
 
+        bool start(ThreadingManager& manager);
         void stop();
         void join();
 
@@ -32,7 +35,6 @@ namespace Acorn::Threading
         virtual void work() = 0;
 
         Base::Logger m_logger;
-
         std::atomic_bool m_running;
 
     private:

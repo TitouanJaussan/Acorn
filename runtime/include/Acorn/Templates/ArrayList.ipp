@@ -119,21 +119,25 @@ namespace Acorn
     }
 
     template<typename T>
-    void ArrayList<T>::append(const T& val)
+    T& ArrayList<T>::append(const T& val)
     {
         if (m_size == m_capacity)
             growCapacity();
 
         new (&m_arr[m_size++]) T(val);
+
+        return m_arr[m_size - 1];
     }
 
     template<typename T>
-    void ArrayList<T>::append(T&& val)
+    T& ArrayList<T>::append(T&& val)
     {
         if (m_size == m_capacity)
             growCapacity();
 
         new (&m_arr[m_size++]) T(std::move(val));
+
+        return m_arr[m_size - 1];
     }
 
     template<typename T>

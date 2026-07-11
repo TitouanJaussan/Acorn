@@ -10,6 +10,7 @@
 #include "Acorn/Base/Logging/Logger.hpp"
 #include "Acorn/Threading/JobScheduler.hpp"
 #include "Acorn/Threading/ServiceManager.hpp"
+#include "Acorn/Threading/ThreadingManagerHandle.hpp"
 
 namespace Acorn::Threading
 {
@@ -19,13 +20,15 @@ namespace Acorn::Threading
         ThreadingManager(Base::LoggerFactory& factory);
 
         std::thread queryNewThread(std::function<void()> fn);
+        ThreadingManagerHandle newHandle();
+
         void update();
         void shutdown();
         
-        const size_t m_maxThreadsCount;
+        const size_t maxThreadsCount;
 
-        JobScheduler m_jobScheduler;
-        ServiceManager m_serviceManager;
+        JobScheduler jobScheduler;
+        ServiceManager serviceManager;
 
     private:
         size_t m_threadsCount;

@@ -31,7 +31,7 @@ namespace Acorn::Threading
         executeAllCallbacks();
     }
 
-    void JobScheduler::scheduleJob(Job job)
+    void JobScheduler::submitJob(Job job)
     {
         std::unique_lock<std::mutex> lock(m_jobsMutex);
         m_jobsQueue.push(job);

@@ -8,12 +8,12 @@
 
 #include "Export.hpp"
 
-class RENDER_MODULE_EXPORT RenderService final : public Acorn::Threading::Service
+class RENDER_MODULE_EXPORT RenderService final :
+    public Acorn::Threading::Service
 {
 public:
     RenderService(
         Acorn::Base::LoggerFactory& factory,
-        Acorn::Threading::ThreadingManager& threadingManager,
         Acorn::Module::APIHandle& windowModAPI);
 
     void work() override;

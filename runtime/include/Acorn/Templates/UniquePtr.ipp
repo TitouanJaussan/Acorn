@@ -13,12 +13,7 @@ namespace Acorn
     {}
 
     template<typename T>
-    UniquePtr<T>::UniquePtr(T* ptr) noexcept
-        : m_ptr(ptr)
-    {}
-
-    template<typename T>
-    UniquePtr<T>::UniquePtr(UniquePtr&& other)
+    UniquePtr<T>::UniquePtr(UniquePtr&& other) noexcept
         : m_ptr(other.m_ptr)
     {
         other.m_ptr = nullptr;
@@ -30,6 +25,20 @@ namespace Acorn
             !other ? nullptr
                    : mem_new<T>(*other)
             )
+    {}
+
+    template<typename T>
+    template<typename OtherT>
+    requires(std::is_base_of_v<T, OtherT>)
+    UniquePtr<T>::UniquePtr(UniquePtr<OtherT>&& other)
+        : m_ptr(other.m_ptr)
+    {
+        other.m_ptr = nullptr;
+    }
+
+    template<typename T>
+    UniquePtr<T>::UniquePtr(T* ptr) noexcept
+        : m_ptr(ptr)
     {}
 
     template<typename T>

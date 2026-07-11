@@ -32,20 +32,20 @@ void init(
     );
 
     modAPI = mem_new<WindowModuleAPI>(mod);
-    mod->m_logger.info("Created window mod!");
+    mod->logger.info("Created window mod!");
 }
 
 void update()
 {
-    mod->m_window->pollEvents();
+    mod->window->pollEvents();
 
-    if (mod->m_window->shouldClose())
-        mod->m_runtimeAPI.stopEngine();
+    if (mod->window->shouldClose())
+        mod->runtimeAPI.stopEngine();
 }
 
 void unload()
 {
-    mod->m_logger.info("Deleting window mod");
+    mod->logger.info("Deleting window mod");
 
     mem_delete(modAPI);
     mem_delete(mod);

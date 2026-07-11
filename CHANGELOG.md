@@ -5,6 +5,7 @@ Date format: `YYYY`-`MM`-`DD`
 <details>
 <summary><b>Versions list</b></summary>
 
+- [v0.2.5](#v025---2026-07-11)
 - [v0.2.4](#v024---2026-07-10)
 - [v0.2.3](#v023---2026-07-04)
 - [v0.2.2](#v022---2026-06-28)
@@ -16,6 +17,14 @@ Date format: `YYYY`-`MM`-`DD`
 - [v0.0.1](#v001---2026-06-01)
 
 </details>
+
+## [v0.2.5] - 2026-07-11
+### Added
+- Systems handle for filtering method access
+
+### Changed
+- `Service` creation and startup pipeline, now only starts once registered by the engine
+- A lot of rewrites & refactors for cleaning up code & improving quality
 
 ## [v0.2.4] - 2026-07-10
 ### Added

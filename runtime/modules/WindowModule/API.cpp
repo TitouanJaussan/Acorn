@@ -9,5 +9,5 @@ WindowModuleAPI::WindowModuleAPI(WindowModule* mod)
 
 BaseWindow* WindowModuleAPI::getMainWindow()
 {
-    return m_module->m_window.getPtr();
+    return m_module->window.getPtr();
 }

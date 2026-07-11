@@ -3,13 +3,14 @@
 #include "Acorn/Core/CommandLineArguments/CommandLineArgumentsDescriptor.hpp"
 #include "Acorn/Base/Memory/Tracker.hpp"
 #include "Core/SignalHandler.hpp"
+#include <cmath>
 
 namespace Acorn::Runtime
 {
     Engine::Engine(int argc, char** argv)
         : m_core{"log.tmp"},
 
-          m_cmdLineArgs(Core::CommandLineArgumentsDescriptor
+          cmdLineArgs(Core::CommandLineArgumentsDescriptor
           {
               .factory = m_core.loggerFactory,
               .argc = argc,
@@ -17,10 +18,10 @@ namespace Acorn::Runtime
           }),
 
           // Probably could rewrite this in a cleaner manner
-          m_systems(
+          systems(
               m_core.loggerFactory,
               std::filesystem::path(
-                  m_cmdLineArgs.getArgumentOr(
+                  cmdLineArgs.getArgumentOr(
                       "root-dir",
                       String(std::filesystem::absolute(argv[0])
                           .parent_path()
@@ -33,9 +34,9 @@ namespace Acorn::Runtime
         Core::setSignalHandler(this);
         logEngineInfo();
 
-        m_systems.modManager.loadModules(
+        systems.modManager.loadModules(
             "modules/",
-            m_systems.filesystem,
+            systems.filesystem,
             createAPI());
     }
 
@@ -43,7 +44,8 @@ namespace Acorn::Runtime
     {
         m_core.logger.info("Shutting down runtime...");
 
-        m_systems.threadingManager.m_jobScheduler.shutdown();
+        // Ok this is weird, why doing this manually ??
+        systems.threadingManager.jobScheduler.shutdown();
 
         m_core.logger.info("Maximum memory usage reached: {} bytes",
             Memory::Tracker::getSingleton()->getMaxMemUsage());
@@ -53,16 +55,16 @@ namespace Acorn::Runtime
 
     void Engine::run()
     {
-        m_systems.modManager.callInit(*this);  // I don't like this
+        systems.modManager.callInit(*this);  // I don't like this
 
         while (m_core.running)
         {
-            m_systems.modManager.callUpdate();
-            m_systems.threadingManager.update();
+            systems.modManager.callUpdate();
+            systems.threadingManager.update();
         }
 
-        m_systems.threadingManager.shutdown();
-        m_systems.modManager.callUnload();
+        systems.threadingManager.shutdown();
+        systems.modManager.callUnload();
     }
 
     void Engine::stop()

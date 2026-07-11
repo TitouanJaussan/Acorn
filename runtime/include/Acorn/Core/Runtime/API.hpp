@@ -2,9 +2,11 @@
 #define ACORN_RUNTIME_API_HPP
 
 #include "Acorn/EngineAPI.hpp"
+#include "Acorn/Base/Logging/LoggerFactory.hpp"
 #include "Acorn/Base/Version/Version.hpp"
-#include "Acorn/Threading/ThreadingManager.hpp"
-#include "Acorn/Module/APIHandle.hpp"
+#include "Acorn/Module/ModuleManagerHandle.hpp"
+#include "Acorn/Threading/ThreadingManagerHandle.hpp"
+#include "Acorn/Filesystem/FilesystemHandle.hpp"
 
 namespace Acorn::Module
 {
@@ -14,6 +16,7 @@ namespace Acorn::Module
 namespace Acorn::Runtime
 {
     class Engine;
+    class Systems;
 
     class ENGINE_API API
     {
@@ -21,11 +24,13 @@ namespace Acorn::Runtime
         API(Engine& engine, Version::Version engineVersion);
 
         void stopEngine() const;
-        Version::Version version() const noexcept;
+        Version::Version getVersion() const noexcept;
+
+        Threading::ThreadingManagerHandle threading();
+        Filesystem::FilesystemHandle      filesystem();
+        Module::ModuleManagerHandle       module();
 
         Base::LoggerFactory& getLoggerFactory() const noexcept;
-        Threading::ThreadingManager& getThreadingManager() const noexcept;
-        Module::APIHandle* getModuleAPIHandle(String modName) const;
 
     private:
         Engine& m_engine;
