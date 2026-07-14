@@ -27,6 +27,11 @@ namespace Acorn::Threading
             std::min((size_t)4, maxThreadsCount - 2));
     }
 
+    ThreadingManagerHandle ThreadingManager::newHandle()
+    {
+        return ThreadingManagerHandle(*this);
+    }
+
     std::thread ThreadingManager::queryNewThread(std::function<void()> fn)
     {
         if (m_threadsCount == maxThreadsCount)
@@ -41,11 +46,6 @@ namespace Acorn::Threading
         return std::thread(std::move(fn));  // That doesn't mean that the thread starts executing even
                                             // before it's even returned (realistically it's the same
                                             // as if it started when returned)
-    }
-
-    ThreadingManagerHandle ThreadingManager::newHandle()
-    {
-        return ThreadingManagerHandle(*this);
     }
 
     void ThreadingManager::update()

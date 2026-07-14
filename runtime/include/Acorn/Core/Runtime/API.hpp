@@ -7,6 +7,7 @@
 #include "Acorn/Module/ModuleManagerHandle.hpp"
 #include "Acorn/Threading/ThreadingManagerHandle.hpp"
 #include "Acorn/Filesystem/FilesystemHandle.hpp"
+#include "Acorn/ECS/ECSManagerHandle.hpp"
 
 namespace Acorn::Module
 {
@@ -16,7 +17,7 @@ namespace Acorn::Module
 namespace Acorn::Runtime
 {
     class Engine;
-    class Systems;
+    struct Systems;
 
     class ENGINE_API API
     {
@@ -25,12 +26,12 @@ namespace Acorn::Runtime
 
         void stopEngine() const;
         Version::Version getVersion() const noexcept;
+        Base::LoggerFactory& getLoggerFactory() const noexcept;
 
         Threading::ThreadingManagerHandle threading();
         Filesystem::FilesystemHandle      filesystem();
         Module::ModuleManagerHandle       module();
-
-        Base::LoggerFactory& getLoggerFactory() const noexcept;
+        ECS::ECSManagerHandle             ecs();
 
     private:
         Engine& m_engine;

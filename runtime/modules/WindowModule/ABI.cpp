@@ -3,13 +3,6 @@
 #include "glfw/Window.hpp"
 #include "glfw/WindowDescriptor.hpp"
 
-static const Acorn::Module::ModuleManifest MANIFEST = 
-{
-    .name = "Window",
-    .runtimeVersion = Acorn::Version::Version{0, 2, 2},
-    .dependencies = {}
-};
-
 static WindowModule*    mod{nullptr};
 static WindowModuleAPI* modAPI{nullptr};
 
@@ -57,9 +50,4 @@ void unload()
 WindowModuleAPI* getAPI()
 {
     return modAPI;
-}
-
-const Acorn::Module::ModuleManifest* getManifest()
-{
-    return &MANIFEST;
 }

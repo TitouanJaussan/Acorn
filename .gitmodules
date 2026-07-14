@@ -1,6 +1,3 @@
 [submodule "runtime/vendor/spdlog"]
 	path = runtime/vendor/spdlog
 	url = https://github.com/gabime/spdlog
-[submodule "runtime/vendor/tomlplusplus"]
-	path = runtime/vendor/tomlplusplus
-	url = https://github.com/marzer/tomlplusplus.git

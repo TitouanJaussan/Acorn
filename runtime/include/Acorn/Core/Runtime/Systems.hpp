@@ -7,6 +7,7 @@
 #include "Acorn/Filesystem/Filesystem.hpp"
 #include "Acorn/Threading/ThreadingManager.hpp"
 #include "Acorn/Module/ModuleManager.hpp"
+#include "Acorn/ECS/ECSManager.hpp"
 #include "Acorn/Base/Logging/LoggerFactory.hpp"
 
 namespace Acorn::Runtime
@@ -16,6 +17,7 @@ namespace Acorn::Runtime
         Filesystem::Filesystem      filesystem;
         Threading::ThreadingManager threadingManager;
         Module::ModuleManager       modManager;
+        ECS::ECSManager             ecsManager;
 
         Systems(Base::LoggerFactory& factory,
                 std::filesystem::path rootDirectory);

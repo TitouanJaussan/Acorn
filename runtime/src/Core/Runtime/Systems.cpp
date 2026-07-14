@@ -6,6 +6,7 @@ namespace Acorn::Runtime
                      std::filesystem::path rootDirectory)
         : filesystem(factory, std::move(rootDirectory)),
           threadingManager(factory),
-          modManager(factory)
+          modManager(factory),
+          ecsManager(factory)
     {}
 }

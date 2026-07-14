@@ -16,7 +16,12 @@ namespace Acorn::Runtime
     
     Version::Version API::getVersion() const noexcept
     {
-        return m_version;
+        return m_version;  // TODO: Replace with m_engine.version
+    }
+
+    Base::LoggerFactory& API::getLoggerFactory() const noexcept
+    {
+        return m_engine.getLoggerFactory();
     }
 
     Threading::ThreadingManagerHandle API::threading()
@@ -34,8 +39,8 @@ namespace Acorn::Runtime
         return m_engine.systems.modManager.newHandle();
     }
 
-    Base::LoggerFactory& API::getLoggerFactory() const noexcept
+    ECS::ECSManagerHandle API::ecs()
     {
-        return m_engine.getLoggerFactory();
+        return m_engine.systems.ecsManager.newHandle();
     }
 }

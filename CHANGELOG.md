@@ -5,6 +5,7 @@ Date format: `YYYY`-`MM`-`DD`
 <details>
 <summary><b>Versions list</b></summary>
 
+- [v0.3.0](#v030---2026-07-14)
 - [v0.2.5](#v025---2026-07-11)
 - [v0.2.4](#v024---2026-07-10)
 - [v0.2.3](#v023---2026-07-04)
@@ -17,6 +18,17 @@ Date format: `YYYY`-`MM`-`DD`
 - [v0.0.1](#v001---2026-06-01)
 
 </details>
+
+## [v0.3.0] - 2026-07-14
+### Added
+- Basic & simple ECS systems, available to modules
+
+### Changed
+- Fixed (but commented until proper fix) `spdlog` include path in `premake5.lua`
+- Random rewrites and small improvements for sligthly cleaner code
+
+### Removed
+- Removed weird orphan git submodule for tomlplusplus
 
 ## [v0.2.5] - 2026-07-11
 ### Added

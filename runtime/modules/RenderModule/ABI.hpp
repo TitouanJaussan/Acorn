@@ -17,7 +17,6 @@ extern "C"
     RENDER_MODULE_EXPORT void unload();
 
     RENDER_MODULE_EXPORT RenderModuleAPI* getAPI();
-    RENDER_MODULE_EXPORT const Acorn::Module::ModuleManifest* getManifest();
 }
 
 #endif /* RENDER_MODULE_ABI_HPP */

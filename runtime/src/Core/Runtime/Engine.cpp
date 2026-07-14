@@ -3,7 +3,6 @@
 #include "Acorn/Core/CommandLineArguments/CommandLineArgumentsDescriptor.hpp"
 #include "Acorn/Base/Memory/Tracker.hpp"
 #include "Core/SignalHandler.hpp"
-#include <cmath>
 
 namespace Acorn::Runtime
 {

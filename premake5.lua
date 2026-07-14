@@ -93,7 +93,8 @@ project "AcornRuntime"
     includedirs {
         "runtime/include",
         "runtime/src",
-        "runtime/vendor"
+        "runtime/vendor",
+        -- "runtime/vendor/spdlog/include"
     }
     
     files {

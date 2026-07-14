@@ -19,8 +19,8 @@ namespace Acorn::Threading
     public:
         ThreadingManager(Base::LoggerFactory& factory);
 
-        std::thread queryNewThread(std::function<void()> fn);
         ThreadingManagerHandle newHandle();
+        std::thread queryNewThread(std::function<void()> fn);
 
         void update();
         void shutdown();
