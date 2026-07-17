@@ -5,7 +5,7 @@ Date format: `YYYY`-`MM`-`DD`
 <details>
 <summary><b>Versions list</b></summary>
 
-- [v0.3.1](#v031---2026-06-17)
+- [v0.3.1](#v031---2026-07-17)
 - [v0.3.0](#v030---2026-07-14)
 - [v0.2.5](#v025---2026-07-11)
 - [v0.2.4](#v024---2026-07-10)
@@ -20,7 +20,7 @@ Date format: `YYYY`-`MM`-`DD`
 
 </details>
 
-## [v0.3.1] - 2026-06-17
+## [v0.3.1] - 2026-07-17
 ### Added
 - New `Scene` module (WIP)
 - `Version` now formattable
