@@ -15,7 +15,6 @@
 
 namespace Acorn::Threading
 {
-    // TODO: Maybe refactor this class, it does too much on it's own
     class ENGINE_API JobScheduler
     {
     public:

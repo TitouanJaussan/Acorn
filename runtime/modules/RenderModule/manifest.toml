@@ -1,5 +1,5 @@
-# RenderModule
+# Render module
 
 name = "Render"
-version = [0, 3, 0]
-dependencies = [ "Window" ]
+version = [0, 3, 1]
+dependencies = [ "Window", "Scene"]

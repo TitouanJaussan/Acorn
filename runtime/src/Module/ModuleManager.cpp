@@ -1,14 +1,13 @@
 #include "Acorn/Module/ModuleManager.hpp"
 #include "Acorn/Module/ModLoadingCtx.hpp"
-#include "Acorn/Core/Runtime/Engine.hpp"
 #include "Acorn/Base/Assert.hpp"
 
 namespace Acorn::Module
 {
     ModuleManager::ModuleManager(Base::LoggerFactory& factory)
-        : m_logger(factory.create("ModuleManager")),
-          m_modLoader(factory),
-          m_modRegistry(factory)
+        : modRegistry(factory),
+          m_logger(factory.create("ModuleManager")),
+          m_modLoader(factory)
     {}
 
     ModuleManagerHandle ModuleManager::newHandle() noexcept
@@ -24,21 +23,23 @@ namespace Acorn::Module
             std::move(modsFolder),
             ModLoadingCtx
             {
-                .modRegistry = m_modRegistry,
-                .filesystem = filesystem,
-                .runtimeAPI = std::move(api)
+                .modRegistry = modRegistry,
+                .filesystem  = filesystem,
+                .runtimeAPI  = std::move(api)
             }
         );
     }
     
-    void ModuleManager::callInit(Runtime::Engine& engine)
+    void ModuleManager::callInit(
+        Runtime::API runtimeAPI,
+        Base::LoggerFactory& factory)
     {
-        call([&engine, this](RuntimeModule& mod)
+        call([&runtimeAPI, &factory, this](RuntimeModule& mod)
         {
-            mod.init(engine.createAPI(), engine.getLoggerFactory());
+            mod.init(runtimeAPI, factory);
 
             ACORN_ASSERT(mod.getAPI());
-            m_modRegistry.updateModuleAPI(mod.getManifest().name, mod.getAPI());
+            modRegistry.updateModuleAPI(mod.getManifest().name, mod.getAPI());
         }, "init");
     }
     
@@ -61,10 +62,10 @@ namespace Acorn::Module
 
     ArrayList<String> ModuleManager::getModNames() const
     {
-        const auto& mods = m_modRegistry.getModules();
+        const auto& mods = modRegistry.getModules();
 
         ArrayList<String> names{};
-        names.setCapacity(m_modRegistry.getModules().getSize());
+        names.setCapacity(modRegistry.getModules().getSize());
 
         for (size_t i = 0; i < mods.getSize(); ++i)
             names.append(mods[i]->getManifest().name);
@@ -72,20 +73,10 @@ namespace Acorn::Module
         return names;
     }
 
-    RuntimeModule* ModuleManager::getModule(String modName) const
-    {
-        return m_modRegistry.getModule(std::move(modName));
-    }
-
-    APIHandle* ModuleManager::getModuleAPIHandle(String modName) const
-    {
-        return m_modRegistry.getAPIHandle(std::move(modName));
-    }
-
     void ModuleManager::call(std::function<void(RuntimeModule&)> fn,
         const char* fnName)
     {
-        const auto& mods = m_modRegistry.getModules();
+        const auto& mods = modRegistry.getModules();
 
         for (size_t i = 0; i < mods.getSize(); ++i)
         {

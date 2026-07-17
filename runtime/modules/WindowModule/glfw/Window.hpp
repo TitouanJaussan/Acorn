@@ -22,7 +22,7 @@ namespace GLFW
         void swapBuffers() override;
         void makeContextCurrent() override;
         void releaseCurrentContext() override;
-        Acorn::Pair<int, int> getSize() override;
+        Acorn::Math::Vec2i getSize() override;
 
     private:
         GLFWwindow* m_window{nullptr};

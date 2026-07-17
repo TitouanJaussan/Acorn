@@ -3,7 +3,8 @@
 namespace Acorn::ECS
 {
     ECSManager::ECSManager(Base::LoggerFactory& factory)
-        : m_logger(factory.create("ECSManager"))
+        : m_logger(factory.create("ECSManager")),
+          m_registries()
     {}
 
     ECSManagerHandle ECSManager::newHandle()
@@ -11,8 +12,9 @@ namespace Acorn::ECS
         return ECSManagerHandle(*this);
     }
 
-    Registry ECSManager::createRegistry()
+    Registry& ECSManager::newRegistry()
     {
-        return Registry{};
+        return *m_registries.append(
+            UniquePtr<Registry>::create(*this)).getPtr();
     }
 }

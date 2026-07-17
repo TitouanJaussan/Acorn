@@ -8,6 +8,7 @@
 #include "Acorn/Templates/Pair.hpp"
 #include "Acorn/Module/RuntimeModule.hpp"
 #include "Acorn/Module/APIHandle.hpp"
+#include "Acorn/Module/ModuleAPI.hpp"
 
 namespace Acorn::Module
 {
@@ -20,7 +21,7 @@ namespace Acorn::Module
         const ArrayList<UniquePtr<RuntimeModule>>& getModules() const;
 
         RuntimeModule* getModule(String name) const;
-        APIHandle* getAPIHandle(String modName) const;
+        APIHandle<> getAPIHandle(String modName) const;
 
         void updateModuleAPI(String modName, void* newApiPtr);
 
@@ -30,7 +31,7 @@ namespace Acorn::Module
     private:
         Base::Logger m_logger;
         ArrayList<UniquePtr<RuntimeModule>> m_modules;
-        ArrayList<UniquePtr<APIHandle>> m_modsApis;
+        ArrayList<UniquePtr<ModuleAPI>> m_modsAPIs;
     };
 }
 

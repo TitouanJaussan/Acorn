@@ -12,7 +12,6 @@ namespace Acorn::Lib
     {
         if (!m_handle)
         {
-            // TODO: Custom error type 
             throw DynamicLibraryError(
                 Base::format(
                     "Failed to load dynamic library '{}', cause: '{}'",

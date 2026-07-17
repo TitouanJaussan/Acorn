@@ -1,11 +1,13 @@
 #include "Acorn/Module/ModuleRegistry.hpp"
+#include "Acorn/Base/Format.hpp"
+#include "Acorn/Module/ModuleError.hpp"
 
 namespace Acorn::Module
 {
     ModuleRegistry::ModuleRegistry(Base::LoggerFactory& factory)
         : m_logger(factory.create("ModRegistry")),
           m_modules{},
-          m_modsApis{}
+          m_modsAPIs{}
     {}
 
     void ModuleRegistry::registerModule(UniquePtr<RuntimeModule> mod)
@@ -17,11 +19,12 @@ namespace Acorn::Module
             mod->getLibPath().filename().string()
         );
 
-        m_modsApis.append(UniquePtr<APIHandle>::create(nullptr));
+        m_modsAPIs.append(UniquePtr<ModuleAPI>::create(nullptr));
         m_modules.append(std::move(mod));
     }
 
-    const ArrayList<UniquePtr<RuntimeModule>>& ModuleRegistry::getModules() const
+    const ArrayList<UniquePtr<RuntimeModule>>&
+        ModuleRegistry::getModules() const
     {
         return m_modules;
     }
@@ -37,15 +40,18 @@ namespace Acorn::Module
         return nullptr;
     }
 
-    APIHandle* ModuleRegistry::getAPIHandle(String modName) const
+    APIHandle<> ModuleRegistry::getAPIHandle(String modName) const
     {
-        ACORN_ASSERT(m_modules.getSize() == m_modsApis.getSize());
+        ACORN_ASSERT(m_modules.getSize() == m_modsAPIs.getSize());
+
         const auto [found, index] = findModuleIndex(std::move(modName));
 
         if (!found)
-            return nullptr;
+            throw ModuleError(Base::format(
+                "Module API not found for module '{}'", modName
+            ));
 
-        return m_modsApis[index].getPtr();
+        return APIHandle(m_modsAPIs[index].getPtr());
     }
 
     void ModuleRegistry::updateModuleAPI(String modName, void* newApiPtr)
@@ -54,11 +60,13 @@ namespace Acorn::Module
 
         if (!found)
         {
-            m_logger.warn("Can't update module api for unexisting module '{}'", modName);
+            m_logger.warn(
+                "Can't update module api for unexisting module '{}'",
+                modName);
             return;
         }
 
-        m_modsApis[index]->update(newApiPtr);
+        m_modsAPIs[index]->modAPI = newApiPtr;
     }
 
     Pair<bool, size_t> ModuleRegistry::findModuleIndex(String modName) const

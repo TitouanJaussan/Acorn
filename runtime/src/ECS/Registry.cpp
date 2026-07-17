@@ -1,13 +1,13 @@
-#include <utility>
-
 #include "Acorn/ECS/Registry.hpp"
 
 namespace Acorn::ECS
 {
-    Registry::Registry()
+    Registry::Registry(ECSManager& lock)
         : m_entityManager(),
           m_componentArrays()
-    {}
+    {
+        (void)lock;
+    }
 
     void Registry::destroyEntity(EntityID id)
     {

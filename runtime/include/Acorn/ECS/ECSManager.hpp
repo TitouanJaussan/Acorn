@@ -2,6 +2,8 @@
 #define ACORN_ECS_MANAGER_HPP
 
 #include "Acorn/EngineAPI.hpp"
+#include "Acorn/Templates/ArrayList.hpp"
+#include "Acorn/Templates/UniquePtr.hpp"
 #include "Acorn/ECS/Registry.hpp"
 #include "Acorn/ECS/ECSManagerHandle.hpp"
 #include "Acorn/Base/Logging/LoggerFactory.hpp"
@@ -15,10 +17,11 @@ namespace Acorn::ECS
         ECSManager(Base::LoggerFactory& factory);
 
         ECSManagerHandle newHandle();
-        Registry createRegistry();
+        Registry&        newRegistry();
 
     private:
         Base::Logger m_logger;
+        ArrayList<UniquePtr<Registry>> m_registries;
     };
 }
 

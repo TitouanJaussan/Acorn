@@ -43,7 +43,7 @@ namespace Acorn::Runtime
     {
         m_core.logger.info("Shutting down runtime...");
 
-        // Ok this is weird, why doing this manually ??
+        // Ok this is weird, why do this manually ??
         systems.threadingManager.jobScheduler.shutdown();
 
         m_core.logger.info("Maximum memory usage reached: {} bytes",
@@ -54,7 +54,7 @@ namespace Acorn::Runtime
 
     void Engine::run()
     {
-        systems.modManager.callInit(*this);  // I don't like this
+        systems.modManager.callInit(createAPI(), m_core.loggerFactory);
 
         while (m_core.running)
         {
@@ -78,7 +78,12 @@ namespace Acorn::Runtime
 
     API Engine::createAPI()
     {
-        return API{*this, m_core.version};
+        return API{*this};
+    }
+
+    Version::Version Engine::version() const noexcept
+    {
+        return m_core.version;
     }
 
     void Engine::logEngineInfo()

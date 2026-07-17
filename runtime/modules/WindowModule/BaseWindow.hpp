@@ -5,6 +5,7 @@
 #include <GLFW/glfw3.h>
 
 #include <Acorn/Templates/Pair.hpp>
+#include <Acorn/Base/Math/Vec.hpp>
 
 #include "Export.hpp"
 
@@ -19,7 +20,7 @@ public:
     virtual void swapBuffers() = 0;
     virtual void makeContextCurrent() = 0;
     virtual void releaseCurrentContext() = 0;
-    virtual Acorn::Pair<int, int> getSize() = 0;  // TODO: Replace Pair with Vec2
+    virtual Acorn::Math::Vec2i getSize() = 0;
 };
 
 #endif /* ACORN_BASE_WINDOW_HPP */

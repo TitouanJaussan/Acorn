@@ -12,9 +12,7 @@ namespace Acorn::Threading
         ThreadingManager& manager)
     {
         if (!m_services.append(std::move(service))->start(manager))
-        {
-            // Idk maybe do something ?
-        }
+            m_services.popBack();
     }
 
     void ServiceManager::shutdown()

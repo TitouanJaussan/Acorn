@@ -285,8 +285,8 @@ namespace Acorn::Module
         {
             throw ModuleError(Base::format(
                 "{} Module: version too old ({}) for runtime ({})",
-                manifest.name.getData(),  // TODO: Fix by adding support for String to format
-                manifest.runtimeVersion.string(),
+                manifest.name,
+                manifest.runtimeVersion,
                 ver.string()
             ));
         }
@@ -295,7 +295,7 @@ namespace Acorn::Module
             m_logger.warn(
                 "{} Module: version ({}) older than runtime version ({}), "
                 "possible incompatibility",
-                manifest.name.getData(),  // TODO: Fix by adding support for String to format
+                manifest.name,
                 manifest.runtimeVersion.string(),
                 ver.string()
             );

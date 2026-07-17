@@ -22,7 +22,7 @@ namespace Acorn::Runtime
     class ENGINE_API API
     {
     public:
-        API(Engine& engine, Version::Version engineVersion);
+        API(Engine& engine);
 
         void stopEngine() const;
         Version::Version getVersion() const noexcept;
@@ -35,7 +35,6 @@ namespace Acorn::Runtime
 
     private:
         Engine& m_engine;
-        Version::Version m_version;
     };
 }
 

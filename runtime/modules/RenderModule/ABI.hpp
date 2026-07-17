@@ -3,7 +3,6 @@
 
 #include <Acorn/Core/Runtime/API.hpp>
 #include <Acorn/Base/Logging/Logger.hpp>
-#include <Acorn/Module/ModuleManifest.hpp>
 
 #include "Export.hpp"
 #include "API.hpp"

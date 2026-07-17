@@ -63,11 +63,11 @@ namespace GLFW
         glfwMakeContextCurrent(nullptr);
     }
 
-    Acorn::Pair<int, int> Window::getSize()
+    Acorn::Math::Vec2i Window::getSize()
     {
-        Acorn::Pair<int, int> size{0, 0};
+        Acorn::Math::Vec2i size{0, 0};
 
-        glfwGetWindowSize(m_window, &size.m_first, &size.m_second);
+        glfwGetWindowSize(m_window, &size.x(), &size.y());
 
         return size;
     }

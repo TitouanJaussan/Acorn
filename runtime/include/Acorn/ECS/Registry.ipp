@@ -20,6 +20,8 @@ namespace Acorn::ECS
     template<typename T>
     void Registry::addComponent(EntityID id, T component)
     {
+        ACORN_ASSERT(m_entityManager.isValid(id));
+
         const auto [it, inserted] = m_componentArrays.try_emplace(
             typeid(T),
             UniquePtr<ComponentArray<T>>::create()
@@ -32,6 +34,8 @@ namespace Acorn::ECS
     template<typename T>
     T* Registry::getComponent(EntityID id)
     {
+        ACORN_ASSERT(m_entityManager.isValid(id));
+
         const auto it = m_componentArrays.find(typeid(T));
 
         if (it == m_componentArrays.end())
@@ -43,6 +47,8 @@ namespace Acorn::ECS
     template<typename T>
     void Registry::removeComponent(EntityID id)
     {
+        ACORN_ASSERT(m_entityManager.isValid(id));
+
         const auto it = m_componentArrays.find(typeid(T));
 
         if (it == m_componentArrays.end())

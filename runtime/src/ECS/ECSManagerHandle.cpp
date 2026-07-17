@@ -8,8 +8,8 @@ namespace Acorn::ECS
         : m_handle(handle)
     {}
 
-    Registry ECSManagerHandle::createRegistry()
+    Registry& ECSManagerHandle::newRegistry()
     {
-        return m_handle.createRegistry();
+        return m_handle.newRegistry();
     }
 }

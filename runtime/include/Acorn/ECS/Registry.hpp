@@ -12,10 +12,12 @@
 
 namespace Acorn::ECS
 {
+    class ECSManager;
+
     class ENGINE_API Registry
     {
     public:
-        Registry();
+        explicit Registry(ECSManager& lock);
 
         Registry(const Registry&) = delete;
         Registry& operator=(const Registry&) = delete;

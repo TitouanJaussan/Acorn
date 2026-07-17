@@ -4,9 +4,8 @@
 
 namespace Acorn::Runtime
 {
-    API::API(Engine& engine, Version::Version engineVersion)
-        : m_engine(engine),
-          m_version(engineVersion)
+    API::API(Engine& engine)
+        : m_engine(engine)
     {}
 
     void API::stopEngine() const
@@ -16,7 +15,7 @@ namespace Acorn::Runtime
     
     Version::Version API::getVersion() const noexcept
     {
-        return m_version;  // TODO: Replace with m_engine.version
+        return m_engine.version();
     }
 
     Base::LoggerFactory& API::getLoggerFactory() const noexcept

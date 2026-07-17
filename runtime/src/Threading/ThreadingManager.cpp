@@ -40,12 +40,8 @@ namespace Acorn::Threading
                 maxThreadsCount
             ));
 
-        m_logger.info("Completed thread query");
-
         ++m_threadsCount;
-        return std::thread(std::move(fn));  // That doesn't mean that the thread starts executing even
-                                            // before it's even returned (realistically it's the same
-                                            // as if it started when returned)
+        return std::thread(std::move(fn));
     }
 
     void ThreadingManager::update()

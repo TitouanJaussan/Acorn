@@ -28,6 +28,7 @@ namespace Acorn::Runtime
 
         Base::LoggerFactory& getLoggerFactory();
         API createAPI();
+        Version::Version version() const noexcept;
 
     private:
         void logEngineInfo();

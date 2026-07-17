@@ -4,14 +4,17 @@
 #include <cstdlib>
 #include <cstdio>
 
-// TODO: Log message
 #if defined(ACORN_DEV) || defined(ACORN_DEBUG)
-    #define ACORN_ASSERT(expr) do { \
-        if (!static_cast<bool>(expr))\
-        {\
-            printf("Assertion failed: %s", #expr); /* Doesn't fucking work ?? */ \
-            std::abort();\
-        }\
+    #define ACORN_ASSERT(expr) do {                  \
+        if (!static_cast<bool>(expr))                \
+        {                                            \
+            fprintf(stderr,                          \
+                "Assertion failed: %s\nat %s:%d\n",  \
+                #expr,                               \
+                __FILE__, __LINE__);                 \
+            fflush(stderr);                          \
+            std::abort();                            \
+        }                                            \
     } while (0)
 #else
     #define ACORN_ASSERT(expr)

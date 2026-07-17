@@ -4,7 +4,7 @@
 #include "Export.hpp"
 #include "RenderModule.hpp"
 
-class RENDER_MODULE_LOCAL RenderModuleAPI
+class RENDER_MODULE_EXPORT RenderModuleAPI
 {
 public:
     RenderModuleAPI(RenderModule* mod);

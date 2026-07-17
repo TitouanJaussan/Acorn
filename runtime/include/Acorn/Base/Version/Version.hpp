@@ -2,6 +2,8 @@
 #define ACORN_VERSION_HPP
 
 #include <cstdint>
+#include <fmt/format.h>
+#include <format>
 
 #include "Acorn/EngineAPI.hpp"
 #include "Acorn/Templates/ArrayList.hpp"
@@ -42,5 +44,25 @@ namespace Acorn::Version
             uint32_t m_patch{0};
     };
 }
+
+template<>
+struct fmt::formatter<Acorn::Version::Version>
+{
+    constexpr auto parse(fmt::format_parse_context& ctx) const;
+
+    template<typename FormatContext>
+    auto format(const Acorn::Version::Version& ver,
+        FormatContext& ctx) const;
+};
+
+template<>
+struct std::formatter<Acorn::Version::Version>
+{
+    constexpr auto parse(std::format_parse_context& ctx);
+    auto format(const Acorn::Version::Version& ver,
+        std::format_context& ctx) const;
+};
+
+#include "Acorn/Base/Version/Version.ipp"
 
 #endif /* ACORN_VERSION_HPP */

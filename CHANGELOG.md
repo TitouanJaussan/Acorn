@@ -5,6 +5,7 @@ Date format: `YYYY`-`MM`-`DD`
 <details>
 <summary><b>Versions list</b></summary>
 
+- [v0.3.1](#v031---2026-06-17)
 - [v0.3.0](#v030---2026-07-14)
 - [v0.2.5](#v025---2026-07-11)
 - [v0.2.4](#v024---2026-07-10)
@@ -18,6 +19,21 @@ Date format: `YYYY`-`MM`-`DD`
 - [v0.0.1](#v001---2026-06-01)
 
 </details>
+
+## [v0.3.1] - 2026-06-17
+### Added
+- New `Scene` module (WIP)
+- `Version` now formattable
+- Added Vector class, for `float`, `int` & `unsigned int`, for `Vec2`, `Vec3` & `Vec4`
+
+### Changed
+- Severely improved the `APIHandle` class and it's use for a lot more conveniency
+- Modules now provide their name as a `const char*` to avoid typos and have clearer module lookup
+- ECS Registries are now tracked by the `ECSManager`
+- Did almost every TODO
+
+### Fixed
+- Fixed `ACORN_ASSERT` macro, now actually printing error msg to `stderr`
 
 ## [v0.3.0] - 2026-07-14
 ### Added

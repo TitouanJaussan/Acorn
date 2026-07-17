@@ -13,7 +13,7 @@ namespace Acorn::ECS
     public:
         ECSManagerHandle(ECSManager& handle);
 
-        Registry createRegistry();
+        Registry& newRegistry();
 
     private:
         ECSManager& m_handle;

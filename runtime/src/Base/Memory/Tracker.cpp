@@ -25,7 +25,6 @@ namespace Acorn::Memory
     {
         if (deallocSize > m_currMemUsage)
         {
-            // TODO: Report or print
             deallocSize = m_currMemUsage;
             ACORN_ASSERT(false && "Deallocated too much memory");
         }

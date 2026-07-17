@@ -6,6 +6,9 @@
 #include <Acorn/Module/RuntimeModule.hpp>
 #include <Acorn/Module/APIHandle.hpp>
 
+#include <WindowModule/API.hpp>
+#include <SceneModule/API.hpp>
+
 #include "Export.hpp"
 
 class RENDER_MODULE_EXPORT RenderService final :
@@ -14,12 +17,14 @@ class RENDER_MODULE_EXPORT RenderService final :
 public:
     RenderService(
         Acorn::Base::LoggerFactory& factory,
-        Acorn::Module::APIHandle& windowModAPI);
+        Acorn::Module::APIHandle<> windowModAPI,
+        Acorn::Module::APIHandle<> sceneModAPI);
 
     void work() override;
 
 private:
-    Acorn::Module::APIHandle& m_windowModAPI;
+    Acorn::Module::APIHandle<WindowModuleAPI> m_windowModAPI;
+    Acorn::Module::APIHandle<SceneModuleAPI>  m_sceneModAPI;
 };
 
 #endif /* RENDER_SERVICE_HPP */

@@ -20,7 +20,7 @@ namespace Acorn::Threading
         }
         catch (const Base::DetailedError& err)
         {
-            m_logger.info("Failed to start: {}", err.what());
+            m_logger.error("Failed to start: {}", err.what());
             return false;
         }
     }

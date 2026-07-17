@@ -14,7 +14,7 @@ namespace Acorn::Module
     public:
         ModuleManagerHandle(ModuleManager& handle);
 
-        APIHandle* getModuleAPIHandle(String modName) const;
+        APIHandle<> getModuleAPIHandle(String modName) const;
 
     private:
         ModuleManager& m_handle;
